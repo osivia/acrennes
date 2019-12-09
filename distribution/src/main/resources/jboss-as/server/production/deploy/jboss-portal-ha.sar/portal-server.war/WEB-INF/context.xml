@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Context>
+
+    <Valve className="org.osivia.portal.identity.sso.cas.CASAuthenticationValve"
+           casLogin="${cas.login}"
+           casLogout="${cas.logout}"
+           casValidate="${cas.validate}"
+           casServerName="${cas.servername}"
+           casProxyCallbackUrl="${cas.proxycallback}"
+           brokenSecurityMode="${cas.brokenSecurityMode}"
+           authType="FORM" />
+
+</Context>

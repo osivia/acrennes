@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" version="2.5">
+
+    <display-name>Portail Toutatice - Charte</display-name>
+
+    <jsp-config>
+        <taglib>
+            <taglib-uri>portal-layout</taglib-uri>
+            <taglib-location>theme/portal-layout.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+
+</web-app>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>fr.toutatice.acrennes.portail</groupId>
+        <artifactId>toutatice-portail-acrennes-parent</artifactId>
+        <version>6.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>toutatice-portail-acrennes-distribution</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Portail Toutatice - Distribution</name>
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>toutatice-portail-acrennes-charte</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+
+        <!-- Toutatice CMS -->
+        <dependency>
+            <groupId>toutatice-portail.cms</groupId>
+            <artifactId>toutatice-portail-cms-nuxeo-web</artifactId>
+            <version>${toutatice.version}</version>
+            <type>war</type>
+        </dependency>
+
+        <!-- Directory -->
+        <dependency>
+            <groupId>org.osivia.services.directory.socle</groupId>
+            <artifactId>osivia-services-directory-socle-interfaces</artifactId>
+            <version>${osivia-directory.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>outils.ldap</groupId>
+            <artifactId>toutatice-annuaire-v2-interfaces</artifactId>
+            <version>${toutatice-directory.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>outils.ldap</groupId>
+            <artifactId>toutatice-annuaire-v2</artifactId>
+            <version>${toutatice-directory.version}</version>
+            <type>war</type>
+        </dependency>
+
+        <!-- Identity SSO -->
+        <dependency>
+            <groupId>org.osivia.portal.identity</groupId>
+            <artifactId>osivia-portal-identity-sso-lib</artifactId>
+            <version>${identity-sso.version}</version>
+        </dependency>
+
+        <!-- Java Melody -->
+        <dependency>
+            <groupId>org.osivia.services</groupId>
+            <artifactId>osivia-services-java-melody-integration</artifactId>
+            <version>${java-melody.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <profiles>
+
+        <!-- Unpack -->
+        <profile>
+            <id>unpack</id>
+            <dependencies>
+                <dependency>
+                    <groupId>toutatice-portail.cms</groupId>
+                    <artifactId>toutatice-portail-cms-nuxeo-distribution</artifactId>
+                    <version>${toutatice.version}</version>
+                    <type>zip</type>
+                </dependency>
+            </dependencies>
+            <build>
+                <defaultGoal>package</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>toutatice-portail.cms</groupId>
+                                            <artifactId>toutatice-portail-cms-nuxeo-distribution</artifactId>
+                                            <version>${toutatice.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}/toutatice-distribution</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Pack -->
+        <profile>
+            <id>pack</id>
+            <build>
+                <defaultGoal>package</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>zip</id>
+                                <phase>process-resources</phase>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/main/assembly/assembly.xml</descriptor>
+                                    </descriptors>
+                                    <finalName>${project.artifactId}-${project.version}</finalName>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <attach>true</attach>
+                                </configuration>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+</project>
