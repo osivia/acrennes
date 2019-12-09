@@ -15,7 +15,9 @@
             <unpack>false</unpack>
             <scope>runtime</scope>
             <includes>
+                <!-- Toutatice -->
                 <include>${project.groupId}:toutatice-portail-acrennes-charte:war:${project.version}</include>
+                <include>${project.groupId}.collaboration:toutatice-portail-acrennes-collaboration-ear:ear:${project.version}</include>
 
                 <!-- Toutatice CMS -->
                 <include>toutatice-portail.cms:toutatice-portail-cms-nuxeo-web:war:${toutatice.version}</include>
