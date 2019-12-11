@@ -2,9 +2,9 @@
 <layouts>
 
     <layout>
-        <name>toutatice-2-cols</name>
-        <uri>/layouts/2-cols/index.jsp</uri>
-        <uri state="maximized">/layouts/2-cols/maximized.jsp</uri>
+        <name>toutatice-default</name>
+        <uri>/layouts/default/index.jsp</uri>
+        <uri state="maximized">/layouts/default/maximized.jsp</uri>
         <regions>
             <region name="top" />
             <region name="col-1" />

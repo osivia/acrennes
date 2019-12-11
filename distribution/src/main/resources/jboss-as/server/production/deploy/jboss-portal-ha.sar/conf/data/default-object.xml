@@ -113,7 +113,7 @@
                 </property>
                 <property>
                     <name>layout.id</name>
-                    <value>toutatice-2-cols</value>
+                    <value>toutatice-default</value>
                 </property>
                 <property>
                     <name>coordination.event.implicit_mode</name>
