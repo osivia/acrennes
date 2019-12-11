@@ -33,6 +33,7 @@
 
     <modules>
         <module>charte</module>
+        <module>customizer</module>
         <module>collaboration</module>
 
         <module>distribution</module>

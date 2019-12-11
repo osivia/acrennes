@@ -26,6 +26,12 @@
             <type>war</type>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>toutatice-portail-acrennes-customizer</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}.collaboration</groupId>
             <artifactId>toutatice-portail-acrennes-collaboration-ear</artifactId>
             <version>${project.version}</version>

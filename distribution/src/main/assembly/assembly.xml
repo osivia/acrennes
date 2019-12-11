@@ -17,6 +17,7 @@
             <includes>
                 <!-- Toutatice -->
                 <include>${project.groupId}:toutatice-portail-acrennes-charte:war:${project.version}</include>
+                <include>${project.groupId}:toutatice-portail-acrennes-customizer:war:${project.version}</include>
                 <include>${project.groupId}.collaboration:toutatice-portail-acrennes-collaboration-ear:ear:${project.version}</include>
 
                 <!-- Toutatice CMS -->
