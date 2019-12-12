@@ -1,4 +1,4 @@
-package org.osivia.services.rss.feedRss.portlet.model;
+package fr.toutatice.portail.acrennes.rss.portlet.model;
 
 import java.util.Date;
 
