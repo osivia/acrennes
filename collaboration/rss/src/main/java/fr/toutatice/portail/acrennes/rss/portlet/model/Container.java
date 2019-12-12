@@ -1,14 +1,10 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import fr.toutatice.portail.acrennes.rss.portlet.model.comparator.TitleItemComparator;
 
 /**
  * Rss settings.
@@ -19,21 +15,21 @@ import fr.toutatice.portail.acrennes.rss.portlet.model.comparator.TitleItemCompa
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Container extends TitleItem{
 
-	@Autowired
-	private TitleItemComparator comparator;
-	
-	private final SortedSet<Feed> feeds; 
-	
-    /**
+	private List<Feed> feeds; 
+   
+	/**
      * Constructor.
      */
     public Container() {
         super();
-        this.feeds = new TreeSet<Feed>(this.comparator); 
     }
 
-	public SortedSet<Feed> getFeeds() {
+	public List<Feed> getFeeds() {
 		return feeds;
+	}
+
+	public void setFeeds(List<Feed> feeds) {
+		this.feeds = feeds;
 	}
 
 }

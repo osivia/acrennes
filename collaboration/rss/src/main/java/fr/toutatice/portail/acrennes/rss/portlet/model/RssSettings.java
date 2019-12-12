@@ -1,6 +1,7 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -24,8 +25,26 @@ public class RssSettings {
     /** List containers. */
     private Containers containers;
     
-    /** . */
+    /** List users rights. */
     private List<String> rights;
+    
+    /** List users rights. */
+    private List<String> rightsDisplay;    
+
+    /** List Feeds.*/
+    private List<String> feeds;
+    
+    /** Map feed --> right(s). */
+    private Map<String, List<String>> mapFeedsDisplay;
+
+    /** Map feed --> right(s). */
+    private Map<String, List<String>> mapFeeds;
+    
+    /** title. */
+    private String title;
+    
+    /** title. */
+    private Feed Feed;
     
     /**
      * Constructor.
@@ -64,6 +83,54 @@ public class RssSettings {
 
 	public void setRights(List<String> rights) {
 		this.rights = rights;
+	}
+
+	public Map<String, List<String>> getMapFeeds() {
+		return mapFeeds;
+	}
+
+	public void setMapFeeds(Map<String, List<String>> mapFeeds) {
+		this.mapFeeds = mapFeeds;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public Feed getFeed() {
+		return Feed;
+	}
+
+	public void setFeed(Feed feed) {
+		Feed = feed;
+	}
+
+	public List<String> getRightsDisplay() {
+		return rightsDisplay;
+	}
+
+	public void setRightsDisplay(List<String> rightsDisplay) {
+		this.rightsDisplay = rightsDisplay;
+	}
+
+	public Map<String, List<String>> getMapFeedsDisplay() {
+		return mapFeedsDisplay;
+	}
+
+	public void setMapFeedsDisplay(Map<String, List<String>> mapFeedsDisplay) {
+		this.mapFeedsDisplay = mapFeedsDisplay;
+	}
+
+	public List<String> getFeeds() {
+		return feeds;
+	}
+
+	public void setFeeds(List<String> feeds) {
+		this.feeds = feeds;
 	}
 
 }
