@@ -1,15 +1,14 @@
 package fr.toutatice.portail.acrennes.rss.portlet.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.portlet.PortletException;
 
-import org.nuxeo.ecm.automation.client.model.Document;
 import org.osivia.portal.api.context.PortalControllerContext;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
 import fr.toutatice.portail.acrennes.rss.portlet.model.RssSettings;
-import net.sf.json.JSONObject;
 
 /**
  * Item RSS service interface
@@ -32,22 +31,13 @@ public interface ItemService {
 	List<ItemRssModel> getListItem(PortalControllerContext portalControllerContext) throws PortletException;
 	
     /**
-     * Get current Nuxeo document.
-     * 
-     * @param portalControllerContext portal controller context
-     * @return Nuxeo document
-     * @throws PortletException
-     */
-    Document getCurrentDocument(PortalControllerContext portalControllerContext) throws PortletException;	
-    
-    /**
      * Get portlet settings.
      * 
      * @param portalControllerContext portal controller context
      * @return portlet settings
      * @throws PortletException
      */
-    RssSettings getSettings(PortalControllerContext portalControllerContext) throws PortletException;
+    RssSettings getSettings(PortalControllerContext portalControllerContext) throws PortletException, IOException;
 
 
     /**
@@ -60,13 +50,39 @@ public interface ItemService {
     void save(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
 
     /**
-     * Search documents.
-     *
+     * Save portlet settings.
+     * 
      * @param portalControllerContext portal controller context
-     * @param filter search filter
-     * @param page search pagination page number
-     * @return search result JSON object
+     * @param settings portlet settings
      * @throws PortletException
      */
-    JSONObject searchDocuments(PortalControllerContext portalControllerContext, String filter, int page) throws PortletException;
+    void saveSettings(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
+    
+    /**
+     * Get portlet settings.
+     * 
+     * @param portalControllerContext portal controller context
+     * @return portlet settings
+     * @throws PortletException
+     */
+    RssSettings getList(PortalControllerContext portalControllerContext) throws PortletException, IOException;
+    
+    /**
+     * delete feeds.
+     * 
+     * @param portalControllerContext portal controller context
+     * @param settings portlet settings
+     * @param id Id 
+     * @throws PortletException
+     */
+    void delFeeds(PortalControllerContext portalControllerContext, RssSettings settings, String id) throws PortletException;
+    
+    /**
+     * Modication portlet settings.
+     * 
+     * @param portalControllerContext portal controller context
+     * @param settings portlet settings
+     * @throws PortletException
+     */
+    void mod(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
 }

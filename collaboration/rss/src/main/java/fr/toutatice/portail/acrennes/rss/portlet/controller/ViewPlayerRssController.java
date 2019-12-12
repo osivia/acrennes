@@ -12,8 +12,6 @@ import javax.portlet.RenderResponse;
 import org.osivia.portal.api.context.PortalControllerContext;
 import org.osivia.portal.api.internationalization.IBundleFactory;
 import org.osivia.portal.api.notifications.INotificationsService;
-import org.osivia.portal.api.windows.PortalWindow;
-import org.osivia.portal.api.windows.WindowFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -74,7 +72,7 @@ public class ViewPlayerRssController {
     public String view(RenderRequest request, RenderResponse response)
             throws PortletException {
 
-        return "viewListe";
+        return "view-liste";
     }
 
     @ModelAttribute("items")
@@ -85,45 +83,4 @@ public class ViewPlayerRssController {
         List<ItemRssModel> items = this.service.getListItem(portalControllerContext);
         return items;
     }
-    
-	public void doAdmin(PortalControllerContext portalControllerContext) throws PortletException {
-		// Request
-		PortletRequest request = portalControllerContext.getRequest();
-
-		// Current window
-		PortalWindow window = WindowFactory.getWindow(request);
-//		String nbItems = window.getProperty(LABEL_COOPERATIVE);
-//		request.setAttribute("departementLabel", departementLabel);
-//		String target = window.getProperty(TARGET);
-//		request.setAttribute("target", target);
-//		boolean flag = BooleanUtils.toBoolean(window.getProperty(FLAG_TRIANGLE));
-//		request.setAttribute("flag", flag);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-//	@Override
-//	public void processAction(PortalControllerContext portalControllerContext) throws PortletException {
-//		// Request
-//		PortletRequest request = portalControllerContext.getRequest();
-//
-//		if ("admin".equals(request.getPortletMode().toString())
-//				&& "save".equals(request.getParameter(ActionRequest.ACTION_NAME))) {
-//			// Current window
-//			PortalWindow window = WindowFactory.getWindow(request);
-////			window.setProperty(LABEL_COOPERATIVE, StringUtils.trimToNull(request.getParameter("departementLabel")));
-////			System.out.println("fred :" + request.getParameter("target"));
-////			window.setProperty(TARGET, StringUtils.trimToNull(request.getParameter("target")));
-////
-////			boolean flag = BooleanUtils.toBoolean(request.getParameter("flag"));
-////			window.setProperty(FLAG_TRIANGLE, String.valueOf(flag));
-//
-//		}
-//	}
-//
-//	@Override
-//	public boolean isDisplayedInAdmin() {
-//		return true;
-//	}    
 }
