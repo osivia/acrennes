@@ -1,21 +1,21 @@
-package fr.toutatice.portail.acrennes.customizer.regions.controller;
+package fr.toutatice.portail.acrennes.customizer.internationalization.controller;
 
 import fr.toutatice.portail.acrennes.customizer.commons.controller.CustomizerController;
 import org.springframework.stereotype.Controller;
 
 /**
- * Regions customizer controller.
+ * Internationalization customizer controller.
  *
  * @author Cédric Krommenhoek
  * @see CustomizerController
  */
 @Controller
-public class RegionsCustomizerController extends CustomizerController {
+public class InternationalizationCustomizerController extends CustomizerController {
 
     /**
      * Constructor.
      */
-    public RegionsCustomizerController() {
+    public InternationalizationCustomizerController() {
         super();
     }
 
