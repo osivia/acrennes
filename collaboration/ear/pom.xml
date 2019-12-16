@@ -21,6 +21,12 @@
         <!-- Toutatice collaboration -->
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>toutatice-portail-acrennes-collaboration-cua</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>toutatice-portail-acrennes-collaboration-rss</artifactId>
             <version>${project.version}</version>
             <type>war</type>
@@ -48,6 +54,11 @@
                     <modules>
 
                         <!-- Toutatice collaboration -->
+                        <webModule>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>toutatice-portail-acrennes-collaboration-cua</artifactId>
+                            <contextRoot>/toutatice-portail-acrennes-collaboration-cua</contextRoot>
+                        </webModule>
                         <webModule>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>toutatice-portail-acrennes-collaboration-rss</artifactId>

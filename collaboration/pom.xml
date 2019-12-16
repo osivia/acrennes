@@ -18,6 +18,7 @@
 
 
     <modules>
+        <module>cua</module>
         <module>rss</module>
 
         <module>ear</module>
