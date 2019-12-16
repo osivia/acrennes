@@ -4,6 +4,6 @@
 <%@ page contentType="text/html" isELIgnored="false" %>
 
 
-<div class="container-fluid">
+<div class="container-fluid py-4">
     <p:region regionName="maximized"/>
 </div>

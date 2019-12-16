@@ -16,7 +16,7 @@
 <%@ include file="../includes/header.jspf" %>
 
 <main>
-    <div class="container-fluid">
+    <div class="container-fluid py-4">
         <p:region regionName="top"/>
 
         <div class="row">

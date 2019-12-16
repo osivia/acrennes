@@ -64,12 +64,10 @@
                         <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown">
                             <c:choose>
                                 <c:when test="${empty requestScope['osivia.toolbar.person']}">
-                                    <i class="glyphicons glyphicons-basic-user"></i>
                                     <span class="d-md-none d-lg-inline">${requestScope['osivia.toolbar.principal']}</span>
                                 </c:when>
 
                                 <c:otherwise>
-                                    <img class="avatar" src="${requestScope['osivia.toolbar.person'].avatar.url}" alt="">
                                     <span class="d-md-none d-lg-inline">${requestScope['osivia.toolbar.person'].cn}</span>
                                 </c:otherwise>
                             </c:choose>
