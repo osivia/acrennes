@@ -3,15 +3,14 @@ package fr.toutatice.portail.acrennes.rss.portlet.repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.PortletException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.nuxeo.ecm.automation.client.model.Document;
 import org.nuxeo.ecm.automation.client.model.Documents;
-import org.nuxeo.ecm.automation.client.model.PaginableDocuments;
 import org.nuxeo.ecm.automation.client.model.PropertyList;
 import org.nuxeo.ecm.automation.client.model.PropertyMap;
 import org.osivia.portal.api.context.PortalControllerContext;
@@ -22,7 +21,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import fr.toutatice.portail.acrennes.rss.portlet.command.ContainerListCommand;
-import fr.toutatice.portail.acrennes.rss.portlet.command.ItemCreatCommand;
 import fr.toutatice.portail.acrennes.rss.portlet.command.ItemListCommand;
 import fr.toutatice.portail.acrennes.rss.portlet.model.Container;
 import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
@@ -63,22 +61,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 		super();
 	}
 
-	/**
-	 * Create Item RSS
-	 */
-	public void creatItem(PortalControllerContext portalControllerContext, ItemRssModel model) throws PortletException {
-		// Nuxeo controller
-		NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
-
-		// Nuxeo command
-		INuxeoCommand command;
-		command = this.applicationContext.getBean(ItemCreatCommand.class, model);
-
-		nuxeoController.executeNuxeoCommand(command);
-	}
-
-	@Override
-	public List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, String syncid)
+	public List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems)
 			throws PortletException {
 		// Nuxeo controller
 		NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
@@ -86,13 +69,18 @@ public class ItemRepositoryImpl implements ItemRepository {
 		List<ItemRssModel> items;
 
 		// Nuxeo command
-		INuxeoCommand nuxeoCommand = this.applicationContext.getBean(ItemListCommand.class, syncid);
+		INuxeoCommand nuxeoCommand = this.applicationContext.getBean(ItemListCommand.class, map);
 		Documents documents = (Documents) nuxeoController.executeNuxeoCommand(nuxeoCommand);
 		items = new ArrayList<ItemRssModel>(documents.size());
-
+		
+		int max = 1;
 		for (Document document : documents) {
 			ItemRssModel item = fillItem(document, nuxeoController);
 			items.add(item);
+			if(max >= nbItems) {
+				break;
+			}
+			max++;
 		}
 
 		return items;
@@ -103,6 +91,13 @@ public class ItemRepositoryImpl implements ItemRepository {
 		String title = document.getString(TITLE_PROPERTY);
 		String link = document.getString(LINK_PROPERTY);
 		String description = document.getString(DESCRIPTION_PROPERTY);
+		if(description != null && description.contains("<img")) {
+			if(description.contains("<a")) {
+				description = description.replaceAll("<a.*a>","");
+			}else {
+				description = description.replaceAll("<img.*>","");	
+			}
+		}
 		String autor = document.getString(AUTHOR_PROPERTY);
 		String category = document.getString(CATEGORY_PROPERTY);
 		String enclosure = document.getString(ENCLOSURE_PROPERTY);
@@ -122,29 +117,6 @@ public class ItemRepositoryImpl implements ItemRepository {
 		item.setGuid(guid);
 		item.setSourceRss(sources);
 		return item;
-	}
-
-	@Override
-	public void creatItems(PortalControllerContext portalControllerContext, List<ItemRssModel> items)
-			throws PortletException {
-
-		// Nuxeo controller
-		NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
-
-		// Nuxeo command
-		INuxeoCommand command;
-
-		for (ItemRssModel item : items) {
-			item.setPath(nuxeoController.getCurrentDocumentContext().getCmsPath());
-			command = this.applicationContext.getBean(ItemCreatCommand.class, item);
-			nuxeoController.executeNuxeoCommand(command);
-		}
-	}
-
-	@Override
-	public void removeItems(PortalControllerContext portalControllerContext, List<ItemRssModel> items)
-			throws PortletException {
-
 	}
 
 	/**
@@ -201,20 +173,6 @@ public class ItemRepositoryImpl implements ItemRepository {
 			listContainers.setContainers(listContainer);
 		}
 
-	}
-
-	@Override
-	public PaginableDocuments searchDocuments(PortalControllerContext portalControllerContext, String basePath,
-			String filter, int page) throws PortletException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<String, String> getDocumentProperties(PortalControllerContext portalControllerContext, Document document)
-			throws PortletException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

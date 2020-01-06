@@ -1,5 +1,6 @@
 package fr.toutatice.portail.acrennes.rss.portlet.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.portlet.PortletContext;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssSettings;
 import fr.toutatice.portail.acrennes.rss.portlet.service.ItemService;
 
 /**
@@ -52,7 +54,7 @@ public class ViewPlayerRssController {
     /** Notifications service. */
     @Autowired
     protected INotificationsService notificationsService;
-
+    
     /**
      * Constructor.
      */
@@ -69,18 +71,35 @@ public class ViewPlayerRssController {
      * @throws PortletException
      */
     @RenderMapping
-    public String view(RenderRequest request, RenderResponse response)
+    public String view(RenderRequest request, RenderResponse response, @ModelAttribute("settings") RssSettings settings)
             throws PortletException {
+		
+		String view = "viewListe";
+		if (settings.getViewRss() != null && !settings.getViewRss().isEmpty()) {
+			if(settings.getViewRss().equalsIgnoreCase("liste")) {
+				view = "viewListe";
+			} else {
+				view = "viewSlider";			
+			}			
+		}
 
-        return "view-liste";
+        return view;
     }
 
     @ModelAttribute("items")
-    public List<ItemRssModel> getItems(PortletRequest request, PortletResponse response) throws PortletException
+    public List<ItemRssModel> getItems(PortletRequest request, PortletResponse response) throws PortletException, IOException
     {
         // Portal controller context
         PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
-        List<ItemRssModel> items = this.service.getListItem(portalControllerContext);
-        return items;
+        return this.service.getListItem(portalControllerContext);
     }
+    
+    @ModelAttribute("settings")
+    public RssSettings getSettings(PortletRequest request, PortletResponse response) throws PortletException, IOException
+    {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
+		return this.service.getSettings(portalControllerContext);
+    }    
+    
 }

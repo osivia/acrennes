@@ -1,5 +1,8 @@
 package fr.toutatice.portail.acrennes.rss.portlet.command;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.nuxeo.ecm.automation.client.Constants;
 import org.nuxeo.ecm.automation.client.OperationRequest;
 import org.nuxeo.ecm.automation.client.Session;
@@ -21,15 +24,16 @@ import fr.toutatice.portail.cms.nuxeo.api.NuxeoQueryFilterContext;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ItemListCommand implements INuxeoCommand {
 
-    private final String syncId;
+    
+    private final HashMap<List<String>, List<String>> map;
 	
 	/**
 	 * Constructor.
 	 *
 	 */
-	public ItemListCommand(String syncId) {
+	public ItemListCommand(HashMap<List<String>, List<String>> map) {
 		super();
-        this.syncId = syncId;
+        this.map = map;
 	}
 	
 	@Override
@@ -38,7 +42,19 @@ public class ItemListCommand implements INuxeoCommand {
 		// Clause
 		StringBuilder clause = new StringBuilder();
 		clause.append("ecm:primaryType = 'RssItem' ");
-		clause.append("AND rssi:syncId='" + syncId +"'");
+		if(map != null && !map.isEmpty()) {
+			int index = 0;
+			for(HashMap.Entry<List<String>, List<String>> entry : map.entrySet()) {
+				if(index == 0) {
+					clause.append("AND rssi:syncId IN ('" + entry.getKey().get(0) + "'");	
+				}else {
+					clause.append(",'" + entry.getKey().get(0) + "'");
+				}
+				index++;
+			}
+			clause.append(")");
+		}
+        clause.append("ORDER BY rssi:pubDate DESC");
 
 		String filteredRequest = NuxeoQueryFilter.addPublicationFilter(NuxeoQueryFilterContext.CONTEXT_LIVE, clause.toString());
 		

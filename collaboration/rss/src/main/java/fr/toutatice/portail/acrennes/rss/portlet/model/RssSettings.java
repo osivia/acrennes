@@ -35,16 +35,16 @@ public class RssSettings {
     private List<String> feeds;
     
     /** Map feed --> right(s). */
-    private Map<String, List<String>> mapFeedsDisplay;
+    private Containers containersDisplays;
 
     /** Map feed --> right(s). */
-    private Map<String, List<String>> mapFeeds;
+    private Map<List<String>, List<String>> mapFeeds;
     
     /** title. */
     private String title;
     
-    /** title. */
-    private Feed Feed;
+    /** feed. */
+    private String flux;
     
     /**
      * Constructor.
@@ -85,28 +85,12 @@ public class RssSettings {
 		this.rights = rights;
 	}
 
-	public Map<String, List<String>> getMapFeeds() {
-		return mapFeeds;
-	}
-
-	public void setMapFeeds(Map<String, List<String>> mapFeeds) {
-		this.mapFeeds = mapFeeds;
-	}
-
 	public String getTitle() {
 		return title;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Feed getFeed() {
-		return Feed;
-	}
-
-	public void setFeed(Feed feed) {
-		Feed = feed;
 	}
 
 	public List<String> getRightsDisplay() {
@@ -117,20 +101,36 @@ public class RssSettings {
 		this.rightsDisplay = rightsDisplay;
 	}
 
-	public Map<String, List<String>> getMapFeedsDisplay() {
-		return mapFeedsDisplay;
-	}
-
-	public void setMapFeedsDisplay(Map<String, List<String>> mapFeedsDisplay) {
-		this.mapFeedsDisplay = mapFeedsDisplay;
-	}
-
 	public List<String> getFeeds() {
 		return feeds;
 	}
 
 	public void setFeeds(List<String> feeds) {
 		this.feeds = feeds;
+	}
+
+	public String getFlux() {
+		return flux;
+	}
+
+	public void setFlux(String flux) {
+		this.flux = flux;
+	}
+
+	public Containers getContainersDisplays() {
+		return containersDisplays;
+	}
+
+	public void setContainersDisplays(Containers containersDisplays) {
+		this.containersDisplays = containersDisplays;
+	}
+
+	public Map<List<String>, List<String>> getMapFeeds() {
+		return mapFeeds;
+	}
+
+	public void setMapFeeds(Map<List<String>, List<String>> mapFeeds) {
+		this.mapFeeds = mapFeeds;
 	}
 
 }

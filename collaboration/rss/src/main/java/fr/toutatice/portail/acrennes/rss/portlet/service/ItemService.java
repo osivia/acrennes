@@ -27,8 +27,9 @@ public interface ItemService {
      * @param portalControllerContext portal controller context
      * @return List<ContainerRssModel>
      * @throws PortletException
+     * @throws IOException 
      */
-	List<ItemRssModel> getListItem(PortalControllerContext portalControllerContext) throws PortletException;
+	List<ItemRssModel> getListItem(PortalControllerContext portalControllerContext) throws PortletException, IOException;
 	
     /**
      * Get portlet settings.
@@ -72,7 +73,7 @@ public interface ItemService {
      * 
      * @param portalControllerContext portal controller context
      * @param settings portlet settings
-     * @param id Id 
+     * @param id Id
      * @throws PortletException
      */
     void delFeeds(PortalControllerContext portalControllerContext, RssSettings settings, String id) throws PortletException;
@@ -85,4 +86,5 @@ public interface ItemService {
      * @throws PortletException
      */
     void mod(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
+
 }

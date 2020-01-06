@@ -82,7 +82,7 @@ public class AdminPlayerRssController {
 		response.setWindowState(WindowState.NORMAL);
 		response.setPortletMode(PortletMode.VIEW);
 	}
-
+	
 	/**
 	 * Delete feed
 	 * 
@@ -93,7 +93,7 @@ public class AdminPlayerRssController {
 	 * @throws PortletException
 	 * @throws IOException
 	 */
-	@ActionMapping("del")
+	@ActionMapping(value = "del")
 	public void del(ActionRequest request, ActionResponse response, @RequestParam String id,
 			@ModelAttribute("form") RssSettings form, SessionStatus status) throws PortletException, IOException {
 

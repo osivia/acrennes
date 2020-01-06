@@ -9,14 +9,13 @@
     <ul class="list-unstyled">
 		<c:forEach var="item" items="${items}" varStatus="status">
 			<li>
-				<p>
-					<a target="_blank" href="${item.link}">${item.title}</a>
- 					<c:set var="lastDate"><fmt:formatDate value="${item.date}"  type="date" dateStyle="SHORT"/></c:set>
- 
-					<span class="date">(${lastDate})</span>
-					<br>
-					${item.description}
-				</p>
+				<div>
+					<a target="_blank" href="${item.link}">${item.title}
+ 						<c:set var="lastDate"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="SHORT"/></c:set>
+ 						<span class="date">(${lastDate})</span>
+					</a>
+					<div style="line-height: 13px;min-height: 20px;display: inline-block;max-height: 38px;overflow: hidden;font-family: Helvetica,Arial,sans-serif;">${item.description}</div>
+				</div>
 			</li>
 		</c:forEach>
 	</ul>

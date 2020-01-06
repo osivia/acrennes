@@ -11,7 +11,7 @@
 	<portlet:param name="admin" value="container" />
 </portlet:renderURL>
 
-<form:form action="${add}" method="post" modelAttribute="form" style="height:300px;">
+<form:form action="${add}" method="post" modelAttribute="form" style="height:400px;">
 	
 	<div class="form-group">
 
@@ -27,8 +27,8 @@
 			
 			<div class="form-group">
 				<form:label path="feeds"><op:translate key="LABEL_FEED" /></form:label>
-				<form:select cssClass="select2 select2-default" path="feeds"
-					data-placeholder="${feedTitle}" id="id_label_single">
+				<form:select cssClass="select2 select2-default" path="flux"
+					data-placeholder="${feedTitle}">
 					<c:forEach var="container" items="${form.containers.containers}">
 						<optgroup label="${container.title}">
 							<c:forEach var="feed" items="${container.feeds}">
