@@ -20,14 +20,28 @@
         <p:region regionName="top"/>
 
         <div class="row">
-            <div class="col-md">
-                <p:region regionName="col-1"/>
+            <div class="col-md-8">
+                <p:region regionName="col-1-2-top"/>
+
+                <div class="row">
+                    <div class="col-md">
+                        <p:region regionName="col-1"/>
+                    </div>
+
+                    <div class="col-md">
+                        <p:region regionName="col-2"/>
+                    </div>
+                </div>
+
+                <p:region regionName="col-1-2-bottom"/>
             </div>
 
             <div class="col-md">
-                <p:region regionName="col-2"/>
+                <p:region regionName="col-3"/>
             </div>
         </div>
+
+        <p:region regionName="bottom"/>
     </div>
 </main>
 
