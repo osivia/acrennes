@@ -19,9 +19,9 @@
 <form:form action="${saveProperties}" method="post"
 	modelAttribute="form" cssClass="form-horizontal" role="form">
 
-	<div class="form-group">
+	<div class="container">
 		<div class="row">
-			<div class="col-sm-3 col-lg-3">
+			<div class="col-sm-6 col-lg-6">
 				<form:label path="nbItems"><op:translate key="NB_ITEMS" /></form:label>
 			</div>
 			<div class="col-sm-6 col-lg-6">
@@ -31,7 +31,7 @@
 		</div>
 	</div>
 
-	<div class="form-group">
+	<div class="container">
 		<div class="row">
 			<div class="col-sm-3 col-lg-3">
 				<form:label path="viewRss"><op:translate key="DISPLAY_MODE" /></form:label><br />
@@ -43,7 +43,7 @@
 		</div>
 	</div>
 
-	<div class="form-group">
+	<div class="container">
 		<table class="table table-condensed table-hover">
 			<c:if test="${empty form.mapFeeds}">
 				<span><op:translate key="LIST_FEED_NO_RESULT" /></span>
@@ -119,9 +119,10 @@
 	</div>
 
 	<div class="form-group">
-		<input type="submit" name="saveProperties" value="Valider"
-			class="btn btn-primary">
 		<!-- Cancel -->
 		<button type="button" class="btn btn-default" onclick="closeFancybox()"><op:translate key="CANCEL" /></button>
+		<!-- Validate -->
+		<input type="submit" name="saveProperties" value="Valider"
+			class="btn btn-primary">
 	</div>
 </form:form>

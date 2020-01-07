@@ -23,7 +23,7 @@ import fr.toutatice.portail.cms.nuxeo.api.CMSPortlet;
 import fr.toutatice.portail.cms.nuxeo.api.services.dao.DocumentDAO;
 
 @Configuration
-@ComponentScan(basePackages={"org.osivia.services.rss.templateRss.portlet", "org.osivia.services.rss.common"})
+@ComponentScan(basePackages={"fr.toutatice.portail.acrennes.rss.portlet"})
 public class PlayerRssConfiguration extends CMSPortlet implements PortletConfigAware {
 
     /** Application context. */

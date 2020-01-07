@@ -74,12 +74,12 @@ public class ViewPlayerRssController {
     public String view(RenderRequest request, RenderResponse response, @ModelAttribute("settings") RssSettings settings)
             throws PortletException {
 		
-		String view = "viewListe";
+		String view = "view-liste";
 		if (settings.getViewRss() != null && !settings.getViewRss().isEmpty()) {
 			if(settings.getViewRss().equalsIgnoreCase("liste")) {
-				view = "viewListe";
+				view = "view-liste";
 			} else {
-				view = "viewSlider";			
+				view = "view-slider";			
 			}			
 		}
 
