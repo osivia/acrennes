@@ -14,7 +14,7 @@
  						<c:set var="lastDate"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="SHORT"/></c:set>
  						<span class="date">(${lastDate})</span>
 					</a>
-					<div style="line-height: 13px;min-height: 20px;display: inline-block;max-height: 38px;overflow: hidden;font-family: Helvetica,Arial,sans-serif;">${item.description}</div>
+					<div class="liste-rss">${item.description}</div>
 				</div>
 			</li>
 		</c:forEach>

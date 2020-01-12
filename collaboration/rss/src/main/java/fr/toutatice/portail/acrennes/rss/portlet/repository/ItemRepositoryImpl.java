@@ -14,6 +14,9 @@ import org.nuxeo.ecm.automation.client.model.Documents;
 import org.nuxeo.ecm.automation.client.model.PropertyList;
 import org.nuxeo.ecm.automation.client.model.PropertyMap;
 import org.osivia.portal.api.context.PortalControllerContext;
+import org.osivia.portal.api.directory.v2.DirServiceFactory;
+import org.osivia.portal.api.directory.v2.model.Group;
+import org.osivia.portal.api.directory.v2.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -42,6 +45,11 @@ public class ItemRepositoryImpl implements ItemRepository {
 	/** Application context. */
 	@Autowired
 	private ApplicationContext applicationContext;
+	
+	/**
+     * Directory group service.
+     */
+    private final GroupService groupService;	
 
 	/** FEEDS RSS */
 	String FEEDS_PROPERTY = "rssc:feeds";
@@ -59,6 +67,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 	 */
 	public ItemRepositoryImpl() {
 		super();
+		this.groupService = DirServiceFactory.getService(GroupService.class);
 	}
 
 	public List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems)
@@ -172,7 +181,17 @@ public class ItemRepositoryImpl implements ItemRepository {
 			listContainer.add(container);
 			listContainers.setContainers(listContainer);
 		}
+	}
+	
+	@Override
+	public List<Group> searchGroups(PortalControllerContext portalControllerContext, String filter)
+			throws PortletException {
 
+        // Groups
+        Group criteria = this.groupService.getEmptyGroup();
+        criteria.setCn(filter);
+        List<Group> groups = this.groupService.search(criteria);
+        return this.groupService.search(criteria);
 	}
 
 }

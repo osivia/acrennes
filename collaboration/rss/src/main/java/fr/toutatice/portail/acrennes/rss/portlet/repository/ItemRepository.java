@@ -2,12 +2,11 @@ package fr.toutatice.portail.acrennes.rss.portlet.repository;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.PortletException;
 
-import org.nuxeo.ecm.automation.client.model.Document;
 import org.osivia.portal.api.context.PortalControllerContext;
+import org.osivia.portal.api.directory.v2.model.Group;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
@@ -57,4 +56,13 @@ public interface ItemRepository {
 
 	List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems)
 			throws PortletException;
+	
+    /**
+     * Search Group
+     * @param PortalControllerContext
+     * @param filter
+     * 
+     * @throws PortletException
+     */
+    List<Group> searchGroups(PortalControllerContext portalControllerContext, String filter) throws PortletException ;
 }

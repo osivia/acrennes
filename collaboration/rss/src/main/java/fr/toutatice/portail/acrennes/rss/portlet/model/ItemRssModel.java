@@ -1,5 +1,6 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
+import java.io.File;
 import java.util.Date;
 
 public class ItemRssModel {
@@ -15,9 +16,10 @@ public class ItemRssModel {
     public String enclosure;
     public String sourceRss;
     public String path;
+    public File file;
 
     public ItemRssModel(String title, String link, String description, String author, Date pubDate, String guid, String idConteneur,
-    		String category, String enclosure, String sourceRss) {
+    		String category, String enclosure, String sourceRss, File file) {
         this.idConteneur = idConteneur;
     	this.title = title;
         this.link = link;
@@ -28,6 +30,7 @@ public class ItemRssModel {
         this.category = category;
         this.enclosure = enclosure;
         this.sourceRss = sourceRss;
+        this.file = file;
     }
 
     public ItemRssModel() {
@@ -151,6 +154,14 @@ public class ItemRssModel {
 
 	public void setPubDate(Date pubDate) {
 		this.pubDate = pubDate;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}	
 	
 }

@@ -12,9 +12,6 @@
 <portlet:renderURL var="add">
 	<portlet:param name="add" value="feed" />
 </portlet:renderURL>
-<portlet:renderURL var="cancel">
-	<portlet:param name="view" value="player" />
-</portlet:renderURL>
 
 <form:form action="${saveProperties}" method="post"
 	modelAttribute="form" cssClass="form-horizontal" role="form">

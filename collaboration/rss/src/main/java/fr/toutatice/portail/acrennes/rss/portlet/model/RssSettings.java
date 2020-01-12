@@ -1,5 +1,6 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,9 @@ public class RssSettings {
     
     /** List users rights. */
     private List<String> rightsDisplay;    
+    
+    /** List personn rights. */
+    private List<String> rightsPersonn;
 
     /** List Feeds.*/
     private List<String> feeds;
@@ -46,7 +50,16 @@ public class RssSettings {
     /** feed. */
     private String flux;
     
-    /**
+    /** indicator for active button  . */
+    private int ind;  
+    
+    /** partner . */
+    private String partner;
+    
+    /** Liste partner. */
+    private ArrayList<Boolean> partners;
+    
+	/**
      * Constructor.
      */
     public RssSettings() {
@@ -133,4 +146,35 @@ public class RssSettings {
 		this.mapFeeds = mapFeeds;
 	}
 
+	public int getInd() {
+		return ind;
+	}
+
+	public void setInd(int ind) {
+		this.ind = ind;
+	}
+
+	public String getPartner() {
+		return partner;
+	}
+
+	public void setPartner(String partner) {
+		this.partner = partner;
+	}
+
+	public ArrayList<Boolean> getPartners() {
+		return partners;
+	}
+
+	public void setPartners(ArrayList<Boolean> partners) {
+		this.partners = partners;
+	}
+
+	public List<String> getRightsPersonn() {
+		return rightsPersonn;
+	}
+
+	public void setRightsPersonn(List<String> rightsPersonn) {
+		this.rightsPersonn = rightsPersonn;
+	}
 }

@@ -9,6 +9,7 @@ import org.osivia.portal.api.context.PortalControllerContext;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
 import fr.toutatice.portail.acrennes.rss.portlet.model.RssSettings;
+import net.sf.json.JSONObject;
 
 /**
  * Item RSS service interface
@@ -87,4 +88,26 @@ public interface ItemService {
      */
     void mod(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
 
+    /**
+     * Search Groups
+     * 
+     * @param portalControllerContext portal controller context
+     * @param filter
+     * @param page
+     * @throws PortletException
+     */
+    JSONObject searchGroups(PortalControllerContext portalControllerContext, String filter, int page) throws PortletException;
+    
+    /**
+     * get List Item.
+     *
+     * @param portalControllerContext portal controller context
+     * @param index int 
+     * @param partner String 
+     * @return List<ContainerRssModel>
+     * @throws PortletException
+     * @throws IOException 
+     */
+    void viewPart(PortalControllerContext portalControllerContext, int index, String part)  throws PortletException;
+		
 }
