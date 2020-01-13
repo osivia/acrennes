@@ -10,57 +10,60 @@
 <portlet:renderURL var="cancelUrl">
 	<portlet:param name="admin" value="container" />
 </portlet:renderURL>
+<portlet:resourceURL id="loadGroup" var="loadUrl" />
 
-<form:form action="${add}" method="post" modelAttribute="form" style="height:300px;">
-	
-	<div class="form-group">
-
-		<c:set var="feedTitle">
-			<op:translate key="FEED_PLACEHOLDER" />
-		</c:set>
-		<c:set var="rigthTitle">
-			<op:translate key="RIGHTS_PLACEHOLDER" />
-		</c:set>
+<div class="rss">
+	<form:form action="${add}" method="post" modelAttribute="form">
+			
+		<div class="form-group">
 		
-		<fieldset>
-			<legend><op:translate key="ADD" /></legend>
+			<c:set var="feedTitle">
+				<op:translate key="FEED_PLACEHOLDER" />
+			</c:set>
+			<c:set var="rigthTitle">
+				<op:translate key="RIGHTS_PLACEHOLDER" />
+			</c:set>
 			
-			<div class="form-group">
-				<form:label path="feeds"><op:translate key="LABEL_FEED" /></form:label>
-				<form:select cssClass="select2 select2-default" path="feeds"
-					data-placeholder="${feedTitle}" id="id_label_single">
-					<c:forEach var="container" items="${form.containers.containers}">
-						<optgroup label="${container.title}">
-							<c:forEach var="feed" items="${container.feeds}">
-								<form:option value="${feed.id}">${feed.title}</form:option>
-							</c:forEach>
-						</optgroup>
-					</c:forEach>
-				</form:select>
-			</div>
-			
-			<div class="form-group">
-				<form:label path="feeds">
-					<op:translate key="LABEL_RIGHT" />
-				</form:label>
-				<form:select cssClass="select2 select2-default" path="rights"
-					data-placeholder="${rigthTitle}" multiple="multiple">
-					<c:forEach var="right" items="${form.rightsDisplay}">
-						<form:option value="${right}">${right}</form:option>
-					</c:forEach>
-				</form:select>
-			</div>
-		</fieldset>
-	</div>
-
-	<div>
-		<!-- Cancel -->
-		<a href="${cancelUrl}" class="btn btn-default">
-		 <span><op:translate key="CANCEL" /></span>
-		</a>
-		<button type="submit" name="add" class="btn btn-primary">
-			<op:translate key="ADD_FEED" />
-		</button>
-	</div>
-
-</form:form>
+			<fieldset>
+				<legend><op:translate key="ADD" /></legend>
+				
+				<div class="form-group">
+					<form:label path="feeds"><op:translate key="LABEL_FEED" /></form:label>
+					<form:select cssClass="select2 select2-default" path="flux"
+						data-placeholder="${feedTitle}">
+						<c:forEach var="container" items="${form.containers.containers}">
+							<optgroup label="${container.title}">
+								<c:forEach var="feed" items="${container.feeds}">
+									<form:option value="${feed.id}">${feed.title}</form:option>
+								</c:forEach>
+							</optgroup>
+						</c:forEach>
+					</form:select>
+				</div>
+				
+				<div class="form-group">
+					<form:label path="feeds">
+						<op:translate key="LABEL_RIGHT" />
+					</form:label>
+					<form:select cssClass="select2 select2-default" path="rights"
+						data-placeholder="${rigthTitle}" data-url="${loadUrl}">
+						<c:forEach var="right" items="${form.rights}">
+							<form:option value="${right}">${right}</form:option>
+						</c:forEach>
+					</form:select>
+				</div>
+			</fieldset>
+		</div>
+	
+		<div>
+			<!-- Cancel -->
+			<a href="${cancelUrl}" class="btn btn-default">
+			 <span><op:translate key="CANCEL" /></span>
+			</a>
+			<button type="submit" name="add" class="btn btn-primary">
+				<op:translate key="ADD_FEED" />
+			</button>
+		</div>
+	
+	</form:form>
+</div>

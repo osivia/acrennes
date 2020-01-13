@@ -9,6 +9,7 @@ import org.osivia.portal.api.context.PortalControllerContext;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
 import fr.toutatice.portail.acrennes.rss.portlet.model.RssSettings;
+import net.sf.json.JSONObject;
 
 /**
  * Item RSS service interface
@@ -27,8 +28,9 @@ public interface ItemService {
      * @param portalControllerContext portal controller context
      * @return List<ContainerRssModel>
      * @throws PortletException
+     * @throws IOException 
      */
-	List<ItemRssModel> getListItem(PortalControllerContext portalControllerContext) throws PortletException;
+	List<ItemRssModel> getListItem(PortalControllerContext portalControllerContext) throws PortletException, IOException;
 	
     /**
      * Get portlet settings.
@@ -72,7 +74,7 @@ public interface ItemService {
      * 
      * @param portalControllerContext portal controller context
      * @param settings portlet settings
-     * @param id Id 
+     * @param id Id
      * @throws PortletException
      */
     void delFeeds(PortalControllerContext portalControllerContext, RssSettings settings, String id) throws PortletException;
@@ -85,4 +87,27 @@ public interface ItemService {
      * @throws PortletException
      */
     void mod(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
+
+    /**
+     * Search Groups
+     * 
+     * @param portalControllerContext portal controller context
+     * @param filter
+     * @param page
+     * @throws PortletException
+     */
+    JSONObject searchGroups(PortalControllerContext portalControllerContext, String filter, int page) throws PortletException;
+    
+    /**
+     * get List Item.
+     *
+     * @param portalControllerContext portal controller context
+     * @param index int 
+     * @param partner String 
+     * @return List<ContainerRssModel>
+     * @throws PortletException
+     * @throws IOException 
+     */
+    void viewPart(PortalControllerContext portalControllerContext, int index, String part)  throws PortletException;
+		
 }

@@ -1,0 +1,71 @@
+
+
+.rss{
+	form{
+		min-height:400px;
+	}	}
+	
+$navy:    #2A3F52 !default;
+
+$colors: (
+  "navy": $navy
+);
+
+$theme-colors: (
+  "navy": $navy
+);
+
+@import "../osivia/variables";
+@import "../bootstrap/buttons";	
+
+.btn-slider{
+	border-radius: 0;
+	font-size: 13px;
+	text-align:left;
+}
+
+.btn-style{
+	margin-top:0 !important;
+	border-top:0 !important;
+}
+
+.img-slider {
+	min-width: 100%;
+	min-height: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	object-fit:cover;	
+	margin:0;
+	padding:0;
+	height: 200px;
+}
+
+.row-slider{
+	height: 200px;
+}
+
+.text-slider{
+/*	border: 1px solid $navy; 
+*/	color: $navy;
+	font-size: 13px;
+	max-height: 100%;
+    overflow: hidden;
+	text-align:justify;
+	padding-right:25px !important;
+}
+
+.liste-rss{
+	line-height: 13px;
+	min-height: 20px;
+	display: inline-block;
+	max-height: 38px;
+	overflow: hidden;
+	font-family: Helvetica,Arial,sans-serif;
+}
+
+.bx-wrapper .bx-viewport{
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}

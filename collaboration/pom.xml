@@ -24,4 +24,17 @@
         <module>ear</module>
     </modules>
 
+
+    <dependencies>
+
+        <dependency>
+            <groupId>fr.toutatice.acrennes.portail.directory</groupId>
+            <artifactId>toutatice-portail-acrennes-directory-interfaces</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
 </project>

@@ -1,6 +1,8 @@
 package fr.toutatice.portail.acrennes.rss.portlet.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -93,7 +95,10 @@ public class EditFeedRssController {
         // Portal controller context
         PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
         RssSettings settings = this.service.getList(portalControllerContext);
-        settings.setTitle(id);
+        id = id.replace("[", "");
+        id = id.replace("]", "");
+        List<String> list = Arrays.asList(id.split(","));
+        settings.setFeeds(list);
         return settings;
     }
 }

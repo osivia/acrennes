@@ -4,6 +4,26 @@
 <%@ page contentType="text/html" isELIgnored="false" %>
 
 
-<div class="container-fluid py-4">
-    <p:region regionName="maximized"/>
-</div>
+<html>
+
+<head>
+    <%@ include file="../includes/head.jspf" %>
+</head>
+
+
+<body>
+
+<%@ include file="../includes/header.jspf" %>
+
+<main>
+    <div class="container-fluid">
+        <p:region regionName="maximized"/>
+
+    </div>
+</main>
+
+<%@ include file="../includes/footer.jspf"%>
+
+</body>
+
+</html>

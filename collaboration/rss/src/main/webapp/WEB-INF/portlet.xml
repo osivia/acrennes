@@ -7,7 +7,7 @@
         version="2.0">
 
     <portlet>
-        <portlet-name>toutatice-portail-rss-player</portlet-name>
+        <portlet-name>toutatice-rss-player</portlet-name>
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
 
         <init-param>

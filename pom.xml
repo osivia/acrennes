@@ -18,13 +18,15 @@
 
         <!-- Directory -->
         <osivia-directory.version>4.9-SNAPSHOT</osivia-directory.version>
-        <toutatice-directory.version>4.7.21</toutatice-directory.version>
 
         <!--Collaboration-->
         <collaboration.version>4.9-SNAPSHOT</collaboration.version>
 
         <!-- Identity SSO -->
         <identity-sso.version>3.0.9</identity-sso.version>
+
+        <!-- Spring framework LDAP -->
+        <springframework-ldap.version>2.1.0.RELEASE</springframework-ldap.version>
 
         <!-- Java Melody -->
         <java-melody.version>1.2</java-melody.version>
@@ -34,6 +36,7 @@
     <modules>
         <module>charte</module>
         <module>customizer</module>
+        <module>directory</module>
         <module>collaboration</module>
 
         <module>distribution</module>
@@ -89,6 +92,19 @@
                     <version>2.5.3</version>
                     <configuration>
                         <releaseProfiles>unpack,pack</releaseProfiles>
+                    </configuration>
+                </plugin>
+
+                <!-- WAR -->
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.2.3</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
                     </configuration>
                 </plugin>
 

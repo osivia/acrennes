@@ -12,16 +12,13 @@
 <portlet:renderURL var="add">
 	<portlet:param name="add" value="feed" />
 </portlet:renderURL>
-<portlet:renderURL var="cancel">
-	<portlet:param name="view" value="player" />
-</portlet:renderURL>
 
 <form:form action="${saveProperties}" method="post"
 	modelAttribute="form" cssClass="form-horizontal" role="form">
 
-	<div class="form-group">
+	<div class="container">
 		<div class="row">
-			<div class="col-sm-3 col-lg-3">
+			<div class="col-sm-6 col-lg-6">
 				<form:label path="nbItems"><op:translate key="NB_ITEMS" /></form:label>
 			</div>
 			<div class="col-sm-6 col-lg-6">
@@ -31,10 +28,10 @@
 		</div>
 	</div>
 
-	<div class="form-group">
+	<div class="container">
 		<div class="row">
 			<div class="col-sm-3 col-lg-3">
-				<form:label path="nbItems"><op:translate key="DISPLAY_MODE" /></form:label><br />
+				<form:label path="viewRss"><op:translate key="DISPLAY_MODE" /></form:label><br />
 			</div>
 			<div class="col-sm-4 col-lg-4">
 				<form:radiobutton path="viewRss" value="liste" /><op:translate key="LIST_RSS" />
@@ -43,7 +40,7 @@
 		</div>
 	</div>
 
-	<div class="form-group">
+	<div class="container">
 		<table class="table table-condensed table-hover">
 			<c:if test="${empty form.mapFeeds}">
 				<span><op:translate key="LIST_FEED_NO_RESULT" /></span>
@@ -59,11 +56,19 @@
 				</thead>
 
 
-				<c:forEach var="feed" items="${form.mapFeeds}">
+				<c:forEach var="feeds" items="${form.mapFeeds}">
 					<tr>
-						<td>${feed.key}</td>
+						<c:forEach var="flux" items="${feeds.key}" varStatus="status">
+							<c:if test="${status.index gt 0}">
+								<!-- Display Name -->
+								<td>${flux}</td>
+							</c:if>
+							<c:if test="${status.index lt 1}">
+								<c:set var="syncId" value="${flux}" />
+							</c:if>
+						</c:forEach>
 						<td>
-							<c:forEach var="right" items="${feed.value}" varStatus="status">
+							<c:forEach var="right" items="${feeds.value}" varStatus="status">
 								<c:if test="${status.index gt 0}">
 									<span>,${right}</span>
 								</c:if>
@@ -75,10 +80,10 @@
 						<td>
 							<portlet:renderURL var="editFeed">
 								<portlet:param name="edit" value="feed" />
-								<portlet:param name="id" value="${feed.key}" />
+								<portlet:param name="id" value="${feeds.key}" />
 							</portlet:renderURL>
 							<portlet:actionURL name="del" var="del" copyCurrentRenderParameters="true">
-								<portlet:param name="id" value="${feed.key}" />
+								<portlet:param name="id" value="${syncId}" />
 							</portlet:actionURL>	
 							<c:set var="delTitle">
 								<op:translate key="DEL_FEED" />
@@ -86,6 +91,7 @@
 							<a href="${del}" class="btn btn-default" title="${delTitle}"> 
 								<i class="glyphicons glyphicons-remove"></i> 
 							</a>
+							
 							<c:set var="editTitle">
 								<op:translate key="MOD_FEED" />
 							</c:set> 
@@ -110,11 +116,10 @@
 	</div>
 
 	<div class="form-group">
+		<!-- Cancel -->
+		<button type="button" class="btn btn-default" onclick="closeFancybox()"><op:translate key="CANCEL" /></button>
+		<!-- Validate -->
 		<input type="submit" name="saveProperties" value="Valider"
 			class="btn btn-primary">
-		<!-- Cancel -->
-		<a href="${cancelFeed}" class="btn btn-default"> <span><op:translate
-					key="CANCEL" /></span>
-		</a>
 	</div>
 </form:form>

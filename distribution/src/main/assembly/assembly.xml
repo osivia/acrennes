@@ -18,13 +18,11 @@
                 <!-- Toutatice -->
                 <include>${project.groupId}:toutatice-portail-acrennes-charte:war:${project.version}</include>
                 <include>${project.groupId}:toutatice-portail-acrennes-customizer:war:${project.version}</include>
+                <include>${project.groupId}.directory:toutatice-portail-acrennes-directory-packaging:war:${project.version}</include>
                 <include>${project.groupId}.collaboration:toutatice-portail-acrennes-collaboration-ear:ear:${project.version}</include>
 
                 <!-- Toutatice CMS -->
                 <include>toutatice-portail.cms:toutatice-portail-cms-nuxeo-web:war:${toutatice.version}</include>
-
-                <!-- Directory -->
-                <include>outils.ldap:toutatice-annuaire-v2:war:${toutatice-directory.version}</include>
             </includes>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
@@ -35,8 +33,9 @@
             <unpack>false</unpack>
             <scope>runtime</scope>
             <includes>
+                <!--Toutatice-->
+                <include>${project.groupId}.directory:toutatice-portail-acrennes-directory-interfaces:jar:${project.version}</include>
                 <!-- Directory -->
-                <include>outils.ldap:toutatice-annuaire-v2-interfaces:jar:${toutatice-directory.version}</include>
                 <include>org.osivia.services.directory.socle:osivia-services-directory-socle-interfaces:jar:${osivia-directory.version}</include>
                 <!-- Identity SSO -->
                 <include>org.osivia.portal.identity:osivia-portal-identity-sso-lib:jar:${identity-sso.version}</include>

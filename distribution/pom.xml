@@ -32,6 +32,18 @@
             <type>war</type>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}.directory</groupId>
+            <artifactId>toutatice-portail-acrennes-directory-interfaces</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}.directory</groupId>
+            <artifactId>toutatice-portail-acrennes-directory-packaging</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}.collaboration</groupId>
             <artifactId>toutatice-portail-acrennes-collaboration-ear</artifactId>
             <version>${project.version}</version>
@@ -51,17 +63,6 @@
             <groupId>org.osivia.services.directory.socle</groupId>
             <artifactId>osivia-services-directory-socle-interfaces</artifactId>
             <version>${osivia-directory.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>outils.ldap</groupId>
-            <artifactId>toutatice-annuaire-v2-interfaces</artifactId>
-            <version>${toutatice-directory.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>outils.ldap</groupId>
-            <artifactId>toutatice-annuaire-v2</artifactId>
-            <version>${toutatice-directory.version}</version>
-            <type>war</type>
         </dependency>
 
         <!-- Identity SSO -->

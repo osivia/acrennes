@@ -1,0 +1,1 @@
+<p class="text-danger">Une erreur est survenue.</p>

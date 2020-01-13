@@ -1,13 +1,12 @@
 package fr.toutatice.portail.acrennes.rss.portlet.repository;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.PortletException;
 
-import org.nuxeo.ecm.automation.client.model.Document;
-import org.nuxeo.ecm.automation.client.model.PaginableDocuments;
 import org.osivia.portal.api.context.PortalControllerContext;
+import org.osivia.portal.api.directory.v2.model.Group;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
@@ -47,59 +46,6 @@ public interface ItemRepository {
     /** Select2 results page size. */
     int SELECT2_RESULTS_PAGE_SIZE = 10;	
    
-   /**
-    * Create Item RSS.
-    *
-    * @param portalControllerContext portal controller context
-    * @param model
-    * @throws PortletException
-    */
-   void creatItem(PortalControllerContext portalControllerContext, ItemRssModel model) throws PortletException;
-
-   /**
-    * Create Item RSS.
-    *
-    * @param portalControllerContext portal controller context
-    * @param items
-    * @throws PortletException
-    */
-   void creatItems(PortalControllerContext portalControllerContext, List<ItemRssModel> items) throws PortletException;   
-   
-   /**
-    * remove Items.
-    *
-    * @param portalControllerContext portal controller context
-    * @param items 
-    * @throws PortletException
-    */
-   void removeItems(PortalControllerContext portalControllerContext, List<ItemRssModel> items) throws PortletException;
-   
-   /**
-    * get feed list RSS.
-    *
-    * @param portalControllerContext portal controller context
-    * @throws PortletException
-    */
-   List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, String syncid) throws PortletException;   
-   
-   /**
-    * Search documents with criteria
-    * @param portalControllerContext
-    * @param filter
-    * @param page
-    * @return PaginableDocuments
-    */
-   PaginableDocuments searchDocuments(PortalControllerContext portalControllerContext, String basePath, String filter, int page) throws PortletException;
-   
-   /**
-    * Get document properties.
-    *
-    * @param document Nuxeo document
-    * @return properties
-    * @throws PortletException
-    */
-   Map<String, String> getDocumentProperties(PortalControllerContext portalControllerContext, Document document) throws PortletException;
-   
 	/**
 	 * get feeds list RSS.
 	 *
@@ -107,4 +53,16 @@ public interface ItemRepository {
 	 * @throws PortletException
 	 */
 	Containers getListFeedRss(PortalControllerContext portalControllerContext) throws PortletException;
+
+	List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems)
+			throws PortletException;
+	
+    /**
+     * Search Group
+     * @param PortalControllerContext
+     * @param filter
+     * 
+     * @throws PortletException
+     */
+    List<Group> searchGroups(PortalControllerContext portalControllerContext, String filter) throws PortletException ;
 }

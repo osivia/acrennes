@@ -11,7 +11,7 @@
 	<portlet:param name="admin" value="container" />
 </portlet:renderURL>
 
-<form:form action="${modif}" method="post" modelAttribute="form">
+<form:form action="${modif}" method="post" modelAttribute="form" style="height:400px;">
 	
 	<div class="form-group">
 
@@ -24,16 +24,23 @@
 		<fieldset>
 			<legend align="left">Edition du flux</legend>
 			<div class="row">
-				<div class="col-sm-4 col-lg-4"><span>${form.title}</span></div>
 				<div class="col-sm-4 col-lg-4">
-					<label for="id_label_single"> <form:select
-							cssClass="select2 select2-default" path="rights"
-							data-placeholder="${rigthTitle}" multiple="multiple">
-							<c:forEach var="right" items="${form.rights}">
-								<form:option value="${right}">${right}</form:option>
-							</c:forEach>
-						</form:select>
-					</label>
+					<form:label path="rights">
+						<c:forEach  var="feed" items="${form.feeds}" varStatus="status">
+							<c:if test="${status.index gt 0}">
+								<!-- Display Name -->
+								<td>${feed}</td>
+							</c:if>
+						</c:forEach>
+					</form:label>
+				</div>
+				<div class="col-sm-8 col-lg-8">
+				<form:select cssClass="select2 select2-default" path="rights"
+						data-placeholder="${rigthTitle}" multiple="multiple">
+					<c:forEach var="right" items="${form.rightsDisplay}">
+						<form:option value="${right}">${right}</form:option>
+					</c:forEach>
+				</form:select>
 				</div>
 			</div>
 		</fieldset>

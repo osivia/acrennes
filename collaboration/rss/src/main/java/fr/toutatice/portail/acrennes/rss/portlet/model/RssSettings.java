@@ -1,5 +1,6 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,23 +31,35 @@ public class RssSettings {
     
     /** List users rights. */
     private List<String> rightsDisplay;    
+    
+    /** List personn rights. */
+    private List<String> rightsPersonn;
 
     /** List Feeds.*/
     private List<String> feeds;
     
     /** Map feed --> right(s). */
-    private Map<String, List<String>> mapFeedsDisplay;
+    private Containers containersDisplays;
 
     /** Map feed --> right(s). */
-    private Map<String, List<String>> mapFeeds;
+    private Map<List<String>, List<String>> mapFeeds;
     
     /** title. */
     private String title;
     
-    /** title. */
-    private Feed Feed;
+    /** feed. */
+    private String flux;
     
-    /**
+    /** indicator for active button  . */
+    private int ind;  
+    
+    /** partner . */
+    private String partner;
+    
+    /** Liste partner. */
+    private ArrayList<Boolean> partners;
+    
+	/**
      * Constructor.
      */
     public RssSettings() {
@@ -85,28 +98,12 @@ public class RssSettings {
 		this.rights = rights;
 	}
 
-	public Map<String, List<String>> getMapFeeds() {
-		return mapFeeds;
-	}
-
-	public void setMapFeeds(Map<String, List<String>> mapFeeds) {
-		this.mapFeeds = mapFeeds;
-	}
-
 	public String getTitle() {
 		return title;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Feed getFeed() {
-		return Feed;
-	}
-
-	public void setFeed(Feed feed) {
-		Feed = feed;
 	}
 
 	public List<String> getRightsDisplay() {
@@ -117,14 +114,6 @@ public class RssSettings {
 		this.rightsDisplay = rightsDisplay;
 	}
 
-	public Map<String, List<String>> getMapFeedsDisplay() {
-		return mapFeedsDisplay;
-	}
-
-	public void setMapFeedsDisplay(Map<String, List<String>> mapFeedsDisplay) {
-		this.mapFeedsDisplay = mapFeedsDisplay;
-	}
-
 	public List<String> getFeeds() {
 		return feeds;
 	}
@@ -133,4 +122,59 @@ public class RssSettings {
 		this.feeds = feeds;
 	}
 
+	public String getFlux() {
+		return flux;
+	}
+
+	public void setFlux(String flux) {
+		this.flux = flux;
+	}
+
+	public Containers getContainersDisplays() {
+		return containersDisplays;
+	}
+
+	public void setContainersDisplays(Containers containersDisplays) {
+		this.containersDisplays = containersDisplays;
+	}
+
+	public Map<List<String>, List<String>> getMapFeeds() {
+		return mapFeeds;
+	}
+
+	public void setMapFeeds(Map<List<String>, List<String>> mapFeeds) {
+		this.mapFeeds = mapFeeds;
+	}
+
+	public int getInd() {
+		return ind;
+	}
+
+	public void setInd(int ind) {
+		this.ind = ind;
+	}
+
+	public String getPartner() {
+		return partner;
+	}
+
+	public void setPartner(String partner) {
+		this.partner = partner;
+	}
+
+	public ArrayList<Boolean> getPartners() {
+		return partners;
+	}
+
+	public void setPartners(ArrayList<Boolean> partners) {
+		this.partners = partners;
+	}
+
+	public List<String> getRightsPersonn() {
+		return rightsPersonn;
+	}
+
+	public void setRightsPersonn(List<String> rightsPersonn) {
+		this.rightsPersonn = rightsPersonn;
+	}
 }
