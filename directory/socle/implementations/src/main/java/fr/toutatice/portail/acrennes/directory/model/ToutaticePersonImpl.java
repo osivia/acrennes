@@ -1,14 +1,13 @@
 package fr.toutatice.portail.acrennes.directory.model;
 
-import fr.toutatice.portail.acrennes.directory.dao.ToutaticePersonDao;
 import org.osivia.portal.api.urls.Link;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +22,10 @@ import java.util.Objects;
 @Entry(objectClasses = "ENTPerson")
 public final class ToutaticePersonImpl implements ToutaticePerson {
 
-    @Autowired
-    private ToutaticePersonDao dao;
+    /**
+     * LDAP base.
+     */
+    private static final String LDAP_BASE = System.getProperty("ldap.base");
 
 
     /**
@@ -33,38 +34,82 @@ public final class ToutaticePersonImpl implements ToutaticePerson {
     @Id
     private Name dn;
 
+    /**
+     * CN.
+     */
     @Attribute
     private String cn;
 
+    /**
+     * SN.
+     */
     @Attribute
     private String sn;
 
+    /**
+     * Display name.
+     */
     @Attribute
     private String displayName;
 
+    /**
+     * Given name.
+     */
     @Attribute
     private String givenName;
 
+    /**
+     * Mail.
+     */
     @Attribute
     private String mail;
 
+    /**
+     * Title.
+     */
     @Attribute
     private String title;
 
+    /**
+     * UID.
+     */
     @Attribute
     private String uid;
 
+    /**
+     * Profiles.
+     */
     @Attribute(name = "EntPersonProfils")
     private List<Name> profiles;
 
+    /**
+     * Avatar link.
+     */
+    @Transient
     private Link avatar;
 
+    /**
+     * External account indicator.
+     */
+    @Transient
     private Boolean external;
 
+    /**
+     * Account creation date.
+     */
+    @Transient
     private Date creationDate;
 
+    /**
+     * Account validity date.
+     */
+    @Transient
     private Date validity;
 
+    /**
+     * Last connection date.
+     */
+    @Transient
     private Date lastConnection;
 
 
@@ -260,13 +305,18 @@ public final class ToutaticePersonImpl implements ToutaticePerson {
 
     @Override
     public Name buildBaseDn() {
-        return this.dao.getBaseDn();
+        LdapNameBuilder ldapNameBuilder = LdapNameBuilder.newInstance(LDAP_BASE);
+        ldapNameBuilder.add("ou=personnes");
+        return ldapNameBuilder.build();
     }
 
 
     @Override
     public Name buildDn(String uid) {
-        return this.dao.buildDn(uid);
+        Name baseDn = this.buildBaseDn();
+        LdapNameBuilder ldapNameBuilder = LdapNameBuilder.newInstance(baseDn);
+        ldapNameBuilder.add("uid", uid);
+        return ldapNameBuilder.build();
     }
 
 }

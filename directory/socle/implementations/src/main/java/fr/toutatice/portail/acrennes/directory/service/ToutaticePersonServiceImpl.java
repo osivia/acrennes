@@ -2,10 +2,13 @@ package fr.toutatice.portail.acrennes.directory.service;
 
 import fr.toutatice.portail.acrennes.directory.dao.ToutaticePersonDao;
 import fr.toutatice.portail.acrennes.directory.model.ToutaticePerson;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osivia.directory.v2.service.PersonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.naming.Name;
@@ -20,6 +23,10 @@ import javax.naming.Name;
 @Service
 @Primary
 public class ToutaticePersonServiceImpl extends PersonServiceImpl implements ToutaticePersonService {
+
+    /** Log. */
+    private final Log log;
+
 
     /**
      * Application context.
@@ -39,6 +46,9 @@ public class ToutaticePersonServiceImpl extends PersonServiceImpl implements Tou
      */
     public ToutaticePersonServiceImpl() {
         super();
+
+        // Log
+        this.log = LogFactory.getLog(this.getClass());
     }
 
 
@@ -50,7 +60,21 @@ public class ToutaticePersonServiceImpl extends PersonServiceImpl implements Tou
 
     @Override
     public ToutaticePerson getPerson(Name dn) {
-        return this.dao.getPerson(dn);
+        ToutaticePerson person;
+
+        try {
+            person = this.dao.getPerson(dn);
+
+            // Avatar
+            this.appendAvatar(person);
+        } catch (NameNotFoundException e) {
+            person = null;
+
+            String message = String.format("Person with DN '%s' not found.", dn);
+            this.log.warn(message);
+        }
+
+        return person;
     }
 
 

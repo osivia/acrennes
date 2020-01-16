@@ -21,15 +21,17 @@ import javax.naming.Name;
 @Primary
 public class ToutaticePersonDaoImpl extends PersonDaoImpl implements ToutaticePersonDao {
 
-    /** LDAP base. */
-    private static final String LDAP_BASE = System.getProperty("ldap.base");
-
-
     /**
      * LDAP template.
      */
     @Autowired
     private LdapTemplate template;
+
+    /**
+     * Toutatice person sample.
+     */
+    @Autowired
+    private ToutaticePerson sample;
 
 
     /**
@@ -42,24 +44,19 @@ public class ToutaticePersonDaoImpl extends PersonDaoImpl implements ToutaticePe
 
     @Override
     public ToutaticePerson getPerson(Name dn) {
-        return this.template.findByDn(dn, ToutaticePerson.class);
+        return this.template.findByDn(dn, this.sample.getClass());
     }
 
 
     @Override
     public Name getBaseDn() {
-        LdapNameBuilder ldapNameBuilder = LdapNameBuilder.newInstance(LDAP_BASE);
-        ldapNameBuilder.add("ou=personnes");
-        return ldapNameBuilder.build();
+        return this.sample.buildBaseDn();
     }
 
 
     @Override
     public Name buildDn(String uid) {
-        Name baseDn = this.getBaseDn();
-        LdapNameBuilder ldapNameBuilder = LdapNameBuilder.newInstance(baseDn);
-        ldapNameBuilder.add("uid", uid);
-        return ldapNameBuilder.build();
+        return this.sample.buildDn(uid);
     }
 
 }

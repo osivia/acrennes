@@ -30,6 +30,12 @@ public class ToutaticeGroupDaoImpl extends GroupDaoImpl implements ToutaticeGrou
     @Autowired
     private LdapTemplate template;
 
+    /**
+     * Toutatice group sample.
+     */
+    @Autowired
+    private ToutaticeGroup sample;
+
 
     /**
      * Constructor.
@@ -41,7 +47,7 @@ public class ToutaticeGroupDaoImpl extends GroupDaoImpl implements ToutaticeGrou
 
     @Override
     public ToutaticeGroup get(Name dn) {
-        return this.template.findByDn(dn, ToutaticeGroup.class);
+        return this.template.findByDn(dn, this.sample.getClass());
     }
 
 
