@@ -28,13 +28,7 @@ public class ToutaticeGroupDaoImpl extends GroupDaoImpl implements ToutaticeGrou
      * LDAP template.
      */
     @Autowired
-    protected LdapTemplate template;
-
-    /**
-     * Toutatice group sample.
-     */
-    @Autowired
-    private ToutaticeGroup sample;
+    private LdapTemplate template;
 
 
     /**

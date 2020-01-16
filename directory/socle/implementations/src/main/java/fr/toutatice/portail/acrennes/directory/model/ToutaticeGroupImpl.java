@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.naming.Name;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Toutatice group implementation.
@@ -18,8 +19,8 @@ import java.util.List;
  * @see ToutaticeGroup
  */
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Primary
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entry(objectClasses = "groupOfNames")
 public final class ToutaticeGroupImpl implements ToutaticeGroup {
 
@@ -47,6 +48,20 @@ public final class ToutaticeGroupImpl implements ToutaticeGroup {
      */
     public ToutaticeGroupImpl() {
         super();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ToutaticeGroupImpl that = (ToutaticeGroupImpl) o;
+        return cn.equals(that.cn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cn);
     }
 
 
