@@ -9,6 +9,10 @@
         <transaction>
             <trans-attribute>Required</trans-attribute>
         </transaction>
+  
+        <header-content>
+            <script type="text/javascript" src="/js/rss.js"/>
+        </header-content>
                     
     </portlet>
 
@@ -17,5 +21,7 @@
         <service-class>org.osivia.portal.api.customization.ICustomizationModulesRepository</service-class>
         <service-ref>osivia:service=CustomizationService</service-ref>
     </service>
+    
+    
 
 </portlet-app>

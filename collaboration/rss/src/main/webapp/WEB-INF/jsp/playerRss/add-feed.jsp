@@ -13,7 +13,7 @@
 <portlet:resourceURL id="loadGroup" var="loadUrl" />
 
 <div class="rss">
-	<form:form action="${add}" method="post" modelAttribute="form">
+	<form:form action="${add}" method="post" modelAttribute="form" style="height:600px;">
 			
 		<div class="form-group">
 		
@@ -45,7 +45,7 @@
 					<form:label path="feeds">
 						<op:translate key="LABEL_RIGHT" />
 					</form:label>
-					<form:select cssClass="select2 select2-default" path="rights"
+					<form:select cssClass="select2 select2-rss" path="rights"
 						data-placeholder="${rigthTitle}" data-url="${loadUrl}">
 						<c:forEach var="right" items="${form.rights}">
 							<form:option value="${right}">${right}</form:option>
@@ -55,9 +55,9 @@
 			</fieldset>
 		</div>
 	
-		<div>
+		<div class="float-right">
 			<!-- Cancel -->
-			<a href="${cancelUrl}" class="btn btn-default">
+			<a href="${cancelUrl}" class="btn btn-secondary">
 			 <span><op:translate key="CANCEL" /></span>
 			</a>
 			<button type="submit" name="add" class="btn btn-primary">

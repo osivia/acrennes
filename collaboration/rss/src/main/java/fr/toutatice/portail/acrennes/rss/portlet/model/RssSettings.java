@@ -59,6 +59,12 @@ public class RssSettings {
     /** Liste partner. */
     private ArrayList<Boolean> partners;
     
+    /** Picture for the slider buttons. */	
+    private Picture2 picture;
+    
+    /** Number of button for slider*/
+    private int numberButton;
+    
 	/**
      * Constructor.
      */
@@ -176,5 +182,21 @@ public class RssSettings {
 
 	public void setRightsPersonn(List<String> rightsPersonn) {
 		this.rightsPersonn = rightsPersonn;
+	}
+
+	public Picture2 getPicture() {
+		return picture;
+	}
+
+	public void setPicture(Picture2 picture) {
+		this.picture = picture;
+	}
+
+	public int getNumberButton() {
+		return numberButton;
+	}
+
+	public void setNumberButton(int numberButton) {
+		this.numberButton = numberButton;
 	}
 }

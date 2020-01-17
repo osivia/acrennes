@@ -10,8 +10,9 @@
 <portlet:renderURL var="cancelUrl">
 	<portlet:param name="admin" value="container" />
 </portlet:renderURL>
+<portlet:resourceURL id="loadGroup" var="loadUrl" />
 
-<form:form action="${modif}" method="post" modelAttribute="form" style="height:400px;">
+<form:form action="${modif}" method="post" modelAttribute="form" style="height:600px;">
 	
 	<div class="form-group">
 
@@ -22,11 +23,11 @@
 			<op:translate key="RIGHTS_PLACEHOLDER" />
 		</c:set>
 		<fieldset>
-			<legend align="left">Edition du flux</legend>
-			<div class="row">
-				<div class="col-sm-4 col-lg-4">
+			<legend align="left"><op:translate key="Title_Edition" /></legend>
+			<div class="row ">
+				<div class="col-sm-2 col-lg-2">
 					<form:label path="rights">
-						<c:forEach  var="feed" items="${form.feeds}" varStatus="status">
+						<c:forEach var="feed" items="${form.feeds}" varStatus="status">
 							<c:if test="${status.index gt 0}">
 								<!-- Display Name -->
 								<td>${feed}</td>
@@ -34,21 +35,21 @@
 						</c:forEach>
 					</form:label>
 				</div>
-				<div class="col-sm-8 col-lg-8">
-				<form:select cssClass="select2 select2-default" path="rights"
-						data-placeholder="${rigthTitle}" multiple="multiple">
-					<c:forEach var="right" items="${form.rightsDisplay}">
-						<form:option value="${right}">${right}</form:option>
-					</c:forEach>
-				</form:select>
+				<div class="col-sm-10 col-lg-10">
+					<form:select cssClass="select2 select2-rss" path="rights"
+						data-placeholder="${rigthTitle}" data-url="${loadUrl}">
+						<c:forEach var="right" items="${form.rights}">
+							<form:option value="${right}">${right}</form:option>
+						</c:forEach>
+					</form:select>
 				</div>
 			</div>
 		</fieldset>
 	</div>
 
-	<div>
+	<div class="float-right">
 		<!-- Cancel -->
-		<a href="${cancelUrl}" class="btn btn-default">
+		<a href="${cancelUrl}" class="btn btn-secondary">
 		 <span><op:translate key="CANCEL" /></span>
 		</a>
 		<button type="submit" name="modif" class="btn btn-primary">

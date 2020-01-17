@@ -1,6 +1,7 @@
 package fr.toutatice.portail.acrennes.rss.portlet.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,8 +13,11 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.osivia.portal.api.context.PortalControllerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,9 +27,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.RssSettings;
 import fr.toutatice.portail.acrennes.rss.portlet.service.ItemService;
+import net.sf.json.JSONObject;
 
 /**
  * Admin Template Rss controller.
@@ -101,4 +107,21 @@ public class EditFeedRssController {
         settings.setFeeds(list);
         return settings;
     }
+    
+    @ResourceMapping("loadGroup")
+    public void loadGroup(ResourceRequest request, ResourceResponse response, @RequestParam(name="filter", required=false) String filter, @RequestParam(value = "page", required = false) String page) throws PortletException, IOException {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
+
+        // Search results
+        JSONObject results = this.service.searchGroups(portalControllerContext, filter, NumberUtils.toInt(page, 1));
+
+        // Content type
+        response.setContentType("application/json");
+
+        // Content
+        PrintWriter printWriter = new PrintWriter(response.getPortletOutputStream());
+        printWriter.write(results.toString());
+        printWriter.close();
+    }    
 }

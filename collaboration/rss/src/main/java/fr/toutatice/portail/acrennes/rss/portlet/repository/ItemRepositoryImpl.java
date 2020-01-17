@@ -9,6 +9,7 @@ import java.util.List;
 import javax.portlet.PortletException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.client.model.Document;
 import org.nuxeo.ecm.automation.client.model.Documents;
 import org.nuxeo.ecm.automation.client.model.PropertyList;
@@ -16,19 +17,20 @@ import org.nuxeo.ecm.automation.client.model.PropertyMap;
 import org.osivia.portal.api.context.PortalControllerContext;
 import org.osivia.portal.api.directory.v2.DirServiceFactory;
 import org.osivia.portal.api.directory.v2.model.Group;
-import org.osivia.portal.api.directory.v2.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
+import fr.toutatice.portail.acrennes.directory.service.ToutaticeGroupService;
 import fr.toutatice.portail.acrennes.rss.portlet.command.ContainerListCommand;
 import fr.toutatice.portail.acrennes.rss.portlet.command.ItemListCommand;
 import fr.toutatice.portail.acrennes.rss.portlet.model.Container;
 import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
 import fr.toutatice.portail.acrennes.rss.portlet.model.Feed;
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
+import fr.toutatice.portail.acrennes.rss.portlet.model.Picture2;
 import fr.toutatice.portail.acrennes.rss.portlet.model.comparator.TitleItemComparator;
 import fr.toutatice.portail.cms.nuxeo.api.INuxeoCommand;
 import fr.toutatice.portail.cms.nuxeo.api.NuxeoController;
@@ -49,10 +51,12 @@ public class ItemRepositoryImpl implements ItemRepository {
 	/**
      * Directory group service.
      */
-    private final GroupService groupService;	
+    private final ToutaticeGroupService groupService;	
 
 	/** FEEDS RSS */
 	String FEEDS_PROPERTY = "rssc:feeds";
+	/** PICTURE RSS */
+	String LOGOS_PROPERTY = "rssc:logos";	
 	/** Display Name RSS */
 	String DISPLAY_NAME_PROPERTY = "displayName";
 	/** url du flux RSS */
@@ -61,16 +65,17 @@ public class ItemRepositoryImpl implements ItemRepository {
 	String ID_PROPERTY = "syncId";
 	/** Description Nuxeo document property. */
 	private static final String DESCRIPTION_PROPERTY = "dc:description";
+	
 
 	/**
 	 * Constructor.
 	 */
 	public ItemRepositoryImpl() {
 		super();
-		this.groupService = DirServiceFactory.getService(GroupService.class);
+		this.groupService = DirServiceFactory.getService(ToutaticeGroupService.class);
 	}
 
-	public List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems)
+	public List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems, String view)
 			throws PortletException {
 		// Nuxeo controller
 		NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
@@ -85,11 +90,13 @@ public class ItemRepositoryImpl implements ItemRepository {
 		int max = 1;
 		for (Document document : documents) {
 			ItemRssModel item = fillItem(document, nuxeoController);
-			items.add(item);
-			if(max >= nbItems) {
-				break;
+			if(view.contentEquals("liste") || (item.getEnclosure() != null && view.contentEquals("slider"))) {
+				items.add(item);
+				if(max >= nbItems) {
+					break;
+				}
+				max++;				
 			}
-			max++;
 		}
 
 		return items;
@@ -100,6 +107,8 @@ public class ItemRepositoryImpl implements ItemRepository {
 		String title = document.getString(TITLE_PROPERTY);
 		String link = document.getString(LINK_PROPERTY);
 		String description = document.getString(DESCRIPTION_PROPERTY);
+		
+		// TODO: mettre en place un sanitasier pour épurer le code
 		if(description != null && description.contains("<img")) {
 			if(description.contains("<a")) {
 				description = description.replaceAll("<a.*a>","");
@@ -131,7 +140,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 	/**
 	 * getList feed RSS
 	 */
-	public Containers getListFeedRss(PortalControllerContext portalControllerContext) throws PortletException {
+	public Containers getListFeedRss(PortalControllerContext portalControllerContext, Picture2 picture) throws PortletException {
 
 		// Nuxeo controller
 		NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
@@ -143,13 +152,13 @@ public class ItemRepositoryImpl implements ItemRepository {
 		Containers listContainers = this.applicationContext.getBean(Containers.class);
 
 		for (Document document : documents) {
-			fillContainers(document, nuxeoController, listContainers);
+			fillContainers(document, nuxeoController, listContainers, picture);
 		}
 
 		return listContainers;
 	}
 
-	private void fillContainers(Document document, NuxeoController nuxeoController, Containers listContainers) {
+	private void fillContainers(Document document, NuxeoController nuxeoController, Containers listContainers, Picture2 picture) {
 
 		PropertyList propertyList = (PropertyList) document.getProperties().get(FEEDS_PROPERTY);
 		Container container = this.applicationContext.getBean(Container.class);
@@ -166,6 +175,14 @@ public class ItemRepositoryImpl implements ItemRepository {
 			}
 		}
 
+		// Search for logos: blob
+        PropertyMap propertyMap = document.getProperties().getMap(LOGOS_PROPERTY);
+        if ((propertyMap != null) && !propertyMap.isEmpty()) {
+            // Vignette URL
+            String url = nuxeoController.createFileLink(document, LOGOS_PROPERTY);
+            picture.setUrl(url);
+        }
+		
 		if (CollectionUtils.isNotEmpty(list)) {
 			// Comparator
 			TitleItemComparator comparator = this.applicationContext.getBean(TitleItemComparator.class);
@@ -189,8 +206,16 @@ public class ItemRepositoryImpl implements ItemRepository {
 
         // Groups
         Group criteria = this.groupService.getEmptyGroup();
-        criteria.setCn(filter);
-        List<Group> groups = this.groupService.search(criteria);
+        // Stripped filter
+        String strippedFilter = StringUtils.strip(StringUtils.trim(filter), "*");
+        // Tokenized filter
+        String tokenizedFilter;
+        if (StringUtils.isBlank(strippedFilter)) {
+            tokenizedFilter = "*";
+        } else {
+            tokenizedFilter = strippedFilter + "*";
+        }
+        criteria.setCn(tokenizedFilter);
         return this.groupService.search(criteria);
 	}
 

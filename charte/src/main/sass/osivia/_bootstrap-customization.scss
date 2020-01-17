@@ -1,0 +1,13 @@
+//
+// OSIVIA Bootstrap customization
+// --------------------------------------------------
+
+@import "variables";
+
+// File update
+.btn-file {
+    input[type=file] {
+        display: none;
+    }
+}
+

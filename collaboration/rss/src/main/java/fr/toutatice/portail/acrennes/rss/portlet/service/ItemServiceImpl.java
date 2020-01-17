@@ -33,6 +33,7 @@ import fr.toutatice.portail.acrennes.rss.portlet.model.Container;
 import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
 import fr.toutatice.portail.acrennes.rss.portlet.model.Feed;
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
+import fr.toutatice.portail.acrennes.rss.portlet.model.Picture2;
 import fr.toutatice.portail.acrennes.rss.portlet.model.RssSettings;
 import fr.toutatice.portail.acrennes.rss.portlet.repository.ItemRepository;
 import net.sf.json.JSONArray;
@@ -67,15 +68,24 @@ public class ItemServiceImpl implements ItemService {
     
     /** Nb Items window property. */
     private static final String NBITEMS_WINDOW_PROPERTY = "form.nbItems";
-    
+
+    /** Nb Items window property. */
+    private static final String LOGOS_WINDOW_PROPERTY  = "form.logos";
+        
     /** Select2 results page size. */
 	public final static int SELECT2_RESULTS_PAGE_SIZE = 10;    
 
     /** Rights properties file name. */
     private static final String PROPERTIES_FILE_NAME = "rights.properties";	
     
-    /** Nb Items window property. */
-    private static final String FEEDS_WINDOW_PROPERTY = "form.mapFeeds";   
+    /** MAP feeds window property. */
+    private static final String FEEDS_WINDOW_PROPERTY = "form.mapFeeds";
+    
+    /** index for slider buttons Items window property. */
+    private static final String INDEX_WINDOW_PROPERTY = "form.index";
+    
+    /** part for slider buttons Items window property. */
+    private static final String PART_WINDOW_PROPERTY = "form.part";    
     
     /**
      * {@inheritDoc}
@@ -91,7 +101,7 @@ public class ItemServiceImpl implements ItemService {
     		return null;
     	}
     	
-		HashMap<List<String>, List<String>> mapFeedRight = new HashMap<>();;		
+		HashMap<List<String>, List<String>> mapFeedRight = new HashMap<>();
 		// Fill the map of feed with the personn have the rights to see them
 		for(HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()){
 				// if ind = 0 --> search all partner (index is for slider rss)
@@ -114,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
 			return null;
 		}
 		
-		return this.repository.getListItemRss(portalControllerContext, mapFeedRight, Integer.parseInt(settings.getNbItems()));         
+		return this.repository.getListItemRss(portalControllerContext, mapFeedRight, Integer.parseInt(settings.getNbItems()), settings.getViewRss());         
     }
 	
 	
@@ -194,7 +204,7 @@ public class ItemServiceImpl implements ItemService {
 		getFeed(settings, window);
 		
 		// Index
-		String index = window.getProperty("index");
+		String index = window.getProperty(INDEX_WINDOW_PROPERTY);
 		if(index == null) {
 			settings.setInd(0);	
 		}else {
@@ -202,7 +212,7 @@ public class ItemServiceImpl implements ItemService {
 		}
 		
 		// part 
-		String part = window.getProperty("part");
+		String part = window.getProperty(PART_WINDOW_PROPERTY);
 		settings.setPartner(part);
 		
     	// getCurretPerson to build a new map of feeds
@@ -231,12 +241,13 @@ public class ItemServiceImpl implements ItemService {
 		// Portlet settings
 		RssSettings settings = this.applicationContext.getBean(RssSettings.class);
 
+		Picture2 picture = this.applicationContext.getBean(Picture2.class);
+		
 		// List Feeds View
-		Containers containers = this.repository.getListFeedRss(portalControllerContext);
+		Containers containers = this.repository.getListFeedRss(portalControllerContext, picture);
 		settings.setContainers(containers);
 		
-		// List Rights
-		getListRight(settings);
+		settings.setPicture(picture);
 		
 		// List Feeds
 		getFeed(settings, window);
@@ -313,6 +324,7 @@ public class ItemServiceImpl implements ItemService {
         window.setProperty(FEEDS_WINDOW_PROPERTY, items.toString());
         window.setProperty(NBITEMS_WINDOW_PROPERTY, settings.getNbItems());
         window.setProperty(VIEW_RSS_WINDOW_PROPERTY, settings.getViewRss());
+        window.setProperty(LOGOS_WINDOW_PROPERTY, settings.getPicture().getUrl());
 	}	
 
 	public void getFeed(RssSettings settings, PortalWindow window) {
@@ -380,22 +392,6 @@ public class ItemServiceImpl implements ItemService {
         }	
         return items; 
 	}	
-
-	public void getListRight(RssSettings settings) throws IOException {
-		// List Rights in rights.properties
-        // Load properties
-		Properties properties = new Properties();
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME);
-        if (inputStream != null) {
-            properties.load(inputStream);
-        } else {
-            throw new FileNotFoundException(PROPERTIES_FILE_NAME);
-        }		
-        
-		ArrayList<String> prop2 = new ArrayList<String>(); 
-		properties.forEach((k, v) -> prop2.add(v.toString()));
-		settings.setRightsDisplay(prop2);		
-	}
 	
     /**
      * Enable Button for the slider Rss
@@ -407,15 +403,16 @@ public class ItemServiceImpl implements ItemService {
 
 		ArrayList<Boolean> list = new ArrayList<Boolean>();
 		// for each Button feed, check if the personn have the rigths to see this feed
-		for (HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()) {
+		for(HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()) {
 			// if feed has no right so enable button
-			if (entry.getValue().size() <2  || !Collections.disjoint(entry.getValue(), right)) {
+			if (entry.getValue().toString().length() <3 || !Collections.disjoint(entry.getValue(), right)) {
 				list.add(true);
 			} else {
 				list.add(false);
 			}
 		}
 		settings.setPartners(list);
+		settings.setNumberButton(Collections.frequency(list, true));
 	}
 	
 	@Override
@@ -444,11 +441,6 @@ public class ItemServiceImpl implements ItemService {
 
         // Items JSON array
         JSONArray items = new JSONArray();
-        // Message
-        if (page == 1) {
-            JSONObject object = new JSONObject();
-            items.add(object);
-        }
 
         // Paginated results
         int begin = (page - 1) * SELECT2_RESULTS_PAGE_SIZE;
@@ -479,6 +471,7 @@ public class ItemServiceImpl implements ItemService {
     protected JSONObject getSearchResult(Group group, Bundle bundle) {
         JSONObject object = new JSONObject();
         object.put("id", group.getCn());
+        object.put("text", group.getCn());
 
         return object;
     }
@@ -488,8 +481,8 @@ public class ItemServiceImpl implements ItemService {
     		throws PortletException {
 		// Window
 		PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
-    	window.setProperty("part", part);
-    	window.setProperty("index", Integer.toString(index) );
+    	window.setProperty(PART_WINDOW_PROPERTY, part);
+    	window.setProperty(INDEX_WINDOW_PROPERTY, Integer.toString(index) );
     	
     }
 }

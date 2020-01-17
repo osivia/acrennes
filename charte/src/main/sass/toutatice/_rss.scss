@@ -24,6 +24,11 @@ $theme-colors: (
 	text-align:left;
 }
 
+.btn-actif{
+	border-color:$navy;
+	border-width:0 0 0 8px;
+}
+
 .btn-style{
 	margin-top:0 !important;
 	border-top:0 !important;
@@ -69,3 +74,37 @@ $theme-colors: (
   box-shadow: none !important;
   border: 0 !important;
 }
+
+.bouton-image:before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: text-top;
+    background-color: transparent;
+    background-position : center center;
+    background-repeat:no-repeat;
+}
+
+.monBouton:before{
+     background-image : url(/toutatice-portail-acrennes-charte/img/infinity-navy.png);
+}
+
+.monBouton .a:hover .a:active{
+	background-image : url(/toutatice-portail-acrennes-charte/img/infinity.png);
+}
+
+.bx-controls {
+	.bx-pager {
+		bottom: 5px;
+		text-align:right !important;
+		width: 100% !important;
+		font-size:0;
+		padding-right:10px;
+	}
+	.bx-controls-direction, .bx-controls-auto .bx-controls-auto-item{
+		display:none;
+	}	
+}
+

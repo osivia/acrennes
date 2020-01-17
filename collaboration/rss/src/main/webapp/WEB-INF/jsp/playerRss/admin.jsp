@@ -11,30 +11,36 @@
 <portlet:actionURL name="save" var="saveProperties" />
 <portlet:renderURL var="add">
 	<portlet:param name="add" value="feed" />
+	<portlet:param name="nbitems" value="${nbItems}" />
+	<portlet:param name="view" value="${form.viewRss}" />	
 </portlet:renderURL>
 
 <form:form action="${saveProperties}" method="post"
-	modelAttribute="form" cssClass="form-horizontal" role="form">
+	modelAttribute="form" cssClass="form-horizontal" role="form" style="height:600px;">
 
 	<div class="container">
-		<div class="row">
-			<div class="col-sm-6 col-lg-6">
-				<form:label path="nbItems"><op:translate key="NB_ITEMS" /></form:label>
-			</div>
-			<div class="col-sm-6 col-lg-6">
-				<form:input type="text" id="nbItems" maxlength="3"
-					size="6" class="form-control" path="nbItems" />
+		<div class="form-group row">
+			<form:label path="nbItems" class="col-sm-2 col-form-label"><op:translate key="NB_ITEMS" /></form:label>
+			<div class="col-sm-10 pl-0">
+				<form:input type="text" id="nbItems" maxlength="3" size="6" path="nbItems" />
 			</div>
 		</div>
 	</div>
+	
+<portlet:renderURL var="add">
+	<portlet:param name="add" value="feed" />
+	<portlet:param name="nbitems" value="" />
+	<portlet:param name="view" value="${form.viewRss}" />	
+</portlet:renderURL>	
 
 	<div class="container">
-		<div class="row">
-			<div class="col-sm-3 col-lg-3">
-				<form:label path="viewRss"><op:translate key="DISPLAY_MODE" /></form:label><br />
-			</div>
-			<div class="col-sm-4 col-lg-4">
+		<div class="form-group row">
+			<label for="viewRss" class="col-sm-2 col-form-label"><op:translate key="DISPLAY_MODE" /></label>
+			 
+			<div class="form-check form-check-inline">
 				<form:radiobutton path="viewRss" value="liste" /><op:translate key="LIST_RSS" />
+			</div>
+			<div class="form-check form-check-inline">
 				<form:radiobutton path="viewRss" value="slider" /><op:translate key="SLIDER_RSS" />
 			</div>
 		</div>
@@ -81,6 +87,8 @@
 							<portlet:renderURL var="editFeed">
 								<portlet:param name="edit" value="feed" />
 								<portlet:param name="id" value="${feeds.key}" />
+								<portlet:param name="nbitems" value="nbItems" />
+								<portlet:param name="view" value="${viewRss}" />
 							</portlet:renderURL>
 							<portlet:actionURL name="del" var="del" copyCurrentRenderParameters="true">
 								<portlet:param name="id" value="${syncId}" />
@@ -88,14 +96,14 @@
 							<c:set var="delTitle">
 								<op:translate key="DEL_FEED" />
 							</c:set> 
-							<a href="${del}" class="btn btn-default" title="${delTitle}"> 
+							<a href="${del}" class="btn btn-secondary" title="${delTitle}"> 
 								<i class="glyphicons glyphicons-remove"></i> 
 							</a>
 							
 							<c:set var="editTitle">
 								<op:translate key="MOD_FEED" />
 							</c:set> 
-							<a href="${editFeed}" class="btn btn-default" title="${editTitle}"> 
+							<a href="${editFeed}" class="btn btn-secondary" title="${editTitle}"> 
 								<i class="glyphicons glyphicons-pencil"></i> 
 							</a>
 						</td>
@@ -105,21 +113,24 @@
 		</table>
 	</div>
 	
-	<c:set var="addTitle">
-		<op:translate key="ADD_FEED" />
-	</c:set>	
-	<div class="form-group">
-		<a href="${add}" class="btn btn-danger" title="${addTitle}"> 
-			<i class="glyphicons glyphicons-plus"></i> 
-			<span class="sr-only"><op:translate	key="ADD_FEED" /></span>
-		</a>
-	</div>
-
-	<div class="form-group">
-		<!-- Cancel -->
-		<button type="button" class="btn btn-default" onclick="closeFancybox()"><op:translate key="CANCEL" /></button>
-		<!-- Validate -->
-		<input type="submit" name="saveProperties" value="Valider"
-			class="btn btn-primary">
+	<div class="container">
+		<c:set var="addTitle">
+			<op:translate key="ADD_FEED" />
+		</c:set>	
+		<div class="form-group pl-3">
+			<a href="${add}" class="btn btn-danger" title="${addTitle}"> 
+				<i class="glyphicons glyphicons-plus"></i> 
+				<span class="sr-only"><op:translate	key="ADD_FEED" /></span>
+			</a>
+		</div>
+	
+		<div class="form-group float-right">
+			<!-- Cancel -->
+			<button type="button" class="btn btn-secondary mr-1" onclick="closeFancybox()"><op:translate key="CANCEL" /></button>
+			<!-- Validate -->
+			<button type="submit" name="saveProperties" class="btn btn-primary">
+				<op:translate key="VALIDATE" />
+			</button>			
+		</div>
 	</div>
 </form:form>

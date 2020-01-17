@@ -7,36 +7,18 @@
 
 <%@ page isELIgnored="false" %>
 
-<%-- 	<div class="row row-eq-height no-gutters row-slider">
-		<div class="col-2 col-eq-height">
-			<a href="${allPart}" class="btn btn-outline-navy btn-block btn-slider ${settings.ind eq 0 ? 'active' : ''}" role="button"><op:translate key="ALL_PART" /></a>
-		    
-		    <c:if test="${settings.boPart1}">
-		   		<a href="${part1}" class="btn btn-outline-navy btn-block btn-slider btn-style ${settings.ind eq 1 ? 'active' : ''}"><op:translate key="RENNES_ACA" /></a>
-		    </c:if>
-			
-			<c:if test="${settings.boPart2}">
-				<a href="${part2}" class="btn btn-outline-navy btn-block btn-slider btn-style ${settings.ind eq 2 ? 'active' : ''}"><op:translate key="AREA_BRETAGNE" /></a>
-			</c:if>
-		    
-		    <c:if test="${settings.boPart3}">
-		    	<a href="${part3}" class="btn btn-outline-navy btn-block btn-slider btn-style ${settings.ind eq 3 ? 'active' : ''}"><op:translate key="PRIVAT_EDUCATION" /></a>
-		    </c:if>
-    	</div>
-    	<div class="col-7"><img src="http://iwallpapers2.free.fr/images/Paysages/Hiver/Pont_en_hiver_superbe_paysage.jpg" class="img-slider" /></div>
-    	<div class="col-3 box-slider">
-    		<b>Description (03/02/17)</b>
-    		<p class="mt-2">Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. </p>
-    	</div>
-    </div> --%>
-
     <div class="row row-eq-height no-gutters row-slider">      
 		<div class="col-2 col-eq-height">
 			<portlet:actionURL name="viewPart" var="part" copyCurrentRenderParameters="true">
 				<portlet:param name="index" value="0" />
 				<portlet:param name="part" value="all" />
 			</portlet:actionURL>
-			<a href="${part}" class="btn btn-outline-navy btn-block btn-slider ${settings.ind eq 0 ? 'active' : ''}" role="button"><op:translate key="ALL_PART" /></a>
+			<c:if test="${settings.numberButton > 1}">
+				<a href="${part}" class="btn btn-block btn-slider ${settings.ind eq 0 ? 'btn-actif' : ''} pl-0" role="button">
+				  <img src="/toutatice-portail-acrennes-collaboration-rss/img/infinity.png" width="30" class="pl-1 pr-2"/><op:translate key="ALL_PART" /> 
+	  			  <%-- <img src="${settings.picture.url}" width="30" class="pl-1 pr-2"/><op:translate key="ALL_PART" /> --%>	
+				</a>
+			</c:if>
 		    
 		    <c:set var="retenue" value="0" />
 		    <c:if test="${not empty settings.mapFeeds}">
@@ -50,7 +32,7 @@
 									<portlet:param name="part" value="${flux}" />
 								</portlet:actionURL>						
 								<!-- Display Name -->
-								<a href="${part}" class="btn btn-outline-navy btn-block btn-slider btn-style ${settings.ind eq indice ? 'active' : ''}" role="button">${flux}</a>
+								<a href="${part}" class="btn btn-block btn-slider btn-style ${settings.ind eq indice ? 'btn-actif' : ''}" role="button">${flux}</a>
 							</c:if>
 							<c:if test="${!settings.partners[statusFeed.index]}">
 								<c:set var="retenue" value="${retenue +1}" />								

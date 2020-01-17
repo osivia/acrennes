@@ -66,7 +66,8 @@ public class AddFeedRssController {
      */
     @RenderMapping
     public String view(RenderRequest request, RenderResponse response) {
-        return "add-feed";
+
+    	return "add-feed";
     }
 
 
@@ -98,10 +99,10 @@ public class AddFeedRssController {
      * @throws IOException 
      */
     @ModelAttribute("form")
-    public RssSettings getSettings(PortletRequest request, PortletResponse response) throws PortletException, IOException {
+    public RssSettings getSettings(PortletRequest request, PortletResponse response, @RequestParam(value = "view", required = false) String view, @RequestParam(value = "nbitems", required = false) String nbitems) throws PortletException, IOException {
         // Portal controller context
         PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
-        
+        System.out.println("Coucou Fred:" + view + ';'+ nbitems);
         return this.service.getList(portalControllerContext);
     }
     
@@ -120,6 +121,5 @@ public class AddFeedRssController {
         PrintWriter printWriter = new PrintWriter(response.getPortletOutputStream());
         printWriter.write(results.toString());
         printWriter.close();
-    	
     }
 }

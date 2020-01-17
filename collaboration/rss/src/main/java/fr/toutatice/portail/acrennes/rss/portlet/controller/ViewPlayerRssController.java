@@ -105,7 +105,7 @@ public class ViewPlayerRssController {
 	}
 
 	/**
-	 * View partner: Slider View for all partner, partner 1 to 3.
+	 * View partner: Slider View for all partner, partner 1 to n.
 	 * 
 	 * @param request  action request
 	 * @param response action response

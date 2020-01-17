@@ -10,6 +10,7 @@ import org.osivia.portal.api.directory.v2.model.Group;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
+import fr.toutatice.portail.acrennes.rss.portlet.model.Picture2;
 
 /**
  * RSS repository interface.
@@ -50,11 +51,21 @@ public interface ItemRepository {
 	 * get feeds list RSS.
 	 *
 	 * @param portalControllerContext portal controller context
+	 * @param picture for slider 
 	 * @throws PortletException
 	 */
-	Containers getListFeedRss(PortalControllerContext portalControllerContext) throws PortletException;
+	Containers getListFeedRss(PortalControllerContext portalControllerContext, Picture2 picture) throws PortletException;
 
-	List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems)
+	/**
+	 * get items RSS.
+	 *
+	 * @param portalControllerContext portal controller context
+	 * @param map
+	 * @param nbItems
+	 * @param view
+	 * @throws PortletException
+	 */
+	List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems, String view)
 			throws PortletException;
 	
     /**
