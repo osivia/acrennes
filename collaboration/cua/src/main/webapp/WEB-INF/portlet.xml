@@ -19,7 +19,7 @@
             <value>fr.toutatice.portail.acrennes.cua.client.portlet.configuration.CuaClientConfiguration</value>
         </init-param>
 
-        <expiration-cache>180</expiration-cache>
+        <expiration-cache>0</expiration-cache>
 
         <supports>
             <mime-type>text/html</mime-type>

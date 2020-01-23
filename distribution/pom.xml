@@ -72,6 +72,13 @@
             <version>${identity-sso.version}</version>
         </dependency>
 
+        <!--Jackson-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
         <!-- Java Melody -->
         <dependency>
             <groupId>org.osivia.services</groupId>
@@ -119,6 +126,19 @@
                                             <outputDirectory>${project.build.directory}/toutatice-distribution</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>import-dependencies</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <includeGroupIds>
+                                        com.fasterxml.jackson
+                                    </includeGroupIds>
                                 </configuration>
                             </execution>
                         </executions>

@@ -114,6 +114,13 @@ public final class ToutaticePersonImpl implements ToutaticePerson {
 
 
     /**
+     * Anonymized identifier.
+     */
+    @Attribute(name = "ENTPersonJointure")
+    private String anonymizedId;
+
+
+    /**
      * Constructor.
      */
     public ToutaticePersonImpl() {
@@ -317,6 +324,12 @@ public final class ToutaticePersonImpl implements ToutaticePerson {
         LdapNameBuilder ldapNameBuilder = LdapNameBuilder.newInstance(baseDn);
         ldapNameBuilder.add("uid", uid);
         return ldapNameBuilder.build();
+    }
+
+
+    @Override
+    public String getAnonymizedId() {
+        return this.anonymizedId;
     }
 
 }

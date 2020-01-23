@@ -1,0 +1,9 @@
+.cua {
+  .cua-sortable {
+    min-height: 200px;
+
+    .card-body {
+      cursor: grab;
+    }
+  }
+}

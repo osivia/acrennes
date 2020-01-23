@@ -15,4 +15,17 @@
 
     <name>Portail Toutatice - Annuaire - Socle - Interfaces</name>
 
+
+    <dependencies>
+
+        <!--OSIVIA directory-->
+        <dependency>
+            <groupId>org.osivia.services.directory.socle</groupId>
+            <artifactId>osivia-services-directory-socle-interfaces</artifactId>
+            <version>${osivia-directory.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
+
 </project>
