@@ -68,7 +68,7 @@
                                 </c:when>
 
                                 <c:otherwise>
-                                    <span class="d-md-none d-lg-inline">${requestScope['osivia.toolbar.person'].cn}</span>
+                                    <span class="d-md-none d-lg-inline">${requestScope['osivia.toolbar.person'].displayName}</span>
                                 </c:otherwise>
                             </c:choose>
                         </a>
