@@ -34,13 +34,6 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-        
-<!--  		<dependency>
-            <groupId>org.osivia.services.rss</groupId>
-            <artifactId>osivia-services-rss</artifactId>
-            <version>4.9-SNAPSHOT</version>
-            <classifier>classes</classifier>
-        </dependency>   -->
 
     </dependencies>
 

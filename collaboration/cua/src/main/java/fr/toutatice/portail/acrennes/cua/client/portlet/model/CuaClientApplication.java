@@ -4,21 +4,23 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 /**
- * CUA application java-bean.
+ * CUA client application.
  *
  * @author Cédric Krommenhoek
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CuaApplication {
+public class CuaClientApplication {
 
     /**
      * Identifier.
      */
     private String id;
+    /**
+     * Order.
+     */
+    private int order;
     /**
      * Title.
      */
@@ -32,19 +34,19 @@ public class CuaApplication {
      */
     private String url;
     /**
-     * Order.
+     * Starred indicator.
      */
-    private int order;
+    private boolean starred;
     /**
-     * Disabled indicator.
+     * Starred indicator original value.
      */
-    private boolean disabled;
+    private boolean starredOriginalValue;
 
 
     /**
      * Constructor.
      */
-    public CuaApplication() {
+    public CuaClientApplication() {
         super();
     }
 
@@ -53,13 +55,15 @@ public class CuaApplication {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CuaApplication that = (CuaApplication) o;
+
+        CuaClientApplication that = (CuaClientApplication) o;
+
         return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return id.hashCode();
     }
 
 
@@ -69,6 +73,14 @@ public class CuaApplication {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public String getTitle() {
@@ -95,19 +107,19 @@ public class CuaApplication {
         this.url = url;
     }
 
-    public int getOrder() {
-        return order;
+    public boolean isStarred() {
+        return starred;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    public void setStarred(boolean starred) {
+        this.starred = starred;
     }
 
-    public boolean isDisabled() {
-        return disabled;
+    public boolean isStarredOriginalValue() {
+        return starredOriginalValue;
     }
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public void setStarredOriginalValue(boolean starredOriginalValue) {
+        this.starredOriginalValue = starredOriginalValue;
     }
 }

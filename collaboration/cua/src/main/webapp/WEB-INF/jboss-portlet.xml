@@ -10,6 +10,11 @@
         <transaction>
             <trans-attribute>Required</trans-attribute>
         </transaction>
+
+        <header-content>
+            <link rel="stylesheet" href="/css/cua.css" />
+            <script type="text/javascript" src="/js/cua.js"></script>
+        </header-content>
     </portlet>
 
 

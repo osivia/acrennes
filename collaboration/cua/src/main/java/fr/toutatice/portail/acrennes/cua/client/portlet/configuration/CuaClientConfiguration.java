@@ -1,5 +1,7 @@
 package fr.toutatice.portail.acrennes.cua.client.portlet.configuration;
 
+import fr.toutatice.portail.acrennes.directory.service.ToutaticePersonService;
+import org.osivia.portal.api.directory.v2.DirServiceFactory;
 import org.osivia.portal.api.portlet.PortletAppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -7,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.portlet.context.PortletConfigAware;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -71,6 +74,28 @@ public class CuaClientConfiguration implements PortletConfigAware {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("cua");
         return messageSource;
+    }
+
+
+    /**
+     * Get REST template.
+     *
+     * @return REST template
+     */
+    @Bean
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
+
+    /**
+     * Get person service.
+     *
+     * @return person service
+     */
+    @Bean
+    public ToutaticePersonService getPersonService() {
+        return DirServiceFactory.getService(ToutaticePersonService.class);
     }
 
 }

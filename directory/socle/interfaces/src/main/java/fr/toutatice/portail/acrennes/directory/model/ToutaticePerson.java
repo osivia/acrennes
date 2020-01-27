@@ -9,4 +9,12 @@ import org.osivia.portal.api.directory.v2.model.Person;
  * @see Person
  */
 public interface ToutaticePerson extends Person {
+
+    /**
+     * Get Toutatice person anonymized identifier.
+     *
+     * @return identifier
+     */
+    String getAnonymizedId();
+
 }
