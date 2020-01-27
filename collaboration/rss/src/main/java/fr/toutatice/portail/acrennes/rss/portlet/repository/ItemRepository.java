@@ -1,16 +1,14 @@
 package fr.toutatice.portail.acrennes.rss.portlet.repository;
 
 import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
-import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
 import fr.toutatice.portail.acrennes.rss.portlet.model.RssPicture;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssPlayerFeed;
 import fr.toutatice.portail.acrennes.rss.portlet.model.RssWindowPropertiesFeed;
 import org.osivia.portal.api.context.PortalControllerContext;
 import org.osivia.portal.api.directory.v2.model.Group;
 
 import javax.portlet.PortletException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * RSS repository interface.
@@ -66,10 +64,6 @@ public interface ItemRepository {
      */
     String SOURCES_PROPERTY = "rssi:source";
 
-    /**
-     * Select2 results page size.
-     */
-    int SELECT2_RESULTS_PAGE_SIZE = 10;
 
     /**
      * get feeds list RSS.
@@ -80,37 +74,33 @@ public interface ItemRepository {
      */
     Containers getListFeedRss(PortalControllerContext portalControllerContext, RssPicture picture) throws PortletException;
 
-    /**
-     * get items RSS.
-     *
-     * @param portalControllerContext portal controller context
-     * @param map
-     * @param nbItems
-     * @param view
-     * @throws PortletException
-     */
-    List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<String, List<String>> map, int nbItems, String view)
-            throws PortletException;
 
     /**
-     * Search Group
+     * Search groups.
      *
-     * @param PortalControllerContext
-     * @param filter
-     * @throws PortletException
+     * @param portalControllerContext portal controller context
+     * @param filter                  search filter
      */
     List<Group> searchGroups(PortalControllerContext portalControllerContext, String filter) throws PortletException;
 
+
     /**
-     * search DisplayName
+     * Fill feeds.
      *
-     * @param portalControllerContext
-     * @param id
-     * @throws PortletException
+     * @param portalControllerContext portal controller context
+     * @param feeds                   feeds
      */
-    Map<String, String> searchDisplayName(PortalControllerContext portalControllerContext, String id) throws PortletException;
-
-
     void fillFeeds(PortalControllerContext portalControllerContext, List<RssWindowPropertiesFeed> feeds) throws PortletException;
+
+
+    /**
+     * Get feeds.
+     *
+     * @param portalControllerContext portal controller context
+     * @param identifiers             feeds identifiers
+     * @param limit                   limit
+     * @return feeds
+     */
+    List<RssPlayerFeed> getFeeds(PortalControllerContext portalControllerContext, List<String> identifiers, int limit) throws PortletException;
 
 }

@@ -2,9 +2,7 @@ package fr.toutatice.portail.acrennes.rss.portlet.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.toutatice.portail.acrennes.rss.portlet.controller.ViewPlayerRssController;
 import fr.toutatice.portail.acrennes.rss.portlet.model.*;
-import fr.toutatice.portail.acrennes.rss.portlet.model.comparator.MapComparator;
 import fr.toutatice.portail.acrennes.rss.portlet.repository.ItemRepository;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -27,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import javax.naming.Name;
 import javax.portlet.PortletException;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -106,328 +103,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
-    public static JSONArray setJSONArray(RssSettings settings) {
-        // Message JSON object
-        JSONObject id = new JSONObject();
-        JSONObject rights = new JSONObject();
-        JSONArray items = new JSONArray();
-        for (HashMap.Entry<String, List<String>> entry : settings.getMapFeeds().entrySet()) {
-            id.put("id", entry.getKey());
-            items.add(id);
-            if (entry.getValue() == null) {
-                rights.put("rights", "");
-            } else {
-                rights.put("rights", entry.getValue());
-            }
-
-            items.add(rights);
-            ;
-        }
-        return items;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IOException
-     */
-    @SuppressWarnings({"unused"})
-    public List<ItemRssModel> getListItem(PortalControllerContext portalControllerContext) throws PortletException, IOException {
-        String result = null;
-
-        RssSettings settings = getSettings(portalControllerContext);
-
-        if (settings.getMapFeeds() == null || settings.getMapFeeds().isEmpty() || settings.getNbItems() == null) {
-            return null;
-        }
-
-        HashMap<String, List<String>> mapFeedRight = new HashMap<>();
-        // Fill the map of feed with the personn have the rights to see them
-        for (HashMap.Entry<List<String>, List<String>> entry : settings.getSortFeeds().entrySet()) {
-            // if ind = 0 --> search all partner (index is for slider rss)
-            if (settings.getInd() != 0) {
-                if (entry.getKey().get(1).contentEquals(settings.getPartner())) {
-                    if (entry.getValue().size() < 2 || !Collections.disjoint(entry.getValue(), settings.getRightsPersonn())) {
-                        mapFeedRight.put(entry.getKey().get(0), entry.getValue());
-                        break;
-                    }
-                }
-            } else {
-                // Check if the personn have the right to see the feed
-                if (entry.getValue().size() == 1 || !Collections.disjoint(entry.getValue(), settings.getRightsPersonn())) {
-                    mapFeedRight.put(entry.getKey().get(0), entry.getValue());
-                }
-            }
-        }
-
-        if (mapFeedRight == null || mapFeedRight.isEmpty()) {
-            return null;
-        }
-
-        return this.repository.getListItemRss(portalControllerContext, mapFeedRight, Integer.parseInt(settings.getNbItems()), settings.getViewRss());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void save(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException {
-        // Window
-        PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
-
-        Map<String, List<String>> map = new HashMap<>();
-        if (settings.getMapFeeds() != null) {
-            for (HashMap.Entry<String, List<String>> entry : settings.getMapFeeds().entrySet()) {
-                map.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        // Search Title into list container
-        List<Container> containers = settings.getContainers().getContainers();
-        boolean ok = false;
-        for (Container container : containers) {
-            for (Feed feed : container.getFeeds()) {
-                if (settings.getFlux().equalsIgnoreCase(feed.getId())) {
-                    map.put(feed.getId(), settings.getRights());
-                    ok = true;
-                    break;
-                }
-                if (ok) {
-                    break;
-                }
-            }
-        }
-
-        settings.setMapFeeds(map);
-        settings.setFlux(null);
-
-        JSONArray items = setJSONArray(settings);
-
-        window.setProperty(FEEDS_WINDOW_PROPERTY, items.toString());
-        window.setProperty(NBITEMS_WINDOW_PROPERTY, settings.getNbItems());
-        window.setProperty(VIEW_RSS_WINDOW_PROPERTY, settings.getViewRss());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void saveSettings(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException {
-        // Window
-        PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
-
-        window.setProperty(NBITEMS_WINDOW_PROPERTY, settings.getNbItems());
-        window.setProperty(VIEW_RSS_WINDOW_PROPERTY, settings.getViewRss());
-    }
-
-    @Override
-    public RssSettings getSettings(PortalControllerContext portalControllerContext) throws PortletException, IOException {
-        // Window
-        PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
-
-        // Portlet settings
-        RssSettings settings = this.applicationContext.getBean(RssSettings.class);
-
-        // Nb Items
-        String nbItems = window.getProperty(NBITEMS_WINDOW_PROPERTY);
-        settings.setNbItems(nbItems);
-
-        // View Rss
-        String viewRss = window.getProperty(VIEW_RSS_WINDOW_PROPERTY);
-        settings.setViewRss(viewRss);
-
-        // List Feeds
-        getFeed(settings, window, portalControllerContext);
-
-        // Index
-        String index = window.getProperty(INDEX_WINDOW_PROPERTY);
-        if (index == null) {
-            settings.setInd(0);
-        } else {
-            settings.setInd(Integer.parseInt(index));
-        }
-
-        // part
-        String part = window.getProperty(PART_WINDOW_PROPERTY);
-        settings.setPartner(part);
-
-        // getCurretPerson to build a new map of feeds
-        Person person = (Person) portalControllerContext.getRequest().getAttribute(Constants.ATTR_LOGGED_PERSON_2);
-        List<String> rights;
-        if (person == null) {
-            rights = null;
-        } else {
-            List<Name> names = person.getProfiles();
-            if (CollectionUtils.isEmpty(names)) {
-                rights = null;
-            } else {
-                rights = new ArrayList<>(names.size());
-                for (Name name : names) {
-                    String cn = StringUtils.substringAfter(name.get(name.size() - 1), "=");
-                    rights.add(cn);
-                }
-            }
-        }
-        settings.setRightsPersonn(rights);
-
-        if (ViewPlayerRssController.VIEW_SLIDER.equals(settings.getViewRss())) {
-            // enable partner button for slider
-            setButtonSlider(rights, settings);
-        }
-
-        return settings;
-    }
-
-    @Override
-    public RssSettings getList(PortalControllerContext portalControllerContext) throws PortletException, IOException {
-        // Window
-        PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
-
-        // Portlet settings
-        RssSettings settings = this.applicationContext.getBean(RssSettings.class);
-
-        RssPicture picture = this.applicationContext.getBean(RssPicture.class);
-
-        // List Feeds View
-        Containers containers = this.repository.getListFeedRss(portalControllerContext, picture);
-        settings.setContainers(containers);
-
-        settings.setPicture(picture);
-
-        // List Feeds
-        getFeed(settings, window, portalControllerContext);
-
-        // Nb Items
-        String nbItems = window.getProperty(NBITEMS_WINDOW_PROPERTY);
-        settings.setNbItems(nbItems);
-
-        // View Rss
-        String viewRss = window.getProperty(VIEW_RSS_WINDOW_PROPERTY);
-        settings.setViewRss(viewRss);
-
-        return settings;
-    }
-
-    @Override
-    public void delFeeds(PortalControllerContext portalControllerContext, RssWindowProperties form, String id)
-            throws PortletException {
-        if (CollectionUtils.isNotEmpty(form.getFeeds())) {
-            boolean found = false;
-            Iterator<RssWindowPropertiesFeed> iterator = form.getFeeds().iterator();
-            while (!found && iterator.hasNext()) {
-                RssWindowPropertiesFeed feed = iterator.next();
-                if (StringUtils.equalsIgnoreCase(id, feed.getId())) {
-                    found = true;
-                    iterator.remove();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void mod(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException {
-        // Window
-        PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
-
-        Map<String, List<String>> map = new HashMap<>();
-        boolean mod = false;
-        if (settings.getMapFeeds() != null) {
-            for (HashMap.Entry<String, List<String>> entry : settings.getMapFeeds().entrySet()) {
-
-                if (entry.getKey().equalsIgnoreCase(settings.getFeeds().get(0))) {
-                    mod = true;
-                }
-                if (mod) {
-                    map.put(entry.getKey(), settings.getRights());
-                    mod = false;
-                } else {
-                    map.put(entry.getKey(), entry.getValue());
-                }
-            }
-        }
-
-        settings.setMapFeeds(map);
-
-        JSONArray items = setJSONArray(settings);
-
-        window.setProperty(FEEDS_WINDOW_PROPERTY, items.toString());
-        window.setProperty(NBITEMS_WINDOW_PROPERTY, settings.getNbItems());
-        window.setProperty(VIEW_RSS_WINDOW_PROPERTY, settings.getViewRss());
-        window.setProperty(LOGOS_WINDOW_PROPERTY, settings.getPicture().getUrl());
-    }
-
-    public void getFeed(RssSettings settings, PortalWindow window, PortalControllerContext portalControllerContext) throws PortletException {
-        String json = window.getProperty(FEEDS_WINDOW_PROPERTY);
-
-        if (json != null && !json.isEmpty() && !json.equalsIgnoreCase("{}")) {
-            JSONArray items = JSONArray.fromObject(json);
-
-            JSONArray jArray = (JSONArray) items;
-            List<String> rights = new ArrayList<String>();
-            Map<String, List<String>> map = new HashMap<>();
-            Map<String, String> mapFeed = new HashMap<>();
-            MapComparator comparateur = new MapComparator(mapFeed);
-            TreeMap<String, String> sortMap = new TreeMap<>(comparateur);
-            String name = null;
-            String id = null;
-            Map<String, String> displayName = this.repository.searchDisplayName(portalControllerContext, null);
-            if (jArray != null && !jArray.isEmpty()) {
-                for (int i = 0; i < jArray.size(); i++) {
-                    JSONObject home = jArray.getJSONObject(i);
-                    if (home.containsKey("id")) {
-                        id = home.getString("id");
-                        name = displayName.get(home.getString("id"));
-                        mapFeed.put(id, name);
-                    }
-                    if (home.containsKey("rights")) {
-                        String val = home.getString("rights").replace("[", "");
-                        val = val.replace("]", "");
-                        val = val.replaceAll("\"", "");
-                        List<String> strings = Arrays.asList(val.split(","));
-                        rights.addAll(strings);
-                        map.put(id, rights);
-                        rights = new ArrayList<String>();
-                    }
-                }
-            }
-            settings.setMapFeeds(map);
-            List<String> list = new ArrayList<String>();
-            sortMap.putAll(mapFeed);
-            Map<List<String>, List<String>> map10 = new LinkedHashMap<List<String>, List<String>>();
-            // Sort Map
-            for (HashMap.Entry<String, String> entry : sortMap.entrySet()) {
-                list.add(entry.getKey());
-                list.add(entry.getValue());
-                map10.put(list, settings.getMapFeeds().get(entry.getKey()));
-                list = new ArrayList<String>();
-            }
-
-            settings.setSortFeeds(map10);
-        }
-    }
-
-    /**
-     * Enable Button for the slider Rss
-     * it's a list of rights so you have change the test with the list of rihts of the feed
-     *
-     * @throws IOException
-     */
-    public void setButtonSlider(List<String> right, RssSettings settings) throws IOException {
-
-        ArrayList<Boolean> list = new ArrayList<Boolean>();
-        // for each Button feed, check if the personn have the rigths to see this feed
-        for (HashMap.Entry<List<String>, List<String>> entry : settings.getSortFeeds().entrySet()) {
-            // if feed has no right so enable button
-            if (entry.getValue().toString().length() < 3 || !Collections.disjoint(entry.getValue(), right)) {
-                list.add(true);
-            } else {
-                list.add(false);
-            }
-        }
-        settings.setPartners(list);
-        settings.setNumberButton(Collections.frequency(list, true));
-    }
-
     @Override
     public JSONObject searchGroups(PortalControllerContext portalControllerContext, String filter, int page)
             throws PortletException {
@@ -481,15 +156,6 @@ public class ItemServiceImpl implements ItemService {
         object.put("text", group.getCn());
 
         return object;
-    }
-
-    @Override
-    public void viewPart(PortalControllerContext portalControllerContext, int index, String part)
-            throws PortletException {
-        // Window
-        PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
-        window.setProperty(PART_WINDOW_PROPERTY, part);
-        window.setProperty(INDEX_WINDOW_PROPERTY, Integer.toString(index));
     }
 
 
@@ -627,6 +293,22 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
+    public void deleteFeed(PortalControllerContext portalControllerContext, RssWindowProperties windowProperties, String id) throws PortletException {
+        if (CollectionUtils.isNotEmpty(windowProperties.getFeeds())) {
+            boolean found = false;
+            Iterator<RssWindowPropertiesFeed> iterator = windowProperties.getFeeds().iterator();
+            while (!found && iterator.hasNext()) {
+                RssWindowPropertiesFeed feed = iterator.next();
+                if (StringUtils.equalsIgnoreCase(id, feed.getId())) {
+                    found = true;
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+
+    @Override
     public List<Container> getContainers(PortalControllerContext portalControllerContext) throws PortletException {
         List<Container> result;
 
@@ -638,6 +320,96 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return result;
+    }
+
+
+    @Override
+    public String getViewPath(PortalControllerContext portalControllerContext) throws PortletException {
+        // Window properties
+        RssWindowProperties windowProperties = this.getWindowProperties(portalControllerContext);
+
+        // View
+        RssView view = windowProperties.getView();
+        if (view == null) {
+            view = RssView.DEFAULT;
+        }
+
+        return "view-" + StringUtils.lowerCase(view.getId());
+    }
+
+
+    @Override
+    public RssPlayer getPlayer(PortalControllerContext portalControllerContext) throws PortletException {
+        // RSS player
+        RssPlayer player = this.applicationContext.getBean(RssPlayer.class);
+
+        if (!player.isLoaded()) {
+            // Window properties
+            RssWindowProperties windowProperties = this.getWindowProperties(portalControllerContext);
+
+            // Person rights
+            Person person = (Person) portalControllerContext.getRequest().getAttribute(Constants.ATTR_LOGGED_PERSON_2);
+            List<String> rights;
+            if (person == null) {
+                rights = new ArrayList<>(0);
+            } else {
+                List<Name> names = person.getProfiles();
+                if (CollectionUtils.isEmpty(names)) {
+                    rights = new ArrayList<>(0);
+                } else {
+                    rights = new ArrayList<>(names.size());
+                    for (Name name : names) {
+                        String cn = StringUtils.substringAfter(name.get(name.size() - 1), "=");
+                        rights.add(cn);
+                    }
+                }
+            }
+
+            // Loaded indicator
+            player.setLoaded(true);
+
+            // Feeds
+            List<RssWindowPropertiesFeed> properties = windowProperties.getFeeds();
+            List<RssPlayerFeed> feeds;
+            if (CollectionUtils.isEmpty(properties)) {
+                feeds = null;
+            } else {
+                // Feed identifiers
+                List<String> identifiers = new ArrayList<>(properties.size());
+                for (RssWindowPropertiesFeed property : properties) {
+                    if (CollectionUtils.isEmpty(property.getRights()) || CollectionUtils.containsAny(rights, property.getRights())) {
+                        identifiers.add(property.getId());
+                    }
+                }
+
+                feeds = this.repository.getFeeds(portalControllerContext, identifiers, windowProperties.getNbItems());
+            }
+            player.setFeeds(feeds);
+
+            // Displayed items
+            List<RssPlayerFeedItem> displayedItems;
+            if (CollectionUtils.isEmpty(feeds)) {
+                displayedItems = null;
+            } else {
+                displayedItems = new ArrayList<>(feeds.size());
+                for (RssPlayerFeed feed : feeds) {
+                    List<RssPlayerFeedItem> items = feed.getItems();
+                    if (CollectionUtils.isNotEmpty(items)) {
+                        RssPlayerFeedItem item = items.get(0);
+                        displayedItems.add(item);
+                    }
+                }
+            }
+            player.setDisplayedItems(displayedItems);
+        }
+
+        return player;
+    }
+
+
+    @Override
+    public void selectFeed(PortalControllerContext portalControllerContext, RssPlayer player, String id) throws PortletException {
+        // TODO
     }
 
 }

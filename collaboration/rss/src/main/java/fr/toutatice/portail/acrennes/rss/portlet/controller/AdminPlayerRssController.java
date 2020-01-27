@@ -96,7 +96,8 @@ public class AdminPlayerRssController {
     public void del(ActionRequest request, ActionResponse response, @RequestParam("del") String id, @ModelAttribute("windowPropertiesForm") RssWindowProperties form) throws PortletException {
         // Portal controller context
         PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
-        this.service.delFeeds(portalControllerContext, form, id);
+
+        this.service.deleteFeed(portalControllerContext, form, id);
     }
 
 

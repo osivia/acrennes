@@ -2,14 +2,30 @@ package fr.toutatice.portail.acrennes.rss.portlet.model;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * RSS view.
+ */
 public enum RssView {
 
+    /**
+     * List.
+     */
     LIST,
-
+    /**
+     * Slider.
+     */
     SLIDER;
 
 
-    /** Internationalization key. */
+    /**
+     * Default view.
+     */
+    public static final RssView DEFAULT = LIST;
+
+
+    /**
+     * Internationalization key.
+     */
     private final String key;
 
 

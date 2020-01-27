@@ -1,8 +1,5 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -10,33 +7,37 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * RSS window properties feed.
+ * RSS player feed.
  *
  * @author Cédric Krommenhoek
  * @see RssFeed
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class RssWindowPropertiesFeed implements RssFeed {
+public class RssPlayerFeed implements RssFeed {
 
-    @JsonProperty("id")
+    /**
+     * Feed identifier.
+     */
     private String id;
-
-    @JsonIgnore
+    /**
+     * Feed display name.
+     */
     private String displayName;
-
-    @JsonIgnore
+    /**
+     * Feed picture URL.
+     */
     private String pictureUrl;
-
-    @JsonProperty("rights")
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> rights;
+    /**
+     * Feed items.
+     */
+    private List<RssPlayerFeedItem> items;
 
 
     /**
      * Constructor.
      */
-    public RssWindowPropertiesFeed() {
+    public RssPlayerFeed() {
         super();
     }
 
@@ -77,11 +78,11 @@ public class RssWindowPropertiesFeed implements RssFeed {
     }
 
 
-    public List<String> getRights() {
-        return rights;
+    public List<RssPlayerFeedItem> getItems() {
+        return items;
     }
 
-    public void setRights(List<String> rights) {
-        this.rights = rights;
+    public void setItems(List<RssPlayerFeedItem> items) {
+        this.items = items;
     }
 }

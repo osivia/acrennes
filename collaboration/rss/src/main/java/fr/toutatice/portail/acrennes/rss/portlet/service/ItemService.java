@@ -1,11 +1,13 @@
 package fr.toutatice.portail.acrennes.rss.portlet.service;
 
-import fr.toutatice.portail.acrennes.rss.portlet.model.*;
+import fr.toutatice.portail.acrennes.rss.portlet.model.Container;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssPlayer;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssWindowProperties;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssWindowPropertiesFeed;
 import net.sf.json.JSONObject;
 import org.osivia.portal.api.context.PortalControllerContext;
 
 import javax.portlet.PortletException;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,97 +18,13 @@ import java.util.List;
 public interface ItemService {
 
     /**
-     * Base path window property.
-     */
-    String BASE_PATH_PROPERTY = "osivia.rss.basePath";
-
-    /**
-     * get List Item.
+     * Search groups.
      *
      * @param portalControllerContext portal controller context
-     * @return List<ContainerRssModel>
-     * @throws PortletException
-     * @throws IOException
-     */
-    List<ItemRssModel> getListItem(PortalControllerContext portalControllerContext) throws PortletException, IOException;
-
-    /**
-     * Get portlet settings.
-     *
-     * @param portalControllerContext portal controller context
-     * @return portlet settings
-     * @throws PortletException
-     */
-    RssSettings getSettings(PortalControllerContext portalControllerContext) throws PortletException, IOException;
-
-
-    /**
-     * Save portlet settings.
-     *
-     * @param portalControllerContext portal controller context
-     * @param settings                portlet settings
-     * @throws PortletException
-     */
-    void save(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
-
-    /**
-     * Save portlet settings.
-     *
-     * @param portalControllerContext portal controller context
-     * @param settings                portlet settings
-     * @throws PortletException
-     */
-    void saveSettings(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
-
-    /**
-     * Get portlet settings.
-     *
-     * @param portalControllerContext portal controller context
-     * @return portlet settings
-     * @throws PortletException
-     */
-    RssSettings getList(PortalControllerContext portalControllerContext) throws PortletException, IOException;
-
-    /**
-     * delete feeds.
-     *
-     * @param portalControllerContext portal controller context
-     * @param form                    form
-     * @param id                      Id
-     * @throws PortletException
-     */
-    void delFeeds(PortalControllerContext portalControllerContext, RssWindowProperties form, String id) throws PortletException;
-
-    /**
-     * Modication portlet settings.
-     *
-     * @param portalControllerContext portal controller context
-     * @param settings                portlet settings
-     * @throws PortletException
-     */
-    void mod(PortalControllerContext portalControllerContext, RssSettings settings) throws PortletException;
-
-    /**
-     * Search Groups
-     *
-     * @param portalControllerContext portal controller context
-     * @param filter
-     * @param page
-     * @throws PortletException
+     * @param filter                  search filter
+     * @param page                    search page
      */
     JSONObject searchGroups(PortalControllerContext portalControllerContext, String filter, int page) throws PortletException;
-
-    /**
-     * get List Item.
-     *
-     * @param portalControllerContext portal controller context
-     * @param index                   int
-     * @param partner                 String
-     * @return List<ContainerRssModel>
-     * @throws PortletException
-     * @throws IOException
-     */
-    void viewPart(PortalControllerContext portalControllerContext, int index, String part) throws PortletException;
 
 
     /**
@@ -168,11 +86,50 @@ public interface ItemService {
 
 
     /**
+     * Delete feed.
+     *
+     * @param portalControllerContext portal controller context
+     * @param windowProperties        window properties
+     * @param id                      feed identifier
+     * @throws PortletException
+     */
+    void deleteFeed(PortalControllerContext portalControllerContext, RssWindowProperties windowProperties, String id) throws PortletException;
+
+
+    /**
      * Get RSS containers.
      *
      * @param portalControllerContext portal controller context
      * @return RSS containers
      */
     List<Container> getContainers(PortalControllerContext portalControllerContext) throws PortletException;
+
+
+    /**
+     * Get view path.
+     *
+     * @param portalControllerContext portal controller context
+     * @return view path
+     */
+    String getViewPath(PortalControllerContext portalControllerContext) throws PortletException;
+
+
+    /**
+     * Get RSS player.
+     *
+     * @param portalControllerContext portal controller context
+     * @return RSS player
+     */
+    RssPlayer getPlayer(PortalControllerContext portalControllerContext) throws PortletException;
+
+
+    /**
+     * Select feed.
+     *
+     * @param portalControllerContext portal controller context
+     * @param player                  RSS player
+     * @param id                      feed identifier
+     */
+    void selectFeed(PortalControllerContext portalControllerContext, RssPlayer player, String id) throws PortletException;
 
 }

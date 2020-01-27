@@ -16,14 +16,14 @@ import fr.toutatice.portail.cms.nuxeo.api.NuxeoQueryFilterContext;
 import java.util.List;
 
 /**
- * List Nuxeo command.
+ * Get RSS containers Nuxeo command.
  *
  * @author Frédéric Boudan
  * @see INuxeoCommand
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ContainerListCommand implements INuxeoCommand {
+public class GetContainersCommand implements INuxeoCommand {
 
 	/** Feed identifiers. */
 	private final List<String> feedIds;
@@ -33,12 +33,12 @@ public class ContainerListCommand implements INuxeoCommand {
 	 * Constructor.
 	 *
 	 */
-	public ContainerListCommand() {
+	public GetContainersCommand() {
 		this(null);
 	}
 
 
-	public ContainerListCommand(List<String> feedIds) {
+	public GetContainersCommand(List<String> feedIds) {
 		super();
 		this.feedIds = feedIds;
 	}
