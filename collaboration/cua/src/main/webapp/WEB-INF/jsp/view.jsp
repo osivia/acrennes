@@ -36,13 +36,15 @@
     <%--Actions--%>
     <div class="d-flex">
         <p class="mr-3">
-            <a href="#${namespace}-other-applications" class="text-secondary no-ajax-link" data-toggle="collapse">
+            <a href="#${namespace}-other-applications" class="btn btn-outline-secondary btn-sm no-ajax-link" data-toggle="collapse">
+                <i class="glyphicons glyphicons-basic-more-vertical"></i>
                 <span><op:translate key="CUA_CLIENT_VIEW_ALL_APPLICATIONS"/></span>
             </a>
         </p>
 
-        <p class="ml-auto">
-            <a href="${settingsUrl}" class="text-secondary">
+        <p>
+            <a href="${settingsUrl}" class="btn btn-outline-secondary btn-sm">
+                <i class="glyphicons glyphicons-basic-cogwheel"></i>
                 <span><op:translate key="CUA_CLIENT_SETTINGS"/></span>
             </a>
         </p>
