@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletException;
 
@@ -55,10 +56,10 @@ public class ItemRepositoryImpl implements ItemRepository {
 
 	/** FEEDS RSS */
 	String FEEDS_PROPERTY = "rssc:feeds";
-	/** PICTURE RSS */
-	String LOGOS_PROPERTY = "rssc:logos";	
 	/** Display Name RSS */
 	String DISPLAY_NAME_PROPERTY = "displayName";
+	/** Logo RSS */
+	String LOGO_PROPERTY = "logos";	
 	/** url du flux RSS */
 	String URL_PROPERTY = "url";
 	/** Id sync flux RSS */
@@ -75,7 +76,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 		this.groupService = DirServiceFactory.getService(ToutaticeGroupService.class);
 	}
 
-	public List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems, String view)
+	public List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<String, List<String>> map, int nbItems, String view)
 			throws PortletException {
 		// Nuxeo controller
 		NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
@@ -174,15 +175,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 				list.add(feedNuxeo);
 			}
 		}
-
-		// Search for logos: blob
-        PropertyMap propertyMap = document.getProperties().getMap(LOGOS_PROPERTY);
-        if ((propertyMap != null) && !propertyMap.isEmpty()) {
-            // Vignette URL
-            String url = nuxeoController.createFileLink(document, LOGOS_PROPERTY);
-            picture.setUrl(url);
-        }
-		
+	
 		if (CollectionUtils.isNotEmpty(list)) {
 			// Comparator
 			TitleItemComparator comparator = this.applicationContext.getBean(TitleItemComparator.class);
@@ -219,4 +212,31 @@ public class ItemRepositoryImpl implements ItemRepository {
         return this.groupService.search(criteria);
 	}
 
+	@Override
+	public Map<String, String> searchDisplayName(PortalControllerContext portalControllerContext, String id) throws PortletException {
+
+        // Nuxeo controller
+        NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
+        
+        // Nuxeo command
+        INuxeoCommand nuxeoCommand = this.applicationContext.getBean(ContainerListCommand.class);
+        Documents documents = (Documents) nuxeoController.executeNuxeoCommand(nuxeoCommand);
+        Map<String, String> feed = new HashMap<>();
+        for (Document document : documents) {
+        	fillFeed(document, nuxeoController, feed);
+        }
+        
+		return feed;
+	}
+	
+	private void fillFeed(Document document, NuxeoController nuxeoController, Map<String, String> feed) {
+		
+        PropertyList propertyList = (PropertyList) document.getProperties().get(FEEDS_PROPERTY);
+        if (propertyList != null) {
+            for (int i = 0; i < propertyList.size(); i++) {
+                PropertyMap map = propertyList.getMap(i);
+				feed.put(map.getString(ID_PROPERTY), map.getString(DISPLAY_NAME_PROPERTY));
+            }        	
+        }
+	}		
 }

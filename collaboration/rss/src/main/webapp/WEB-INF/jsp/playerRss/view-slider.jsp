@@ -21,8 +21,8 @@
 			</c:if>
 		    
 		    <c:set var="retenue" value="0" />
-		    <c:if test="${not empty settings.mapFeeds}">
-			    <c:forEach var="feeds" items="${settings.mapFeeds}" varStatus="statusFeed">
+		    <c:if test="${not empty settings.sortFeeds}">
+			    <c:forEach var="feeds" items="${settings.sortFeeds}" varStatus="statusFeed">
 					<c:set var="indice" value="${statusFeed.index +1 - retenue}" />
 					<c:forEach var="flux" items="${feeds.key}" varStatus="status">
 						<c:if test="${status.index gt 0}">

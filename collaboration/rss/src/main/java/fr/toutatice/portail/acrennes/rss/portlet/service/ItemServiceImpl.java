@@ -1,15 +1,14 @@
 package fr.toutatice.portail.acrennes.rss.portlet.service;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.TreeMap;
 
 import javax.naming.Name;
 import javax.portlet.PortletException;
@@ -35,6 +34,7 @@ import fr.toutatice.portail.acrennes.rss.portlet.model.Feed;
 import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
 import fr.toutatice.portail.acrennes.rss.portlet.model.Picture2;
 import fr.toutatice.portail.acrennes.rss.portlet.model.RssSettings;
+import fr.toutatice.portail.acrennes.rss.portlet.model.comparator.MapComparator;
 import fr.toutatice.portail.acrennes.rss.portlet.repository.ItemRepository;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -74,9 +74,6 @@ public class ItemServiceImpl implements ItemService {
         
     /** Select2 results page size. */
 	public final static int SELECT2_RESULTS_PAGE_SIZE = 10;    
-
-    /** Rights properties file name. */
-    private static final String PROPERTIES_FILE_NAME = "rights.properties";	
     
     /** MAP feeds window property. */
     private static final String FEEDS_WINDOW_PROPERTY = "form.mapFeeds";
@@ -101,21 +98,21 @@ public class ItemServiceImpl implements ItemService {
     		return null;
     	}
     	
-		HashMap<List<String>, List<String>> mapFeedRight = new HashMap<>();
+		HashMap<String, List<String>> mapFeedRight = new HashMap<>();
 		// Fill the map of feed with the personn have the rights to see them
-		for(HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()){
+		for(HashMap.Entry<List<String>, List<String>> entry : settings.getSortFeeds().entrySet()){
 				// if ind = 0 --> search all partner (index is for slider rss)
 				if(settings.getInd() != 0) {
 					if(entry.getKey().get(1).contentEquals(settings.getPartner()) ) {
 						if(entry.getValue().size() <2 || !Collections.disjoint(entry.getValue(), settings.getRightsPersonn())){
-							mapFeedRight.put(entry.getKey(), entry.getValue());
+							mapFeedRight.put(entry.getKey().get(0), entry.getValue());
 							break;
 						}			
 					}
 				} else {
 					// Check if the personn have the right to see the feed
 					if(entry.getValue().size() == 1 || !Collections.disjoint(entry.getValue(), settings.getRightsPersonn())){
-						mapFeedRight.put(entry.getKey(), entry.getValue());
+						mapFeedRight.put(entry.getKey().get(0), entry.getValue());
 					}			
 				}
 		}
@@ -136,9 +133,9 @@ public class ItemServiceImpl implements ItemService {
         // Window
         PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
 
-        Map<List<String>, List<String>> map = new HashMap<>();
+        Map<String, List<String>> map = new HashMap<>();
         if(settings.getMapFeeds() != null) {
-        	for (HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()) {
+        	for (HashMap.Entry<String, List<String>> entry : settings.getMapFeeds().entrySet()) {
                 map.put(entry.getKey(), entry.getValue());
               }        	
         }
@@ -146,13 +143,10 @@ public class ItemServiceImpl implements ItemService {
         // Search Title into list container
         List<Container> containers = settings.getContainers().getContainers();
         boolean ok = false;
-        List<String> list = new ArrayList<String>();
         for(Container container: containers) {
         	for(Feed feed: container.getFeeds()) {
         		if(settings.getFlux().equalsIgnoreCase(feed.getId())) {
-        			list.add(feed.getId());
-        			list.add(feed.getTitle());
-        			map.put(list, settings.getRights());
+        			map.put(feed.getId(), settings.getRights());
 					ok = true;
 					break;
         		}
@@ -200,8 +194,8 @@ public class ItemServiceImpl implements ItemService {
 		String viewRss = window.getProperty(VIEW_RSS_WINDOW_PROPERTY);
 		settings.setViewRss(viewRss);
 		
-		// List Feeds 
-		getFeed(settings, window);
+		// List Feeds
+		getFeed(settings, window, portalControllerContext);
 		
 		// Index
 		String index = window.getProperty(INDEX_WINDOW_PROPERTY);
@@ -250,7 +244,7 @@ public class ItemServiceImpl implements ItemService {
 		settings.setPicture(picture);
 		
 		// List Feeds
-		getFeed(settings, window);
+		getFeed(settings, window, portalControllerContext);
 		
 		// Nb Items
 		String nbItems = window.getProperty(NBITEMS_WINDOW_PROPERTY);
@@ -270,15 +264,13 @@ public class ItemServiceImpl implements ItemService {
 		// Window
 		PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
 
-        Map<List<String>, List<String>> map = new HashMap<>();
+        Map<String, List<String>> map = new HashMap<>();
         boolean del = false;
         if(settings.getMapFeeds() != null) {
-			for (HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()) {
-				for (String feed : entry.getKey()) {
-					if (feed.equalsIgnoreCase(id)) {
-						del = true;
-						break;
-					}
+			for (HashMap.Entry<String, List<String>> entry : settings.getMapFeeds().entrySet()) {
+				if (entry.getKey().equalsIgnoreCase(id)) {
+					del = true;
+					break;
 				}
 				if (!del) {
 					map.put(entry.getKey(), entry.getValue());
@@ -291,7 +283,9 @@ public class ItemServiceImpl implements ItemService {
         settings.setMapFeeds(map);
         
         JSONArray json = setJSONArray(settings);
-        window.setProperty(FEEDS_WINDOW_PROPERTY, json.toString());   
+        window.setProperty(FEEDS_WINDOW_PROPERTY, json.toString());
+        window.setProperty(NBITEMS_WINDOW_PROPERTY, settings.getNbItems());
+        window.setProperty(VIEW_RSS_WINDOW_PROPERTY, settings.getViewRss());        
 	}
 
 	@Override
@@ -299,15 +293,14 @@ public class ItemServiceImpl implements ItemService {
 		// Window
 		PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
 
-        Map<List<String>, List<String>> map = new HashMap<>();
+        Map<String, List<String>> map = new HashMap<>();
         boolean mod = false;
         if(settings.getMapFeeds() != null) {
-        	for (HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()) {
-                for(String feed: entry.getKey()) {
-                	if(feed.equalsIgnoreCase(settings.getFeeds().get(0))){
-                		mod = true;
-                	}
-                }
+        	for (HashMap.Entry<String, List<String>> entry : settings.getMapFeeds().entrySet()) {
+               
+				if (entry.getKey().equalsIgnoreCase(settings.getFeeds().get(0))) {
+					mod = true;
+				}
         		if(mod) {
                 	map.put(entry.getKey(), settings.getRights());
                 	mod = false;
@@ -327,24 +320,28 @@ public class ItemServiceImpl implements ItemService {
         window.setProperty(LOGOS_WINDOW_PROPERTY, settings.getPicture().getUrl());
 	}	
 
-	public void getFeed(RssSettings settings, PortalWindow window) {
+	public void getFeed(RssSettings settings, PortalWindow window, PortalControllerContext portalControllerContext) throws PortletException {
         String json = window.getProperty(FEEDS_WINDOW_PROPERTY);
         
         if(json != null && !json.isEmpty() && !json.equalsIgnoreCase("{}")) {
             JSONArray items = JSONArray.fromObject(json);
             
             JSONArray jArray = (JSONArray) items;
-            List<String> feeds = new ArrayList<String>();      
             List<String> rights = new ArrayList<String>();
-            Map<List<String>, List<String>> map = new HashMap<>();
+            Map<String, List<String>> map = new HashMap<>();
+            Map<String, String> mapFeed = new HashMap<>();
+            MapComparator comparateur = new MapComparator(mapFeed);
+            TreeMap<String, String> sortMap = new TreeMap<>(comparateur);
+            String name = null;
+            String id = null;
+    		Map<String, String> displayName = this.repository.searchDisplayName(portalControllerContext, null);
             if (jArray != null && !jArray.isEmpty()) {
     			for (int i = 0; i < jArray.size(); i++) {
     				JSONObject home = jArray.getJSONObject(i);
     				if (home.containsKey("id")) {
-    					feeds.add(home.getString("id"));
-    				}
-    				if (home.containsKey("displayName")) {
-    					feeds.add(home.getString("displayName"));
+    					id = home.getString("id");
+    					name = displayName.get(home.getString("id"));
+    					mapFeed.put(id, name);
     				}
     				if (home.containsKey("rights")) {
     					String val = home.getString("rights").replace("[", "");
@@ -352,36 +349,35 @@ public class ItemServiceImpl implements ItemService {
     					val = val.replaceAll("\"","");
     					List<String> strings = Arrays.asList(val.split(","));
     					rights.addAll(strings);
-    					map.put(feeds, rights);
+    					map.put(id, rights);
     					rights = new ArrayList<String>();
-    					feeds = new ArrayList<String>();
     				}
     			}
     		}
             settings.setMapFeeds(map);
-            settings.setFeeds(feeds); 
-            settings.setRights(rights);
+            List<String> list = new ArrayList<String>();
+            sortMap.putAll(mapFeed);
+            Map<List<String>, List<String>> map10 = new LinkedHashMap<List<String>,List<String>>(); 
+            // Sort Map
+            for(HashMap.Entry<String, String> entry : sortMap.entrySet()) {
+            	list.add(entry.getKey());
+            	list.add(entry.getValue());
+            	map10.put(list, settings.getMapFeeds().get(entry.getKey()));
+            	list = new ArrayList<String>();
+            }
+
+            settings.setSortFeeds(map10);
         }
 	}	
 	
 	public static JSONArray setJSONArray(RssSettings settings) {
         // Message JSON object
         JSONObject id = new JSONObject();
-        JSONObject displayName = new JSONObject();
         JSONObject rights = new JSONObject();
         JSONArray items = new JSONArray();
-        for(HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()){
-        	int i = 0;
-            for(String feed :entry.getKey()) {
-            	if(i == 0) {
-                	id.put("id", feed);            		
-                    items.add(id);
-            	} else {
-                    displayName.put("displayName", feed);
-                    items.add(displayName);
-            	}
-            	i++;
-            }
+        for(HashMap.Entry<String, List<String>> entry : settings.getMapFeeds().entrySet()){
+        	id.put("id", entry.getKey());            		
+            items.add(id);
             if(entry.getValue() == null) {
                 rights.put("rights", "");            	
             } else {
@@ -403,7 +399,7 @@ public class ItemServiceImpl implements ItemService {
 
 		ArrayList<Boolean> list = new ArrayList<Boolean>();
 		// for each Button feed, check if the personn have the rigths to see this feed
-		for(HashMap.Entry<List<String>, List<String>> entry : settings.getMapFeeds().entrySet()) {
+		for(HashMap.Entry<List<String>, List<String>> entry : settings.getSortFeeds().entrySet()) {
 			// if feed has no right so enable button
 			if (entry.getValue().toString().length() <3 || !Collections.disjoint(entry.getValue(), right)) {
 				list.add(true);
@@ -422,19 +418,16 @@ public class ItemServiceImpl implements ItemService {
         // Bundle
         Bundle bundle = this.bundleFactory.getBundle(portalControllerContext.getRequest().getLocale());
 		
-		
         // Groups
         List<Group> groups = this.repository.searchGroups(portalControllerContext, filter);
         
         // JSON objects
         List<JSONObject> objects = new ArrayList<>();        
-        for (Group group : groups) {
-
-            // Search result
-            JSONObject object = this.getSearchResult(group, bundle);
-
-            objects.add(object);
-        }
+		for (Group group : groups) {
+			// Search result
+			JSONObject object = this.getSearchResult(group, bundle);
+			objects.add(object);
+		}
 
         // Results JSON object
         JSONObject results = new JSONObject();        
@@ -483,7 +476,7 @@ public class ItemServiceImpl implements ItemService {
 		PortalWindow window = WindowFactory.getWindow(portalControllerContext.getRequest());
     	window.setProperty(PART_WINDOW_PROPERTY, part);
     	window.setProperty(INDEX_WINDOW_PROPERTY, Integer.toString(index) );
-    	
     }
+
 }
 

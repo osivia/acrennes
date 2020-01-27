@@ -2,6 +2,7 @@ package fr.toutatice.portail.acrennes.rss.portlet.repository;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletException;
 
@@ -65,7 +66,7 @@ public interface ItemRepository {
 	 * @param view
 	 * @throws PortletException
 	 */
-	List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<List<String>, List<String>> map, int nbItems, String view)
+	List<ItemRssModel> getListItemRss(PortalControllerContext portalControllerContext, HashMap<String, List<String>> map, int nbItems, String view)
 			throws PortletException;
 	
     /**
@@ -76,4 +77,12 @@ public interface ItemRepository {
      * @throws PortletException
      */
     List<Group> searchGroups(PortalControllerContext portalControllerContext, String filter) throws PortletException ;
+    
+    /** 
+     * search DisplayName
+     * @param portalControllerContext
+     * @param id
+     * @throws PortletException
+     */
+    Map<String, String> searchDisplayName(PortalControllerContext portalControllerContext, String id) throws PortletException ;
 }

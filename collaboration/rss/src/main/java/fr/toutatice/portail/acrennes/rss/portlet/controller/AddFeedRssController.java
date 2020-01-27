@@ -102,7 +102,6 @@ public class AddFeedRssController {
     public RssSettings getSettings(PortletRequest request, PortletResponse response, @RequestParam(value = "view", required = false) String view, @RequestParam(value = "nbitems", required = false) String nbitems) throws PortletException, IOException {
         // Portal controller context
         PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
-        System.out.println("Coucou Fred:" + view + ';'+ nbitems);
         return this.service.getList(portalControllerContext);
     }
     

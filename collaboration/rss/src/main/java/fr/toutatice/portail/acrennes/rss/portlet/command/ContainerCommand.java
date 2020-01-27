@@ -1,8 +1,5 @@
 package fr.toutatice.portail.acrennes.rss.portlet.command;
 
-import java.util.HashMap;
-import java.util.List;
-
 import org.nuxeo.ecm.automation.client.Constants;
 import org.nuxeo.ecm.automation.client.OperationRequest;
 import org.nuxeo.ecm.automation.client.Session;
@@ -10,6 +7,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
 import fr.toutatice.portail.cms.nuxeo.api.INuxeoCommand;
 import fr.toutatice.portail.cms.nuxeo.api.NuxeoQueryFilter;
 import fr.toutatice.portail.cms.nuxeo.api.NuxeoQueryFilterContext;
@@ -22,40 +20,28 @@ import fr.toutatice.portail.cms.nuxeo.api.NuxeoQueryFilterContext;
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ItemListCommand implements INuxeoCommand {
+public class ContainerCommand implements INuxeoCommand {
 
-    
-    private final HashMap<String, List<String>> map;
+    /** RSS Model. */
+    private String id;
 	
 	/**
 	 * Constructor.
 	 *
 	 */
-	public ItemListCommand(HashMap<String, List<String>> map) {
+	public ContainerCommand(String id) {
 		super();
-        this.map = map;
+		this.id = id;
 	}
-	
+
 	@Override
 	public Object execute(Session nuxeoSession) throws Exception {
 
 		// Clause
 		StringBuilder clause = new StringBuilder();
-		clause.append("ecm:primaryType = 'RssItem' ");
-		if(map != null && !map.isEmpty()) {
-			int index = 0;
-			for(HashMap.Entry<String, List<String>> entry : map.entrySet()) {
-				if(index == 0) {
-					clause.append("AND rssi:syncId IN ('" + entry.getKey() + "'");	
-				}else {
-					clause.append(",'" + entry.getKey() + "'");
-				}
-				index++;
-			}
-			clause.append(")");
-		}
-        clause.append("ORDER BY rssi:pubDate DESC");
-
+		clause.append("ecm:primaryType = 'RssContainer' ");
+		clause.append("rssc:syncId = '" + id + "' ");
+		
 		String filteredRequest = NuxeoQueryFilter.addPublicationFilter(NuxeoQueryFilterContext.CONTEXT_LIVE, clause.toString());
 		
 		// Request
@@ -69,6 +55,7 @@ public class ItemListCommand implements INuxeoCommand {
 
 	@Override
 	public String getId() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

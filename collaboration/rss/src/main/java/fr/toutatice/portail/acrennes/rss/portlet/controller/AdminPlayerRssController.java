@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
@@ -93,18 +92,63 @@ public class AdminPlayerRssController {
 	 * @throws PortletException
 	 * @throws IOException
 	 */
-	@ActionMapping(value = "del")
-	public void del(ActionRequest request, ActionResponse response, @RequestParam String id,
+	@ActionMapping(name = "save", params = "del")
+	public void del(ActionRequest request, ActionResponse response, 
+			@ModelAttribute("form") RssSettings form, SessionStatus status) throws PortletException, IOException {
+
+		// Portal controller context
+		PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
+				response);
+		String id = request.getParameter("del");
+		this.service.delFeeds(portalControllerContext, form, id);
+		status.setComplete();
+	}
+	
+	/**
+	 * Edit feed
+	 * 
+	 * @param request
+	 * @param response
+	 * @param form
+	 * @param status
+	 * @throws PortletException
+	 * @throws IOException
+	 */
+	@ActionMapping(name = "save", params = "edit")
+	public void edit(ActionRequest request, ActionResponse response, 
+			@ModelAttribute("form") RssSettings form, SessionStatus status) throws PortletException, IOException {
+
+		// Portal controller context
+		PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
+				response);
+		String id = request.getParameter("edit");
+		response.setRenderParameter("id", id);
+		this.service.saveSettings(portalControllerContext, form);
+		response.setRenderParameter("edit", "feed");
+	}	
+
+	/**
+	 * Add feed
+	 * 
+	 * @param request
+	 * @param response
+	 * @param form
+	 * @param status
+	 * @throws PortletException
+	 * @throws IOException
+	 */
+	@ActionMapping(name = "save", params = "add")	
+	public void add(ActionRequest request, ActionResponse response, 
 			@ModelAttribute("form") RssSettings form, SessionStatus status) throws PortletException, IOException {
 
 		// Portal controller context
 		PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
 				response);
 
-		this.service.delFeeds(portalControllerContext, form, id);
-		status.setComplete();
+		this.service.saveSettings(portalControllerContext, form);
+		response.setRenderParameter("add", "feed");
 	}
-
+	
 	/**
 	 * Get portlet settings model attribute.
 	 * 

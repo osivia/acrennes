@@ -41,8 +41,11 @@ public class RssSettings {
     /** Map feed --> right(s). */
     private Containers containersDisplays;
 
-    /** Map feed --> right(s). */
-    private Map<List<String>, List<String>> mapFeeds;
+    /** Map id --> right(s). */
+    private Map<String, List<String>> mapFeeds;
+
+    /** Map id --> displayName. */
+    private Map<List<String>, List<String>> sortFeeds;
     
     /** title. */
     private String title;
@@ -144,14 +147,6 @@ public class RssSettings {
 		this.containersDisplays = containersDisplays;
 	}
 
-	public Map<List<String>, List<String>> getMapFeeds() {
-		return mapFeeds;
-	}
-
-	public void setMapFeeds(Map<List<String>, List<String>> mapFeeds) {
-		this.mapFeeds = mapFeeds;
-	}
-
 	public int getInd() {
 		return ind;
 	}
@@ -198,5 +193,21 @@ public class RssSettings {
 
 	public void setNumberButton(int numberButton) {
 		this.numberButton = numberButton;
+	}
+
+	public Map<String, List<String>> getMapFeeds() {
+		return mapFeeds;
+	}
+
+	public void setMapFeeds(Map<String, List<String>> mapFeeds) {
+		this.mapFeeds = mapFeeds;
+	}
+
+	public Map<List<String>, List<String>> getSortFeeds() {
+		return sortFeeds;
+	}
+
+	public void setSortFeeds(Map<List<String>, List<String>> sortFeeds) {
+		this.sortFeeds = sortFeeds;
 	}
 }
