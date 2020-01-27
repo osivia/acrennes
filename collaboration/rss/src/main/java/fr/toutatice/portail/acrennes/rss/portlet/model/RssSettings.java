@@ -63,7 +63,7 @@ public class RssSettings {
     private ArrayList<Boolean> partners;
     
     /** Picture for the slider buttons. */	
-    private Picture2 picture;
+    private RssPicture picture;
     
     /** Number of button for slider*/
     private int numberButton;
@@ -179,11 +179,11 @@ public class RssSettings {
 		this.rightsPersonn = rightsPersonn;
 	}
 
-	public Picture2 getPicture() {
+	public RssPicture getPicture() {
 		return picture;
 	}
 
-	public void setPicture(Picture2 picture) {
+	public void setPicture(RssPicture picture) {
 		this.picture = picture;
 	}
 

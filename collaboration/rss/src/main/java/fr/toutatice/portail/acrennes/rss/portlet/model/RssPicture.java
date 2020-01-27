@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class Picture2 {
+public class RssPicture {
 
     /** Vignette original URL. */
     private String url;
@@ -30,7 +30,7 @@ public class Picture2 {
     /**
      * Constructor.
      */
-    public Picture2() {
+    public RssPicture() {
         super();
     }
 

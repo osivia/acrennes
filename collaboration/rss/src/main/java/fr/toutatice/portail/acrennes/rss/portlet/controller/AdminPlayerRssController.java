@@ -1,29 +1,22 @@
 package fr.toutatice.portail.acrennes.rss.portlet.controller;
 
-import java.io.IOException;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletException;
-import javax.portlet.PortletMode;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.WindowState;
-
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssView;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssWindowProperties;
+import fr.toutatice.portail.acrennes.rss.portlet.service.ItemService;
 import org.osivia.portal.api.context.PortalControllerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fr.toutatice.portail.acrennes.rss.portlet.model.RssSettings;
-import fr.toutatice.portail.acrennes.rss.portlet.service.ItemService;
+import javax.portlet.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Admin Template Rss controller.
@@ -31,140 +24,132 @@ import fr.toutatice.portail.acrennes.rss.portlet.service.ItemService;
  * @author Frédéric Boudan
  */
 @Controller
-@RequestMapping(value = "ADMIN")
+@RequestMapping("ADMIN")
+@SessionAttributes("windowPropertiesForm")
 public class AdminPlayerRssController {
 
-	/** Portlet context. */
-	@Autowired
-	private PortletContext portletContext;
+    /**
+     * Portlet context.
+     */
+    @Autowired
+    private PortletContext portletContext;
 
-	/** Portlet service. */
-	@Autowired
-	private ItemService service;
+    /**
+     * Portlet service.
+     */
+    @Autowired
+    private ItemService service;
 
-	/**
-	 * Constructor.
-	 */
-	public AdminPlayerRssController() {
-		super();
-	}
+    /**
+     * Constructor.
+     */
+    public AdminPlayerRssController() {
+        super();
+    }
 
-	/**
-	 * View render mapping.
-	 * 
-	 * @param request  render request
-	 * @param response render response
-	 * @return view path
-	 */
-	@RenderMapping
-	public String view(RenderRequest request, RenderResponse response) {
-		return "admin";
-	}
+    /**
+     * View render mapping.
+     *
+     * @param request  render request
+     * @param response render response
+     * @return view path
+     */
+    @RenderMapping
+    public String view(RenderRequest request, RenderResponse response) {
+        return "admin";
+    }
 
-	/**
-	 * Save portlet settings action mapping.
-	 * 
-	 * @param request  action request
-	 * @param response action response
-	 * @param settings portlet settings model attribute
-	 * @throws PortletException
-	 */
-	@ActionMapping(value = "save")
-	public void save(ActionRequest request, ActionResponse response, @ModelAttribute("form") RssSettings settings)
-			throws PortletException {
-		// Portal controller context
-		PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
-				response);
 
-		this.service.saveSettings(portalControllerContext, settings);
+    /**
+     * Save window properties.
+     *
+     * @param request  action request
+     * @param response action response
+     * @param form form model attribute
+	 * @param status session status
+     */
+    @ActionMapping(name = "submit", params = "save")
+    public void save(ActionRequest request, ActionResponse response, @ModelAttribute("windowPropertiesForm") RssWindowProperties form, SessionStatus status)
+            throws PortletException {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
+                response);
 
-		response.setWindowState(WindowState.NORMAL);
-		response.setPortletMode(PortletMode.VIEW);
-	}
-	
-	/**
-	 * Delete feed
-	 * 
-	 * @param request
-	 * @param response
-	 * @param form
-	 * @param status
-	 * @throws PortletException
-	 * @throws IOException
-	 */
-	@ActionMapping(name = "save", params = "del")
-	public void del(ActionRequest request, ActionResponse response, 
-			@ModelAttribute("form") RssSettings form, SessionStatus status) throws PortletException, IOException {
+        this.service.saveWindowProperties(portalControllerContext, form);
 
-		// Portal controller context
-		PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
-				response);
-		String id = request.getParameter("del");
-		this.service.delFeeds(portalControllerContext, form, id);
-		status.setComplete();
-	}
-	
-	/**
-	 * Edit feed
-	 * 
-	 * @param request
-	 * @param response
-	 * @param form
-	 * @param status
-	 * @throws PortletException
-	 * @throws IOException
-	 */
-	@ActionMapping(name = "save", params = "edit")
-	public void edit(ActionRequest request, ActionResponse response, 
-			@ModelAttribute("form") RssSettings form, SessionStatus status) throws PortletException, IOException {
+        status.setComplete();
 
-		// Portal controller context
-		PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
-				response);
-		String id = request.getParameter("edit");
-		response.setRenderParameter("id", id);
-		this.service.saveSettings(portalControllerContext, form);
-		response.setRenderParameter("edit", "feed");
-	}	
+        response.setWindowState(WindowState.NORMAL);
+        response.setPortletMode(PortletMode.VIEW);
+    }
 
-	/**
-	 * Add feed
-	 * 
-	 * @param request
-	 * @param response
-	 * @param form
-	 * @param status
-	 * @throws PortletException
-	 * @throws IOException
-	 */
-	@ActionMapping(name = "save", params = "add")	
-	public void add(ActionRequest request, ActionResponse response, 
-			@ModelAttribute("form") RssSettings form, SessionStatus status) throws PortletException, IOException {
 
-		// Portal controller context
-		PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
-				response);
+    /**
+     * Delete feed.
+     *
+     * @param request action request
+     * @param response action response
+	 * @param id feed identifier request parameter
+     * @param form form model attribute
+     */
+    @ActionMapping(name = "submit", params = "del")
+    public void del(ActionRequest request, ActionResponse response, @RequestParam("del") String id, @ModelAttribute("windowPropertiesForm") RssWindowProperties form) throws PortletException {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
+        this.service.delFeeds(portalControllerContext, form, id);
+    }
 
-		this.service.saveSettings(portalControllerContext, form);
-		response.setRenderParameter("add", "feed");
-	}
-	
-	/**
-	 * Get portlet settings model attribute.
-	 * 
-	 * @param request  portlet request
-	 * @param response portlet response
-	 * @return portlet settings
-	 * @throws PortletException
-	 * @throws IOException
-	 */
-	@ModelAttribute("form")
-	public RssSettings getSettings(PortletRequest request, PortletResponse response)
-			throws PortletException, IOException {
-		// Portal controller context
-		PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request,
-				response);
 
-		return this.service.getSettings(portalControllerContext);
-	}
+    /**
+     * Edit feed.
+     *
+     * @param request action request
+     * @param response action response
+	 * @param id feed identifier request parameter
+     * @param form form model attribute
+     */
+    @ActionMapping(name = "submit", params = "edit")
+    public void edit(ActionRequest request, ActionResponse response, @RequestParam("edit") String id, @ModelAttribute("windowPropertiesForm") RssWindowProperties form) {
+        response.setRenderParameter("id", id);
+        response.setRenderParameter("edit", "feed");
+    }
+
+
+    /**
+     * Add feed.
+     *
+     * @param request action request
+     * @param response action response
+     * @param form form model attribute
+     */
+    @ActionMapping(name = "submit", params = "add")
+    public void add(ActionRequest request, ActionResponse response, @ModelAttribute("windowPropertiesForm") RssWindowProperties form) {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
+
+        response.setRenderParameter("add", "feed");
+    }
+
+
+    /**
+     * Get form model attribute.
+     *
+     * @param request  portlet request
+     * @param response portlet response
+     * @return form
+     */
+    @ModelAttribute("windowPropertiesForm")
+    public RssWindowProperties getForm(PortletRequest request, PortletResponse response) throws PortletException {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
+
+        return this.service.getWindowProperties(portalControllerContext);
+    }
+
+
+    @ModelAttribute("views")
+    public List<RssView> getViews() {
+        return Arrays.asList(RssView.values());
+    }
+
 }

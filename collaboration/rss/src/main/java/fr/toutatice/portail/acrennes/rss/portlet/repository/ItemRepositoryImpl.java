@@ -1,14 +1,10 @@
 package fr.toutatice.portail.acrennes.rss.portlet.repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.portlet.PortletException;
 
+import fr.toutatice.portail.acrennes.rss.portlet.model.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.client.model.Document;
@@ -27,11 +23,6 @@ import org.springframework.stereotype.Repository;
 import fr.toutatice.portail.acrennes.directory.service.ToutaticeGroupService;
 import fr.toutatice.portail.acrennes.rss.portlet.command.ContainerListCommand;
 import fr.toutatice.portail.acrennes.rss.portlet.command.ItemListCommand;
-import fr.toutatice.portail.acrennes.rss.portlet.model.Container;
-import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
-import fr.toutatice.portail.acrennes.rss.portlet.model.Feed;
-import fr.toutatice.portail.acrennes.rss.portlet.model.ItemRssModel;
-import fr.toutatice.portail.acrennes.rss.portlet.model.Picture2;
 import fr.toutatice.portail.acrennes.rss.portlet.model.comparator.TitleItemComparator;
 import fr.toutatice.portail.cms.nuxeo.api.INuxeoCommand;
 import fr.toutatice.portail.cms.nuxeo.api.NuxeoController;
@@ -141,7 +132,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 	/**
 	 * getList feed RSS
 	 */
-	public Containers getListFeedRss(PortalControllerContext portalControllerContext, Picture2 picture) throws PortletException {
+	public Containers getListFeedRss(PortalControllerContext portalControllerContext, RssPicture picture) throws PortletException {
 
 		// Nuxeo controller
 		NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
@@ -159,7 +150,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 		return listContainers;
 	}
 
-	private void fillContainers(Document document, NuxeoController nuxeoController, Containers listContainers, Picture2 picture) {
+	private void fillContainers(Document document, NuxeoController nuxeoController, Containers listContainers, RssPicture picture) {
 
 		PropertyList propertyList = (PropertyList) document.getProperties().get(FEEDS_PROPERTY);
 		Container container = this.applicationContext.getBean(Container.class);
@@ -238,5 +229,59 @@ public class ItemRepositoryImpl implements ItemRepository {
 				feed.put(map.getString(ID_PROPERTY), map.getString(DISPLAY_NAME_PROPERTY));
             }        	
         }
-	}		
+	}
+
+
+	@Override
+	public void fillFeeds(PortalControllerContext portalControllerContext, List<RssWindowPropertiesFeed> feeds) throws PortletException {
+		// Nuxeo controller
+		NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
+
+		if (CollectionUtils.isNotEmpty(feeds)) {
+			// Feed identifiers
+			List<String> ids = new ArrayList<>(feeds.size());
+			for (RssWindowPropertiesFeed feed : feeds) {
+				ids.add(feed.getId());
+			}
+
+			// Containers
+			INuxeoCommand command = this.applicationContext.getBean(ContainerListCommand.class, ids);
+			Documents containers = (Documents) nuxeoController.executeNuxeoCommand(command);
+
+			for (Document container : containers.list()) {
+				PropertyList feedList = container.getProperties().getList(FEEDS_PROPERTY);
+				
+				for (int i = 0; i < feedList.size(); i++) {
+					PropertyMap feedMap = feedList.getMap(i);
+
+					String feedId = feedMap.getString(ID_PROPERTY);
+
+					// Feed
+					RssWindowPropertiesFeed feed = null;
+					Iterator<RssWindowPropertiesFeed> iterator = feeds.iterator();
+					while ((feed == null) && iterator.hasNext()) {
+						RssWindowPropertiesFeed item = iterator.next();
+						if (StringUtils.equals(feedId, item.getId())) {
+							feed = item;
+						}
+					}
+
+					if (feed != null) {
+						// Display name
+						String displayName = feedMap.getString(DISPLAY_NAME_PROPERTY);
+						feed.setDisplayName(displayName);
+
+						// Picture URL
+						String url;
+						if (feedMap.get(LOGO_PROPERTY) == null) {
+							url = null;
+						} else {
+							url = nuxeoController.createFileLink(container, FEEDS_PROPERTY + "/" + i + "/" + LOGO_PROPERTY);
+						}
+						feed.setPictureUrl(url);
+					}
+				}
+			}
+		}
+	}
 }

@@ -32,6 +32,14 @@
             <type>war</type>
         </dependency>
 
+        <!--RSS-->
+        <dependency>
+            <groupId>org.osivia.services</groupId>
+            <artifactId>osivia-services-rss</artifactId>
+            <version>${collaboration.version}</version>
+            <type>war</type>
+        </dependency>
+
         <!-- Widgets -->
         <dependency>
             <groupId>org.osivia.services</groupId>
@@ -63,6 +71,13 @@
                             <groupId>${project.groupId}</groupId>
                             <artifactId>toutatice-portail-acrennes-collaboration-rss</artifactId>
                             <contextRoot>/toutatice-portail-acrennes-collaboration-rss</contextRoot>
+                        </webModule>
+
+                        <!--RSS-->
+                        <webModule>
+                            <groupId>org.osivia.services</groupId>
+                            <artifactId>osivia-services-rss</artifactId>
+                            <contextRoot>/osivia-services-rss</contextRoot>
                         </webModule>
 
                         <!-- Widgets -->

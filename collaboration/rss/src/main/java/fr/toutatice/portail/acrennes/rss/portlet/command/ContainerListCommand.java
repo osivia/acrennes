@@ -1,5 +1,7 @@
 package fr.toutatice.portail.acrennes.rss.portlet.command;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.client.Constants;
 import org.nuxeo.ecm.automation.client.OperationRequest;
 import org.nuxeo.ecm.automation.client.Session;
@@ -11,6 +13,8 @@ import fr.toutatice.portail.cms.nuxeo.api.INuxeoCommand;
 import fr.toutatice.portail.cms.nuxeo.api.NuxeoQueryFilter;
 import fr.toutatice.portail.cms.nuxeo.api.NuxeoQueryFilterContext;
 
+import java.util.List;
+
 /**
  * List Nuxeo command.
  *
@@ -21,13 +25,24 @@ import fr.toutatice.portail.cms.nuxeo.api.NuxeoQueryFilterContext;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ContainerListCommand implements INuxeoCommand {
 
+	/** Feed identifiers. */
+	private final List<String> feedIds;
+
+
 	/**
 	 * Constructor.
 	 *
 	 */
 	public ContainerListCommand() {
-		super();
+		this(null);
 	}
+
+
+	public ContainerListCommand(List<String> feedIds) {
+		super();
+		this.feedIds = feedIds;
+	}
+
 
 	@Override
 	public Object execute(Session nuxeoSession) throws Exception {
@@ -35,6 +50,12 @@ public class ContainerListCommand implements INuxeoCommand {
 		// Clause
 		StringBuilder clause = new StringBuilder();
 		clause.append("ecm:primaryType = 'RssContainer' ");
+
+		if (CollectionUtils.isNotEmpty(this.feedIds)) {
+			clause.append("AND rssc:feeds/*/syncId IN ('");
+			clause.append(StringUtils.join(this.feedIds, "', '"));
+			clause.append("') ");
+		}
 
 		String filteredRequest = NuxeoQueryFilter.addPublicationFilter(NuxeoQueryFilterContext.CONTEXT_LIVE, clause.toString());
 		
@@ -49,7 +70,6 @@ public class ContainerListCommand implements INuxeoCommand {
 
 	@Override
 	public String getId() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
