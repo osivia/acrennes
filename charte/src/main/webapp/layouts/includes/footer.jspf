@@ -1,5 +1,7 @@
-<footer>
-
+<footer class="bg-primary">
+    <div class="container py-5">
+        
+    </div>
 </footer>
 
 

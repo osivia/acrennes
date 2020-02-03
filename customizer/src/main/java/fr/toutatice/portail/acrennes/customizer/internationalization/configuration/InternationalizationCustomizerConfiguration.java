@@ -30,7 +30,7 @@ public class InternationalizationCustomizerConfiguration {
     @Bean(name = "messageSource")
     public ResourceBundleMessageSource getMessageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("customizer", "toolbar");
+        messageSource.setBasenames("customizer", "layout", "toolbar");
         return messageSource;
     }
 
