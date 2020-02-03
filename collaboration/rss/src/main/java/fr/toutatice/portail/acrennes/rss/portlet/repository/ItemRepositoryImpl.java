@@ -53,7 +53,10 @@ public class ItemRepositoryImpl implements ItemRepository {
      * Id sync flux RSS
      */
     private static String ID_PROPERTY = "syncId";
-
+    /**   
+     * Description flux RSS
+     */
+    private static String DESCRIPTION_PROPERTY = "dc:description";
 
     /**
      * Application context.
@@ -192,7 +195,6 @@ public class ItemRepositoryImpl implements ItemRepository {
             }
         }
     }
-
 
     @Override
     public List<RssPlayerFeed> getFeeds(PortalControllerContext portalControllerContext, List<String> identifiers, int limit) throws PortletException {
@@ -364,13 +366,21 @@ public class ItemRepositoryImpl implements ItemRepository {
         item.setTitle(title);
 
         // Description
-        String description = document.getString("dc:description");
+        String description = document.getString(DESCRIPTION_PROPERTY);
         item.setDescription(description);
 
         // Picture URL
         String pictureUrl = document.getString("rssi:enclosure"); // FIXME
         item.setPictureUrl(pictureUrl);
 
+        // Link
+        String link = document.getString(LINK_PROPERTY);
+        item.setLink(link);
+        
+        // pubDate
+        Date pubDate = document.getDate(PUBDATE_PROPERTY);
+        item.setPubDate(pubDate);
+        
         return item;
     }
 

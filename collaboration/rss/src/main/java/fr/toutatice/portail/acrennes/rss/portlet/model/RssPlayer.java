@@ -35,14 +35,12 @@ public class RssPlayer {
      */
     private List<RssPlayerFeedItem> displayedItems;
 
-
     /**
      * Constructor.
      */
     public RssPlayer() {
         super();
     }
-
 
     public boolean isLoaded() {
         return loaded;

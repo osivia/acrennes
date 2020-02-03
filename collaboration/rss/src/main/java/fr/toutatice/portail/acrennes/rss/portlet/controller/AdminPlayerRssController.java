@@ -125,9 +125,6 @@ public class AdminPlayerRssController {
      */
     @ActionMapping(name = "submit", params = "add")
     public void add(ActionRequest request, ActionResponse response, @ModelAttribute("windowPropertiesForm") RssWindowProperties form) {
-        // Portal controller context
-        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
-
         response.setRenderParameter("add", "feed");
     }
 

@@ -1,11 +1,14 @@
 package fr.toutatice.portail.acrennes.rss.portlet.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.toutatice.portail.acrennes.rss.portlet.model.*;
-import fr.toutatice.portail.acrennes.rss.portlet.repository.ItemRepository;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.naming.Name;
+import javax.portlet.PortletException;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -23,9 +26,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import javax.naming.Name;
-import javax.portlet.PortletException;
-import java.util.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fr.toutatice.portail.acrennes.rss.portlet.model.Container;
+import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssPlayer;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssPlayerFeed;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssPlayerFeedItem;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssView;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssWindowProperties;
+import fr.toutatice.portail.acrennes.rss.portlet.model.RssWindowPropertiesFeed;
+import fr.toutatice.portail.acrennes.rss.portlet.repository.ItemRepository;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * RSS service interface
@@ -236,7 +250,6 @@ public class ItemServiceImpl implements ItemService {
         return this.getFeedForm(portalControllerContext, null, null);
     }
 
-
     @Override
     public RssWindowPropertiesFeed getFeedForm(PortalControllerContext portalControllerContext, RssWindowProperties windowProperties, String id) throws PortletException {
         RssWindowPropertiesFeed feed = this.applicationContext.getBean(RssWindowPropertiesFeed.class);
@@ -381,7 +394,6 @@ public class ItemServiceImpl implements ItemService {
                         identifiers.add(property.getId());
                     }
                 }
-
                 feeds = this.repository.getFeeds(portalControllerContext, identifiers, windowProperties.getNbItems());
             }
             player.setFeeds(feeds);
@@ -406,10 +418,24 @@ public class ItemServiceImpl implements ItemService {
         return player;
     }
 
-
     @Override
     public void selectFeed(PortalControllerContext portalControllerContext, RssPlayer player, String id) throws PortletException {
-        // TODO
+        List<RssPlayerFeedItem> displayedItems;    	
+        if (CollectionUtils.isEmpty(player.getFeeds())) {
+            displayedItems = null;
+        }else {
+        	for(RssPlayerFeed feed: player.getFeeds()) {
+        		if(feed.getId().equalsIgnoreCase(id)) {
+                    displayedItems = new ArrayList<>();
+        			List<RssPlayerFeedItem> items = feed.getItems();
+                    if (CollectionUtils.isNotEmpty(items)) {
+                        RssPlayerFeedItem item = items.get(0);
+                        displayedItems.add(item);
+                    }    			
+        			player.setDisplayedItems(displayedItems);
+        		}
+        	}
+        }
     }
 
 }

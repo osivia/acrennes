@@ -1,5 +1,7 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,10 @@ public class RssPlayerFeedItem {
      */
     private String title;
     /**
+     * Feed Link.
+     */
+    private String link;
+    /**
      * Description.
      */
     private String description;
@@ -25,7 +31,10 @@ public class RssPlayerFeedItem {
      * Picture URL.
      */
     private String pictureUrl;
-
+    /**
+     * Date.
+     */
+    private Date pubDate;
 
     /**
      * Constructor.
@@ -58,4 +67,24 @@ public class RssPlayerFeedItem {
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
     }
+
+
+	public String getLink() {
+		return link;
+	}
+
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+
+	public Date getPubDate() {
+		return pubDate;
+	}
+
+
+	public void setPubDate(Date pubDate) {
+		this.pubDate = pubDate;
+	}
 }

@@ -41,14 +41,12 @@ public class ViewPlayerRssController {
     @Autowired
     protected ItemService service;
 
-
     /**
      * Constructor.
      */
     public ViewPlayerRssController() {
         super();
     }
-
 
     /**
      * View container render mapping
@@ -64,7 +62,6 @@ public class ViewPlayerRssController {
 
         return this.service.getViewPath(portalControllerContext);
     }
-
 
     /**
      * Select feed action mapping.
