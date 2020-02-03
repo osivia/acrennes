@@ -1,0 +1,18 @@
+$blue: #364676;
+$blue-light: #909ec5;
+$orange: #ffa000;
+$orange-light: #ffecb3;
+$gray-900: #212121;
+
+$tertiary: $orange;
+$tertiary-light: $orange-light;
+
+
+$theme-colors: (
+        "primary-light": $blue-light,
+        "tertiary": $tertiary,
+        "tertiary-light": $tertiary-light
+);
+
+
+$body-bg: #eef0f7;

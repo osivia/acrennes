@@ -16,7 +16,7 @@
 <%@ include file="../includes/header.jspf" %>
 
 <main>
-    <div class="container-fluid">
+    <div class="container">
         <p:region regionName="maximized"/>
 
     </div>
