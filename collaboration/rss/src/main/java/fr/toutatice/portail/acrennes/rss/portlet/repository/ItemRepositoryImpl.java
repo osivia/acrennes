@@ -46,10 +46,6 @@ public class ItemRepositoryImpl implements ItemRepository {
      */
     private static String LOGO_PROPERTY = "logos";
     /**
-     * url du flux RSS
-     */
-    private static String URL_PROPERTY = "url";
-    /**
      * Id sync flux RSS
      */
     private static String ID_PROPERTY = "syncId";

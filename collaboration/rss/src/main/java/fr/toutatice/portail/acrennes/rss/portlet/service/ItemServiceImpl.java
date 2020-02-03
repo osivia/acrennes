@@ -66,22 +66,9 @@ public class ItemServiceImpl implements ItemService {
      */
     private static final String NBITEMS_WINDOW_PROPERTY = "form.nbItems";
     /**
-     * Nb Items window property.
-     */
-    private static final String LOGOS_WINDOW_PROPERTY = "form.logos";
-    /**
      * MAP feeds window property.
      */
     private static final String FEEDS_WINDOW_PROPERTY = "form.mapFeeds";
-    /**
-     * index for slider buttons Items window property.
-     */
-    private static final String INDEX_WINDOW_PROPERTY = "form.index";
-    /**
-     * part for slider buttons Items window property.
-     */
-    private static final String PART_WINDOW_PROPERTY = "form.part";
-
 
     /**
      * Log.
@@ -420,19 +407,29 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void selectFeed(PortalControllerContext portalControllerContext, RssPlayer player, String id) throws PortletException {
-        List<RssPlayerFeedItem> displayedItems;    	
+        List<RssPlayerFeedItem> displayedItems;
         if (CollectionUtils.isEmpty(player.getFeeds())) {
             displayedItems = null;
         }else {
+            displayedItems = new ArrayList<>();
         	for(RssPlayerFeed feed: player.getFeeds()) {
-        		if(feed.getId().equalsIgnoreCase(id)) {
-                    displayedItems = new ArrayList<>();
-        			List<RssPlayerFeedItem> items = feed.getItems();
+        		if(id == null) {
+                    List<RssPlayerFeedItem> items = feed.getItems();
                     if (CollectionUtils.isNotEmpty(items)) {
                         RssPlayerFeedItem item = items.get(0);
                         displayedItems.add(item);
-                    }    			
+                    }        			
         			player.setDisplayedItems(displayedItems);
+        		} else {
+            		if(feed.getId().equalsIgnoreCase(id)) {
+            			List<RssPlayerFeedItem> items = feed.getItems();
+                        if (CollectionUtils.isNotEmpty(items)) {
+                        	for( RssPlayerFeedItem item : items) {
+                                displayedItems.add(item);                    		
+                        	}
+                        }    			
+            			player.setDisplayedItems(displayedItems);
+            		}        			
         		}
         	}
         }
