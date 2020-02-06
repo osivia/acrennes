@@ -1,0 +1,73 @@
+@import "../../../../../charte/src/main/sass/osivia/variables";
+@import "../../../../../charte/src/main/sass/osivia/glyphicons/mixins";
+
+
+.toutatice-slider {
+	background-color: $white;
+	
+	.position-absolute {
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		overflow: hidden;
+	}
+	
+	.toutatice-carousel-indicators {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 1;
+		
+		li {
+			.glyphicons {
+				$url: glyphicons-url("basic", "298", "circle-empty");
+				@include glyphicons-mask($url);
+			}
+			
+			&.active {
+				.glyphicons {
+					$url: glyphicons-url("basic", "299", "circle-selected");
+					@include glyphicons-mask($url);
+				}
+			}
+		}
+	}
+	
+	.carousel-item {
+		.embed-responsive-item {
+			object-fit: cover;
+		}
+		
+		.position-absolute {
+			right: map_get($spacers, 5);
+			bottom: 2 * map_get($spacers, 3);
+			
+			padding: {
+				top: map_get($spacers, 3);
+				left: map_get($spacers, 3);
+				right: map_get($spacers, 1);
+			}
+			
+			&::after {
+				content: "";
+				
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: map_get($spacers, 4);
+				
+				@include gradient-y($start-color: rgba($white, 0), $end-color: $white);
+			}
+		}
+	}
+	
+	.carousel-control-prev, .carousel-control-next {
+		width: map_get($spacers, 5);
+		
+		font-size: 1.5em;
+	}
+	
+}
