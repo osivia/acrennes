@@ -46,6 +46,10 @@ public class ItemRepositoryImpl implements ItemRepository {
      */
     private static String LOGO_PROPERTY = "logos";
     /**
+     * Image RSS
+     */
+    private static String PICTURE_PROPERTY = "rssi:picture";
+    /**
      * Id sync flux RSS
      */
     private static String ID_PROPERTY = "syncId";
@@ -323,7 +327,7 @@ public class ItemRepositoryImpl implements ItemRepository {
             Iterator<Document> iterator = documents.iterator();
             while (limitReached.containsValue(false) && iterator.hasNext()) {
                 Document document = iterator.next();
-                String identifier = document.getString("rssi:syncId");
+                String identifier = document.getString(CONTENEUR_PROPERTY);
                 if (!limitReached.get(identifier)) {
                     List<RssPlayerFeedItem> list = items.get(identifier);
                     if (list == null) {
@@ -331,7 +335,7 @@ public class ItemRepositoryImpl implements ItemRepository {
                         items.put(identifier, list);
                     }
 
-                    RssPlayerFeedItem item = this.convert(document);
+                    RssPlayerFeedItem item = this.convert(document, nuxeoController);
 
                     if (StringUtils.isNotEmpty(item.getPictureUrl())) {
                         list.add(item);
@@ -354,7 +358,7 @@ public class ItemRepositoryImpl implements ItemRepository {
      * @param document Nuxeo document
      * @return RSS item
      */
-    private RssPlayerFeedItem convert(Document document) {
+    private RssPlayerFeedItem convert(Document document, NuxeoController nuxeoController) {
         RssPlayerFeedItem item = this.applicationContext.getBean(RssPlayerFeedItem.class);
 
         // Title
@@ -366,8 +370,13 @@ public class ItemRepositoryImpl implements ItemRepository {
         item.setDescription(description);
 
         // Picture URL
-        String pictureUrl = document.getString("rssi:enclosure"); // FIXME
-        item.setPictureUrl(pictureUrl);
+        String url;
+        if (document.getString(ENCLOSURE_PROPERTY) == null) {
+            url = null;
+        } else {
+            url = nuxeoController.createFileLink(document, PICTURE_PROPERTY);
+        }
+        item.setPictureUrl(url);
 
         // Link
         String link = document.getString(LINK_PROPERTY);
