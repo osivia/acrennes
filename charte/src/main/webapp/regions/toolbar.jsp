@@ -46,8 +46,10 @@
                             <li class="nav-item mt-2 mt-md-0">
                                 <a href="javascript:"
                                    class="nav-link ${requestScope['osivia.toolbar.tasks.count'] gt 0 ? 'text-warning' : ''}"
-                                   data-target="#osivia-modal" data-load-url="${requestScope['osivia.toolbar.tasks.url']}"
-                                   data-load-callback-function="tasksModalCallback" data-title="${title}" data-footer="true">
+                                   data-target="#osivia-modal"
+                                   data-load-url="${requestScope['osivia.toolbar.tasks.url']}"
+                                   data-load-callback-function="tasksModalCallback" data-title="${title}"
+                                   data-footer="true">
                                     <c:choose>
                                         <c:when test="${requestScope['osivia.toolbar.tasks.count'] gt 0}">
                                             <i class="glyphicons glyphicons-basic-bell-ringing"></i>
@@ -80,16 +82,17 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div class="dropdown-header d-lg-none">${empty requestScope['osivia.toolbar.person'] ? requestScope['osivia.toolbar.principal'] : requestScope['osivia.toolbar.person'].cn}</div>
 
-                                <%--User account--%>
-                                <c:set var="url" value="${requestScope['osivia.my-account.url']}"/>
-                                <c:if test="${not empty url}">
-                                    <a href="${url}" class="dropdown-item">
-                                        <i class="glyphicons glyphicons-basic-id-badge"></i>
-                                        <span><op:translate key="TOOLBAR_USER_ACCOUNT"/></span>
+                                    <%--RSS containers administration--%>
+                                <c:if test="${not empty requestScope['toutatice.rss-containers.administration.url']}">
+                                    <a href="${requestScope['toutatice.rss-containers.administration.url']}" class="dropdown-item">
+                                        <i class="glyphicons glyphicons-basic-cogwheel"></i>
+                                        <span><op:translate key="TOOLBAR_RSS_CONTAINERS_ADMINISTRATION"/></span>
                                     </a>
+
+                                    <div class="dropdown-divider"></div>
                                 </c:if>
 
-                                <%--Logout--%>
+                                    <%--Logout--%>
                                 <a href="javascript:" onclick="logout()" class="dropdown-item">
                                     <i class="glyphicons glyphicons-basic-log-out"></i>
                                     <span class="d-md-none d-lg-inline"><op:translate key="TOOLBAR_LOGOUT"/></span>
@@ -105,7 +108,8 @@
 
 
 <%--Disconnection modal--%>
-<div id="disconnection" class="modal fade" data-apps="${op:join(requestScope['osivia.sso.applications'], '|')}" data-redirection="${requestScope['osivia.toolbar.signOutURL']}">
+<div id="disconnection" class="modal fade" data-apps="${op:join(requestScope['toutatice.sso.applications'], '|')}"
+     data-redirection="${requestScope['osivia.toolbar.signOutURL']}">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
