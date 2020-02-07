@@ -70,4 +70,24 @@ $JQry(function () {
 
     });
 
+    
+    $JQry(".toutatice-slider").each(function(index, element) {
+		var $element = $JQry(element);
+		
+		if (!$element.data("loaded")) {
+			var $carousel = $element.find(".carousel");
+			
+			$carousel.on("slide.bs.carousel", function(event) {
+				var to = event.to;
+				var $indicators = $carousel.find(".toutatice-carousel-indicators");
+				var $children = $indicators.find("ol").children();
+				
+				$children.removeClass("active");
+				$children.eq(to).addClass("active");
+			});
+						
+			$element.data("loaded", true);
+		}
+    });
+    
 });

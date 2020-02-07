@@ -11,9 +11,9 @@
         </transaction>
   
         <header-content>
+        	<link rel="stylesheet" type="text/css" href="/css/slider.css" />
             <script type="text/javascript" src="/js/rss.js"/>
         </header-content>
-                    
     </portlet>
 
     <service>
@@ -21,7 +21,5 @@
         <service-class>org.osivia.portal.api.customization.ICustomizationModulesRepository</service-class>
         <service-ref>osivia:service=CustomizationService</service-ref>
     </service>
-    
-    
 
 </portlet-app>

@@ -1,12 +1,13 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
+import java.util.List;
+import java.util.Set;
+
+import org.osivia.portal.api.directory.v2.model.Person;
 import org.osivia.portal.api.portlet.Refreshable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * RSS player.
@@ -34,7 +35,10 @@ public class RssPlayer {
      * Displayed items.
      */
     private List<RssPlayerFeedItem> displayedItems;
-
+    /**
+     * Person.
+     */
+    private Person person;    
     /**
      * Constructor.
      */
@@ -73,4 +77,12 @@ public class RssPlayer {
     public void setDisplayedItems(List<RssPlayerFeedItem> displayedItems) {
         this.displayedItems = displayedItems;
     }
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }

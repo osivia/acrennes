@@ -338,17 +338,30 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
-    @Override
+	@Override
     public RssPlayer getPlayer(PortalControllerContext portalControllerContext) throws PortletException {
         // RSS player
         RssPlayer player = this.applicationContext.getBean(RssPlayer.class);
-
-        if (!player.isLoaded()) {
+        // Person rights
+        Person person = (Person) portalControllerContext.getRequest().getAttribute(Constants.ATTR_LOGGED_PERSON_2);
+        
+        // Check if the personn connect is the same than before
+        boolean diff = false;
+        if(person != null && player.getPerson() != null) {
+        	if(!person.equals(player.getPerson())){
+        		diff = true;
+        	}
+        } else {
+        	if((person != null && player.getPerson() == null) || (person == null && player.getPerson() != null)) {
+        		diff = true;
+        	}
+        }
+        	
+        if (!player.isLoaded() || diff){
             // Window properties
             RssWindowProperties windowProperties = this.getWindowProperties(portalControllerContext);
-
-            // Person rights
-            Person person = (Person) portalControllerContext.getRequest().getAttribute(Constants.ATTR_LOGGED_PERSON_2);
+            
+            player.setPerson(person);
             List<String> rights;
             if (person == null) {
                 rights = new ArrayList<>(0);
@@ -400,7 +413,7 @@ public class ItemServiceImpl implements ItemService {
                 }
             }
             player.setDisplayedItems(displayedItems);
-        }
+		}
 
         return player;
     }
