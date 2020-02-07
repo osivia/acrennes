@@ -16,9 +16,8 @@
 <%@ include file="../includes/header.jspf" %>
 
 <main>
-    <div class="container">
+    <div class="container py-4">
         <p:region regionName="maximized"/>
-
     </div>
 </main>
 
