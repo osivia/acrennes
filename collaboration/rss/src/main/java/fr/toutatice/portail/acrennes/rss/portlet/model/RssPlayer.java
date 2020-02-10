@@ -1,13 +1,12 @@
 package fr.toutatice.portail.acrennes.rss.portlet.model;
 
-import java.util.List;
-import java.util.Set;
-
-import org.osivia.portal.api.directory.v2.model.Person;
 import org.osivia.portal.api.portlet.Refreshable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * RSS player.
@@ -24,9 +23,17 @@ public class RssPlayer {
      */
     private boolean loaded;
     /**
+     * Anonymous user indicator.
+     */
+    private boolean anonymous;
+    /**
      * Feeds.
      */
     private List<RssPlayerFeed> feeds;
+    /**
+     * Selected feed identifier.
+     */
+    private String selectedId;
     /**
      * Active feeds.
      */
@@ -35,16 +42,15 @@ public class RssPlayer {
      * Displayed items.
      */
     private List<RssPlayerFeedItem> displayedItems;
-    /**
-     * Person.
-     */
-    private Person person;    
+
+
     /**
      * Constructor.
      */
     public RssPlayer() {
         super();
     }
+
 
     public boolean isLoaded() {
         return loaded;
@@ -54,12 +60,28 @@ public class RssPlayer {
         this.loaded = loaded;
     }
 
+    public boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
+    }
+
     public List<RssPlayerFeed> getFeeds() {
         return feeds;
     }
 
     public void setFeeds(List<RssPlayerFeed> feeds) {
         this.feeds = feeds;
+    }
+
+    public String getSelectedId() {
+        return selectedId;
+    }
+
+    public void setSelectedId(String selectedId) {
+        this.selectedId = selectedId;
     }
 
     public Set<String> getActiveFeeds() {
@@ -77,12 +99,4 @@ public class RssPlayer {
     public void setDisplayedItems(List<RssPlayerFeedItem> displayedItems) {
         this.displayedItems = displayedItems;
     }
-
-	public Person getPerson() {
-		return person;
-	}
-
-	public void setPerson(Person person) {
-		this.person = person;
-	}
 }

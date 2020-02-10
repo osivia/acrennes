@@ -2,18 +2,60 @@
 @import "../../../../../charte/src/main/sass/osivia/glyphicons/mixins";
 
 
+%position-absolute {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+}
+
+
 .toutatice-slider {
+	display: flex;
+	flex-wrap: wrap;
+
 	background-color: $white;
-	
-	.position-absolute {
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		overflow: hidden;
+
+	@include border-radius();
+
+	.toutatice-slider-selector {
+		position: relative;
+
+		display: flex;
+		flex-direction: column;
+
+		@include make-col(12);
+
+		@media (min-width: map_get($grid-breakpoints, "xl")) {
+			@include make-col(3);
+		}
+
+		> * {
+			display: flex;
+			flex-direction: column;
+
+			padding: {
+				top: map_get($spacers, 2);
+				bottom: map_get($spacers, 2);
+			};
+
+			@extend %position-absolute;
+		}
 	}
-	
-	.toutatice-carousel-indicators {
+
+	.toutatice-slider-container {
+		position: relative;
+
+		@include make-col(12);
+
+		@media (min-width: map_get($grid-breakpoints, "xl")) {
+			@include make-col(9);
+		}
+	}
+
+	.toutatice-slider-indicators {
 		position: absolute;
 		bottom: 0;
 		left: 0;
@@ -34,35 +76,67 @@
 			}
 		}
 	}
-	
-	.carousel-item {
+
+	.toutatice-slider-inner-container {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.toutatice-slider-picture-container {
+		position: relative;
+
+		@include make-col(12);
+
+		@media (min-width: map_get($grid-breakpoints, "xl")) {
+			@include make-col(8);
+		}
+
+		.embed-responsive {
+			&::before {
+				padding-top: (100% / 2.45);
+			}
+		}
+
 		.embed-responsive-item {
 			object-fit: cover;
 		}
-		
-		.position-absolute {
+	}
+
+	.toutatice-slider-text-container {
+		position: relative;
+
+		@include make-col(12);
+
+		@media (min-width: map_get($grid-breakpoints, "xl")) {
+			@include make-col(4);
+		}
+
+		> * {
+			@extend %position-absolute;
+
 			right: map_get($spacers, 5);
 			bottom: 2 * map_get($spacers, 3);
-			
+
 			padding: {
 				top: map_get($spacers, 3);
 				left: map_get($spacers, 3);
 				right: map_get($spacers, 1);
 			}
-			
+
 			&::after {
 				content: "";
-				
+
 				position: absolute;
 				bottom: 0;
 				left: 0;
 				right: 0;
 				height: map_get($spacers, 4);
-				
+
 				@include gradient-y($start-color: rgba($white, 0), $end-color: $white);
 			}
 		}
 	}
+
 	
 	.carousel-control-prev, .carousel-control-next {
 		width: map_get($spacers, 5);

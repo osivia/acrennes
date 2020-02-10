@@ -11,92 +11,97 @@
 
 
 <div class="toutatice-slider">
-    <div class="row no-gutters">
-        <div class="col-3 d-flex flex-column">
-            <div class="position-absolute">
-                <div>
-                    <portlet:actionURL name="select" var="select" />
-                    <c:if test="${fn:length(player.feeds) gt 1}">
-                        <a href="${select}" class="" role="button">
-                            <op:translate key="ALL_PART" />
-                        </a>
-                    </c:if>
-                </div>
-            
-                <c:forEach var="feed" items="${player.feeds}" varStatus="status">
-                    <div>
-                        <portlet:actionURL name="select" var="select">
-                            <portlet:param name="id" value="${feed.id}" />
-                        </portlet:actionURL>
-                        <a href="${select}" class="" role="button">
-                            <%-- <img src="${feed.pictureUrl}" class="" /> --%>
-                            <span>${feed.displayName}</span>
-                        </a>
+    <div class="toutatice-slider-selector">
+        <ol class="toutatice-selector list-unstyled mb-0">
+            <c:if test="${fn:length(player.feeds) gt 1}">
+                <portlet:actionURL name="select" var="select" />
+
+                <li class="toutatice-selector-item ${empty player.selectedId ? 'active' : ''}">
+                    <a href="${select}">
+                        <span class="toutatice-selector-item-icon"></span>
+                        <span><op:translate key="ALL_PART" /></span>
+                    </a>
+                </li>
+            </c:if>
+
+            <c:forEach var="feed" items="${player.feeds}" varStatus="status">
+                <portlet:actionURL name="select" var="select">
+                    <portlet:param name="id" value="${feed.id}" />
+                </portlet:actionURL>
+
+                <li class="toutatice-selector-item ${player.selectedId eq feed.id ? 'active' : ''}">
+                    <a href="${select}" class="" role="button">
+                        <span class="toutatice-selector-item-icon">
+                            <c:if test="${not empty feed.pictureUrl}">
+                                <img src="${feed.pictureUrl}" class="" />
+                            </c:if>
+                        </span>
+                        <span>${feed.displayName}</span>
+                    </a>
+                </li>
+            </c:forEach>
+        </ol>
+    </div>
+
+    <div class="toutatice-slider-container">
+        <div id="${namespace}-slider" class="carousel slide" data-ride="carousel">
+            <%--<div class="toutatice-slider-indicators">
+                <div class="row no-gutters">
+                    <div class="col-4 offset-8">
+                        <ol class="list-inline text-right mb-2 mr-5 pr-1">
+                            <c:forEach var="item" items="${player.displayedItems}" varStatus="status">
+                                <li class="list-inline-item mr-0 ${status.first ? 'active' : ''}">
+                                    <a href="javascript:" class="text-secondary no-ajax-link" data-target="#${namespace}-slider" data-slide-to="${status.index}">
+                                        <i class="glyphicons"></i>
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </ol>
                     </div>
-                </c:forEach>
-            </div>
-        </div>
-    
-        <div class="col-9">
-            <div id="${namespace}-slider" class="carousel slide" data-ride="carousel">
-                <div class="toutatice-carousel-indicators">
-                    <div class="row no-gutters">
-                        <div class="col-4 offset-8">
-                            <ol class="list-inline text-right mb-2 mr-5 pr-1">
-                                <c:forEach var="item" items="${player.displayedItems}" varStatus="status">
-                                    <li class="list-inline-item mr-0 ${status.first ? 'active' : ''}">
-                                        <a href="javascript:" class="text-secondary" data-target="#${namespace}-slider" data-slide-to="${status.index}">
-                                            <i class="glyphicons"></i>
-                                        </a>
-                                    </li>
-                                </c:forEach>
-                            </ol>
-                        </div>
-                    </div>
                 </div>
-            
-                <div class="carousel-inner">
-                    <c:forEach var="item" items="${player.displayedItems}" varStatus="status">
-                        <div class="carousel-item ${status.first ? 'active' : ''}">
-                            <div class="row no-gutters">
-                                <div class="col-8">
-                                    <div class="embed-responsive embed-responsive-21by9">
-                                        <c:if test="${not empty item.pictureUrl}">
-                                            <img src="${item.pictureUrl}" class="embed-responsive-item">
-                                        </c:if>
-                                    </div>
+            </div>--%>
+
+            <div class="carousel-inner">
+                <c:forEach var="item" items="${player.displayedItems}" varStatus="status">
+                    <div class="carousel-item ${status.first ? 'active' : ''}">
+                        <div class="toutatice-slider-inner-container">
+                            <div class="toutatice-slider-picture-container">
+                                <div class="embed-responsive">
+                                    <c:if test="${not empty item.pictureUrl}">
+                                        <img src="${item.pictureUrl}" class="embed-responsive-item">
+                                    </c:if>
                                 </div>
-                                
-                                <div class="col-4">
-                                    <div class="position-absolute">
-                                        <h3 class="h6">
-                                            <!-- Title + date -->
-                                            <a href="${item.link}" target="_blank" class="no-ajax-link">
-                                                <span>${item.title}</span>
-                                            </a>
-                                            <br>
-                                            <small class="text-muted"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></small>
-                                        </h3>
-                                        
-                                        <c:if test="${not empty item.description}">
-                                            <p class="mt-2">${item.description}</p>
-                                        </c:if>
-                                    </div>
+                            </div>
+
+                            <div class="toutatice-slider-text-container">
+                                <div>
+                                    <h3 class="h6">
+                                        <!-- Title + date -->
+                                        <a href="${item.link}" target="_blank" class="no-ajax-link">
+                                            <span>${item.title}</span>
+                                        </a>
+                                        <br>
+                                        <small class="text-muted"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></small>
+                                    </h3>
+
+                                    <c:if test="${not empty item.description}">
+                                        <p class="mt-2">${item.description}</p>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
-                    </c:forEach>
-                </div>
-                
-                <a href="#${namespace}-slider" class="carousel-control-prev text-tertiary" role="button" data-slide="prev">
-                    <i class="glyphicons glyphicons-basic-chevron-left"></i>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a href="#${namespace}-slider" class="carousel-control-next text-tertiary" role="button" data-slide="next">
-                    <i class="glyphicons glyphicons-basic-chevron-right"></i>
-                    <span class="sr-only">Next</span>
-                </a>
+                    </div>
+                </c:forEach>
             </div>
+
+            <a href="#${namespace}-slider" class="carousel-control-prev text-tertiary no-ajax-link" role="button" data-slide="prev">
+                <i class="glyphicons glyphicons-basic-chevron-left"></i>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a href="#${namespace}-slider" class="carousel-control-next text-tertiary no-ajax-link" role="button" data-slide="next">
+                <i class="glyphicons glyphicons-basic-chevron-right"></i>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
     </div>
 </div>

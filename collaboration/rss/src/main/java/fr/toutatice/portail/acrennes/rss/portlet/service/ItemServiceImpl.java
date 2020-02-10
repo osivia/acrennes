@@ -1,14 +1,11 @@
 package fr.toutatice.portail.acrennes.rss.portlet.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.naming.Name;
-import javax.portlet.PortletException;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.toutatice.portail.acrennes.rss.portlet.model.*;
+import fr.toutatice.portail.acrennes.rss.portlet.repository.ItemRepository;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -26,20 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import fr.toutatice.portail.acrennes.rss.portlet.model.Container;
-import fr.toutatice.portail.acrennes.rss.portlet.model.Containers;
-import fr.toutatice.portail.acrennes.rss.portlet.model.RssPlayer;
-import fr.toutatice.portail.acrennes.rss.portlet.model.RssPlayerFeed;
-import fr.toutatice.portail.acrennes.rss.portlet.model.RssPlayerFeedItem;
-import fr.toutatice.portail.acrennes.rss.portlet.model.RssView;
-import fr.toutatice.portail.acrennes.rss.portlet.model.RssWindowProperties;
-import fr.toutatice.portail.acrennes.rss.portlet.model.RssWindowPropertiesFeed;
-import fr.toutatice.portail.acrennes.rss.portlet.repository.ItemRepository;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import javax.naming.Name;
+import javax.portlet.PortletException;
+import java.util.*;
 
 /**
  * RSS service interface
@@ -338,30 +324,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
-	@Override
+    @Override
     public RssPlayer getPlayer(PortalControllerContext portalControllerContext) throws PortletException {
         // RSS player
         RssPlayer player = this.applicationContext.getBean(RssPlayer.class);
         // Person rights
         Person person = (Person) portalControllerContext.getRequest().getAttribute(Constants.ATTR_LOGGED_PERSON_2);
-        
-        // Check if the personn connect is the same than before
-        boolean diff = false;
-        if(person != null && player.getPerson() != null) {
-        	if(!person.equals(player.getPerson())){
-        		diff = true;
-        	}
-        } else {
-        	if((person != null && player.getPerson() == null) || (person == null && player.getPerson() != null)) {
-        		diff = true;
-        	}
-        }
-        	
-        if (!player.isLoaded() || diff){
+
+        if (!player.isLoaded() || (player.isAnonymous() && (person != null))) {
             // Window properties
             RssWindowProperties windowProperties = this.getWindowProperties(portalControllerContext);
-            
-            player.setPerson(person);
+
             List<String> rights;
             if (person == null) {
                 rights = new ArrayList<>(0);
@@ -380,6 +353,9 @@ public class ItemServiceImpl implements ItemService {
 
             // Loaded indicator
             player.setLoaded(true);
+            // Anonymous indicator
+            boolean anonymous = (person == null);
+            player.setAnonymous(anonymous);
 
             // Feeds
             List<RssWindowPropertiesFeed> properties = windowProperties.getFeeds();
@@ -413,39 +389,39 @@ public class ItemServiceImpl implements ItemService {
                 }
             }
             player.setDisplayedItems(displayedItems);
-		}
+        }
 
         return player;
     }
 
     @Override
     public void selectFeed(PortalControllerContext portalControllerContext, RssPlayer player, String id) throws PortletException {
-        List<RssPlayerFeedItem> displayedItems;
-        if (CollectionUtils.isEmpty(player.getFeeds())) {
-            displayedItems = null;
-        }else {
-            displayedItems = new ArrayList<>();
-        	for(RssPlayerFeed feed: player.getFeeds()) {
-        		if(id == null) {
+        if (CollectionUtils.isNotEmpty(player.getFeeds())) {
+            ArrayList<RssPlayerFeedItem> displayedItems = new ArrayList<>();
+            for (RssPlayerFeed feed : player.getFeeds()) {
+                if (id == null) {
                     List<RssPlayerFeedItem> items = feed.getItems();
                     if (CollectionUtils.isNotEmpty(items)) {
                         RssPlayerFeedItem item = items.get(0);
                         displayedItems.add(item);
-                    }        			
-        			player.setDisplayedItems(displayedItems);
-        		} else {
-            		if(feed.getId().equalsIgnoreCase(id)) {
-            			List<RssPlayerFeedItem> items = feed.getItems();
+                    }
+                    player.setDisplayedItems(displayedItems);
+                } else {
+                    if (feed.getId().equalsIgnoreCase(id)) {
+                        List<RssPlayerFeedItem> items = feed.getItems();
                         if (CollectionUtils.isNotEmpty(items)) {
-                        	for( RssPlayerFeedItem item : items) {
-                                displayedItems.add(item);                    		
-                        	}
-                        }    			
-            			player.setDisplayedItems(displayedItems);
-            		}        			
-        		}
-        	}
+                            for (RssPlayerFeedItem item : items) {
+                                displayedItems.add(item);
+                            }
+                        }
+                        player.setDisplayedItems(displayedItems);
+                    }
+                }
+            }
         }
+
+        // Update model
+        player.setSelectedId(id);
     }
 
 }
