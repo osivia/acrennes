@@ -79,7 +79,7 @@ $JQry(function () {
 			
 			$carousel.on("slide.bs.carousel", function(event) {
 				var to = event.to;
-				var $indicators = $carousel.find(".toutatice-carousel-indicators");
+				var $indicators = $carousel.find(".toutatice-slider-indicators");
 				var $children = $indicators.find("ol").children();
 				
 				$children.removeClass("active");

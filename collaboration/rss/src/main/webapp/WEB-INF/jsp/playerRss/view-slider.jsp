@@ -12,14 +12,16 @@
 
 <div class="toutatice-slider">
     <div class="toutatice-slider-selector">
-        <ol class="toutatice-selector list-unstyled mb-0">
+        <ol class="toutatice-selector">
             <c:if test="${fn:length(player.feeds) gt 1}">
                 <portlet:actionURL name="select" var="select" />
 
                 <li class="toutatice-selector-item ${empty player.selectedId ? 'active' : ''}">
-                    <a href="${select}">
-                        <span class="toutatice-selector-item-icon"></span>
-                        <span><op:translate key="ALL_PART" /></span>
+                    <c:set var="title"><op:translate key="ALL_PART" /></c:set>
+                    <a href="${select}" title="${title}">
+                        <span class="toutatice-selector-item-icon d-none d-xl-inline"></span>
+                        <span class="d-xl-none"><op:translate key="ALL"/></span>
+                        <span class="d-none d-xl-inline">${title}</span>
                     </a>
                 </li>
             </c:if>
@@ -30,13 +32,13 @@
                 </portlet:actionURL>
 
                 <li class="toutatice-selector-item ${player.selectedId eq feed.id ? 'active' : ''}">
-                    <a href="${select}" class="" role="button">
+                    <a href="${select}" title="${feed.displayName}">
                         <span class="toutatice-selector-item-icon">
                             <c:if test="${not empty feed.pictureUrl}">
                                 <img src="${feed.pictureUrl}" class="" />
                             </c:if>
                         </span>
-                        <span>${feed.displayName}</span>
+                        <span class="d-none d-xl-inline">${feed.displayName}</span>
                     </a>
                 </li>
             </c:forEach>
@@ -45,7 +47,7 @@
 
     <div class="toutatice-slider-container">
         <div id="${namespace}-slider" class="carousel slide" data-ride="carousel">
-            <%--<div class="toutatice-slider-indicators">
+            <div class="toutatice-slider-indicators">
                 <div class="row no-gutters">
                     <div class="col-4 offset-8">
                         <ol class="list-inline text-right mb-2 mr-5 pr-1">
@@ -59,7 +61,7 @@
                         </ol>
                     </div>
                 </div>
-            </div>--%>
+            </div>
 
             <div class="carousel-inner">
                 <c:forEach var="item" items="${player.displayedItems}" varStatus="status">
@@ -85,7 +87,7 @@
                                     </h3>
 
                                     <c:if test="${not empty item.description}">
-                                        <p class="mt-2">${item.description}</p>
+                                        <div class="d-none d-md-block mt-2">${item.description}</div>
                                     </c:if>
                                 </div>
                             </div>

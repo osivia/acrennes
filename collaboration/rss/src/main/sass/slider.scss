@@ -2,16 +2,6 @@
 @import "../../../../../charte/src/main/sass/osivia/glyphicons/mixins";
 
 
-%position-absolute {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	overflow: hidden;
-}
-
-
 .toutatice-slider {
 	display: flex;
 	flex-wrap: wrap;
@@ -21,27 +11,50 @@
 	@include border-radius();
 
 	.toutatice-slider-selector {
-		position: relative;
-
 		display: flex;
-		flex-direction: column;
 
 		@include make-col(12);
 
-		@media (min-width: map_get($grid-breakpoints, "xl")) {
-			@include make-col(3);
-		}
-
 		> * {
 			display: flex;
-			flex-direction: column;
 
 			padding: {
-				top: map_get($spacers, 2);
-				bottom: map_get($spacers, 2);
+				left: map_get($spacers, 2);
+				right: map_get($spacers, 2);
 			};
+		}
 
-			@extend %position-absolute;
+		@media (min-width: map_get($grid-breakpoints, "md")) {
+			position: relative;
+
+			flex-direction: column;
+
+			> * {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				overflow: hidden;
+
+				flex-direction: column;
+
+				padding: {
+					top: map_get($spacers, 2);
+					bottom: map_get($spacers, 2);
+					left: 0;
+					right: 0;
+				};
+			}
+		}
+
+		@media (min-width: map_get($grid-breakpoints, "md")) and (max-width: map_get($grid-breakpoints, "xl") - 1) {
+			flex-basis: auto;
+			width: (4 * $btn-padding-x) + $line-height-base;
+		}
+
+		@media (min-width: map_get($grid-breakpoints, "xl")) {
+			@include make-col(3);
 		}
 	}
 
@@ -49,6 +62,12 @@
 		position: relative;
 
 		@include make-col(12);
+
+		@media (min-width: map_get($grid-breakpoints, "md")) and (max-width: map_get($grid-breakpoints, "xl") - 1) {
+			flex-basis: 0;
+			flex-grow: 1;
+			max-width: 100%;
+		}
 
 		@media (min-width: map_get($grid-breakpoints, "xl")) {
 			@include make-col(9);
@@ -75,6 +94,10 @@
 				}
 			}
 		}
+		
+		@media (max-width: map_get($grid-breakpoints, "md") - 1) {
+			display: none;
+		}
 	}
 
 	.toutatice-slider-inner-container {
@@ -87,7 +110,7 @@
 
 		@include make-col(12);
 
-		@media (min-width: map_get($grid-breakpoints, "xl")) {
+		@media (min-width: map_get($grid-breakpoints, "md")) {
 			@include make-col(8);
 		}
 
@@ -107,19 +130,25 @@
 
 		@include make-col(12);
 
-		@media (min-width: map_get($grid-breakpoints, "xl")) {
-			@include make-col(4);
+		&::before {
+			content: "";
+			display: block;
+
+			padding-top: (3 * $line-height-base + 2) * map_get($spacers, 3);
 		}
 
 		> * {
-			@extend %position-absolute;
-
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: map_get($spacers, 5);
 			right: map_get($spacers, 5);
-			bottom: 2 * map_get($spacers, 3);
+			overflow: hidden;
 
 			padding: {
 				top: map_get($spacers, 3);
-				left: map_get($spacers, 3);
+				bottom:  map_get($spacers, 3);
+				left: map_get($spacers, 1);
 				right: map_get($spacers, 1);
 			}
 
@@ -133,6 +162,24 @@
 				height: map_get($spacers, 4);
 
 				@include gradient-y($start-color: rgba($white, 0), $end-color: $white);
+			}
+		}
+
+		@media (min-width: map_get($grid-breakpoints, "md")) {
+			@include make-col(4);
+
+			&::before {
+				padding-top: unset;
+			}
+
+			> * {
+				bottom: 2 * map_get($spacers, 3);
+				left: map_get($spacers, 3);
+
+				padding: {
+					bottom: 0;
+					left: 0;
+				}
 			}
 		}
 	}
