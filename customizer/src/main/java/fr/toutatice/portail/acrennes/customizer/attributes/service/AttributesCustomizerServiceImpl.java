@@ -10,6 +10,7 @@ import org.jboss.portal.common.invocation.Scope;
 import org.jboss.portal.core.controller.ControllerContext;
 import org.jboss.portal.core.model.portal.command.render.RenderPageCommand;
 import org.jboss.portal.core.theme.PageRendition;
+import org.jboss.portal.theme.impl.render.dynamic.DynaRenderOptions;
 import org.osivia.portal.api.PortalException;
 import org.osivia.portal.api.context.PortalControllerContext;
 import org.osivia.portal.api.customization.CustomizationContext;
@@ -147,7 +148,11 @@ public class AttributesCustomizerServiceImpl extends CustomizerServiceImpl imple
         String instance = "osivia-services-rss-container-instance";
 
         // Window properties
-        Map<String, String> properties = new HashMap<>(0);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("osivia.hideTitle", "1");
+        properties.put(DynaRenderOptions.PARTIAL_REFRESH_ENABLED, String.valueOf(true));
+        properties.put("osivia.ajaxLink", "1");
+
 
         // URL
         String url;
