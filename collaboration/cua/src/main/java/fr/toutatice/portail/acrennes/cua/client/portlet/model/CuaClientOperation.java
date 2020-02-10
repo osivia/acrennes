@@ -1,6 +1,5 @@
 package fr.toutatice.portail.acrennes.cua.client.portlet.model;
 
-import fr.toutatice.portail.acrennes.cua.client.portlet.repository.CuaClientRepository;
 import org.springframework.http.HttpMethod;
 
 /**
@@ -51,6 +50,10 @@ public enum CuaClientOperation {
      */
     REORDER_STARRED_APPLICATIONS("/api/v1/catalogues/%s/favoris/_ids", HttpMethod.PUT),
     /**
+     * Get health.
+     */
+    GET_HEALTH("/api/v1/health", HttpMethod.GET),
+    /**
      * Get catalog synchronization.
      */
     GET_SYNCHRONIZATION("/api/v1/catalogues/%s/sync", HttpMethod.GET),
@@ -77,7 +80,7 @@ public enum CuaClientOperation {
      * @param method HTTP method
      */
     CuaClientOperation(String path, HttpMethod method) {
-        this.path = CuaClientRepository.CUA_BASE_PATH + path;
+        this.path = path;
         this.method = method;
     }
 

@@ -15,9 +15,13 @@ import javax.portlet.PortletException;
 public interface CuaClientRepository {
 
     /**
-     * CUA base path.
+     * CUA hub URL system property.
      */
-    String CUA_BASE_PATH = "/cua-hub";
+    String CUA_HUB_URL_PROPERTY = "cua-hub.url";
+    /**
+     * CUA hub secret key system property.
+     */
+    String CUA_HUB_SECRET_KEY_PROPERTY = "cua-hub.secret-key";
 
 
     /**
@@ -119,6 +123,15 @@ public interface CuaClientRepository {
      * @param applicationsIds         applications identifiers
      */
     void reorderStarredApplications(PortalControllerContext portalControllerContext, String catalogId, String[] applicationsIds) throws PortletException;
+
+
+    /**
+     * Get application health.
+     *
+     * @param portalControllerContext portal controller context
+     * @return true if application health is OK
+     */
+    boolean getHealth(PortalControllerContext portalControllerContext) throws PortletException;
 
 
     /**

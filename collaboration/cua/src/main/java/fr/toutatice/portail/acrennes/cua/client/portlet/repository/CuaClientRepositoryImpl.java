@@ -2,9 +2,9 @@ package fr.toutatice.portail.acrennes.cua.client.portlet.repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.toutatice.portail.acrennes.cua.client.portlet.model.CuaClientOperation;
 import fr.toutatice.portail.acrennes.cua.client.portlet.model.dto.CuaApplication;
 import fr.toutatice.portail.acrennes.cua.client.portlet.model.dto.CuaIdentityVector;
-import fr.toutatice.portail.acrennes.cua.client.portlet.model.CuaClientOperation;
 import fr.toutatice.portail.acrennes.cua.client.portlet.model.dto.CuaSynchronization;
 import net.sf.json.JSONArray;
 import org.apache.commons.lang.ArrayUtils;
@@ -40,6 +40,15 @@ public class CuaClientRepositoryImpl implements CuaClientRepository {
      */
     private final Log log;
 
+    /**
+     * CUA hub URL.
+     */
+    private final URL cuaHubUrl;
+    /**
+     * CUA hub secret key.
+     */
+    private final String cuaHubSecretKey;
+
 
     /**
      * Application context.
@@ -62,6 +71,19 @@ public class CuaClientRepositoryImpl implements CuaClientRepository {
 
         // Log
         this.log = LogFactory.getLog(this.getClass());
+
+        // CUA hub URL
+        URL url;
+        try {
+            url = new URL(System.getProperty(CUA_HUB_URL_PROPERTY));
+        } catch (MalformedURLException e) {
+            url = null;
+            this.log.error(e.getLocalizedMessage());
+        }
+        this.cuaHubUrl = url;
+
+        // CUA hub secret key
+        this.cuaHubSecretKey = System.getProperty(CUA_HUB_SECRET_KEY_PROPERTY);
     }
 
 
@@ -167,6 +189,14 @@ public class CuaClientRepositoryImpl implements CuaClientRepository {
 
 
     @Override
+    public boolean getHealth(PortalControllerContext portalControllerContext) throws PortletException {
+        ResponseEntity<String> response = this.execute(CuaClientOperation.GET_HEALTH, String.class, null);
+
+        return HttpStatus.OK.equals(response.getStatusCode());
+    }
+
+
+    @Override
     public CuaSynchronization getSynchronization(PortalControllerContext portalControllerContext, String catalogId) throws PortletException {
         return this.get(CuaClientOperation.GET_SYNCHRONIZATION, CuaSynchronization.class, catalogId);
     }
@@ -259,26 +289,37 @@ public class CuaClientRepositoryImpl implements CuaClientRepository {
      * @return operation response
      */
     private <T> ResponseEntity<T> execute(CuaClientOperation operation, Class<T> responseType, String body, String... parameters) throws PortletException {
-        // File
-        String file = String.format(operation.getPath(), parameters);
+        // Response
+        ResponseEntity<T> response;
 
-        // URI
-        URI uri;
-        try {
-            URL url = new URL("https", "partenaires.ipanema.education.fr", file);
-            uri = url.toURI();
-        } catch (MalformedURLException | URISyntaxException e) {
-            throw new PortletException(e);
+        if (this.cuaHubUrl == null) {
+            throw new PortletException("CUA hub URL is not defined.");
+        } else {
+            // File
+            String file = this.cuaHubUrl.getFile() + String.format(operation.getPath(), parameters);
+
+            // URI
+            URI uri;
+            try {
+                URL url = new URL(this.cuaHubUrl.getProtocol(), this.cuaHubUrl.getHost(), file);
+                uri = url.toURI();
+            } catch (MalformedURLException | URISyntaxException e) {
+                throw new PortletException(e);
+            }
+
+            // HTTP headers
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("X-Gravitee-Api-Key", this.cuaHubSecretKey);
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+
+            // HTTP entity
+            HttpEntity<?> httpEntity = new HttpEntity<>(body, httpHeaders);
+
+            response = this.restTemplate.exchange(uri, operation.getMethod(), httpEntity, responseType);
         }
 
-        // HTTP headers
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-
-        // HTTP entity
-        HttpEntity<?> httpEntity = new HttpEntity<>(body, httpHeaders);
-
-        return this.restTemplate.exchange(uri, operation.getMethod(), httpEntity, responseType);
+        return response;
     }
 
 }

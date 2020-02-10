@@ -1,32 +1,26 @@
 <div class="col d-flex flex-column mb-3 px-2">
-    <div class="card flex-grow-1">
+    <div class="card border-light flex-grow-1">
+        <div class="card-img-top embed-responsive embed-responsive-16by9 bg-light">
+            <c:if test="${not empty application.pictureUrl}">
+                <img src="${application.pictureUrl}" class="card-img-top embed-responsive-item">
+            </c:if>
+        </div>
+
         <div class="card-body d-flex flex-column ${empty application.url ? 'text-secondary' : ''}">
             <%--Title--%>
-            <h3 class="h5 card-title">
-                <span><c:out value="${application.title}"/></span>
-            </h3>
-
-            <%--Description--%>
-            <c:if test="${not empty application.description}">
-                <p class="card-text"><c:out value="${application.description}"/></p>
-            </c:if>
-
-            <%--Open--%>
-            <div class="d-flex align-items-end flex-grow-1">
+            <h3 class="h6 card-title">
                 <c:choose>
                     <c:when test="${empty application.url}">
-                        <p class="card-text">
-                            <small class="text-muted"><op:translate key="CUA_CLIENT_CANNOT_OPEN_APPLICATION"/></small>
-                        </p>
+                        <span class="text-muted"><c:out value="${application.title}"/></span>
                     </c:when>
 
                     <c:otherwise>
-                        <a href="${application.url}" target="_blank" class="card-link stretched-link">
-                            <span><op:translate key="CUA_CLIENT_OPEN_APPLICATION"/></span>
+                        <a href="${application.url}" target="_blank" title="${application.description}" class="stretched-link">
+                            <span><c:out value="${application.title}"/></span>
                         </a>
                     </c:otherwise>
                 </c:choose>
-            </div>
+            </h3>
         </div>
     </div>
 </div>

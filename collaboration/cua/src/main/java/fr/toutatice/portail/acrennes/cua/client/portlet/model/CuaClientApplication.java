@@ -34,6 +34,10 @@ public class CuaClientApplication {
      */
     private String url;
     /**
+     * Picture URL.
+     */
+    private String pictureUrl;
+    /**
      * Starred indicator.
      */
     private boolean starred;
@@ -105,6 +109,14 @@ public class CuaClientApplication {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     public boolean isStarred() {

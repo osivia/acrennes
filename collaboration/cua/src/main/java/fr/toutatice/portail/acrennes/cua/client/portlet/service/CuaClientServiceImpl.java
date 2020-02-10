@@ -140,9 +140,18 @@ public class CuaClientServiceImpl implements CuaClientService {
             // Starred applications
             CuaApplication[] starredApplications = this.repository.getStarredApplications(portalControllerContext, catalogId);
             form.setStarredApplications(this.convert(starredApplications));
-        }
 
-        form.setLoaded(true);
+            form.setLoaded(true);
+
+
+            if (ArrayUtils.isEmpty(starredApplications)) {
+                // Other applications
+                CuaApplication[] otherApplications = this.repository.getApplications(portalControllerContext, catalogId);
+                form.setOtherApplications(this.convert(otherApplications));
+
+                form.setOtherApplicationsLoaded(true);
+            }
+        }
 
 
         // Path
@@ -352,7 +361,7 @@ public class CuaClientServiceImpl implements CuaClientService {
         if (person == null) {
             catalogId = null;
         } else {
-            catalogId = person.getAnonymizedId();
+            catalogId = "e9406cec-5937-4a1a-ae55-95432a56a9c2"; // FIXME
         }
 
         return catalogId;
@@ -366,6 +375,12 @@ public class CuaClientServiceImpl implements CuaClientService {
      * @param catalogId               catalog identifier
      */
     private void synchronize(PortalControllerContext portalControllerContext, String catalogId) throws PortletException {
+        // Portlet request
+        PortletRequest request = portalControllerContext.getRequest();
+        // Remote user
+        String remoteUser = request.getRemoteUser();
+
+
         // Check if catalog exists
         boolean exists = this.repository.isCatalogExists(portalControllerContext, catalogId);
         if (!exists) {
@@ -403,7 +418,8 @@ public class CuaClientServiceImpl implements CuaClientService {
         if (refresh) {
             // Identity vector
             CuaIdentityVector identityVector = this.applicationContext.getBean(CuaIdentityVector.class);
-            identityVector.setToutaticeId("string"); // FIXME
+            identityVector.setToutaticeId(remoteUser);
+            // TODO ARENA, GAR, ...
 
             // Synchronize
             this.repository.synchronize(portalControllerContext, catalogId, identityVector);

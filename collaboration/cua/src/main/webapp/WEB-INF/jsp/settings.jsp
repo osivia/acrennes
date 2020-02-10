@@ -124,7 +124,7 @@
                     </button>
 
                         <%--Save--%>
-                    <button type="submit" name="save" class="btn btn-primary">
+                    <button type="submit" name="save" class="btn btn-primary ml-1">
                         <span><op:translate key="SAVE"/></span>
                     </button>
                 </div>

@@ -8,7 +8,8 @@ $JQry(function () {
         $cua.find(".cua-placeholder").each(function (index, element) {
             var $placeholder = $JQry(element);
 
-            $placeholder.load($placeholder.data("url"));
+            $placeholder.load($placeholder.data("url"), function(response, status, xhr) {
+            });
         });
 
 
