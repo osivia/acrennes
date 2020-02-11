@@ -28,9 +28,6 @@
         <!-- Spring framework LDAP -->
         <springframework-ldap.version>2.1.0.RELEASE</springframework-ldap.version>
 
-        <!--Jackson-->
-        <jackson.version>2.10.1</jackson.version>
-
         <!-- Java Melody -->
         <java-melody.version>1.2</java-melody.version>
     </properties>
@@ -60,14 +57,6 @@
             <artifactId>toutatice-portail-cms-nuxeo-dependencies-test</artifactId>
             <version>${toutatice.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <!--Jackson-->
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-            <version>${jackson.version}</version>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>
