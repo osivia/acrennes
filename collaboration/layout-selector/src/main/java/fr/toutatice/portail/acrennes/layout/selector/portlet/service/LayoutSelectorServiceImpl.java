@@ -1,6 +1,9 @@
 package fr.toutatice.portail.acrennes.layout.selector.portlet.service;
 
+import fr.toutatice.portail.acrennes.layout.selector.portlet.model.LayoutSelectorAdminForm;
+import fr.toutatice.portail.acrennes.layout.selector.portlet.model.LayoutSelectorAdminFormItem;
 import fr.toutatice.portail.acrennes.layout.selector.portlet.model.LayoutSelectorForm;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.osivia.portal.api.PortalException;
 import org.osivia.portal.api.context.PortalControllerContext;
@@ -11,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.portlet.PortletException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,24 +77,52 @@ public class LayoutSelectorServiceImpl implements LayoutSelectorService {
 
 
     @Override
-    public void save(PortalControllerContext portalControllerContext) throws PortletException {
-        List<LayoutItem> items;
+    public LayoutSelectorAdminForm getAdminForm(PortalControllerContext portalControllerContext) throws PortletException {
+        // Administration form
+        LayoutSelectorAdminForm form = this.applicationContext.getBean(LayoutSelectorAdminForm.class);
+
+        // Layout items
+        List<LayoutItem> layoutItems;
         try {
-            items = this.layoutService.getItems(portalControllerContext);
+            layoutItems = this.layoutService.getItems(portalControllerContext);
         } catch (PortalException e) {
             throw new PortletException(e);
         }
-        if (CollectionUtils.isEmpty(items)) {
-            items = new ArrayList<>(1);
+
+        // Form items
+        List<LayoutSelectorAdminFormItem> formItems;
+        if (CollectionUtils.isEmpty(layoutItems)) {
+            formItems = null;
+        } else {
+            formItems = new ArrayList<>(layoutItems.size());
+            for (LayoutItem layoutItem : layoutItems) {
+                LayoutSelectorAdminFormItem formItem = this.applicationContext.getBean(LayoutSelectorAdminFormItem.class);
+                try {
+                    BeanUtils.copyProperties(formItem, layoutItem);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new PortletException(e);
+                }
+                formItems.add(formItem);
+            }
+        }
+        form.setItems(formItems);
+
+        return form;
+    }
+
+
+    @Override
+    public void saveAdministration(PortalControllerContext portalControllerContext, LayoutSelectorAdminForm form) throws PortletException {
+        // Layout items
+        List<LayoutItem> layoutItems;
+        if (CollectionUtils.isEmpty(form.getItems())) {
+            layoutItems = null;
+        } else {
+            layoutItems = new ArrayList<>(form.getItems());
         }
 
-        LayoutItem item = this.layoutService.createItem(portalControllerContext, "cua-client");
-        item.setLabel("Client CUA");
-        item.setIcon("glyphicons glyphicons-basic-mouse");
-        items.add(item);
-
         try {
-            this.layoutService.setItems(portalControllerContext, items);
+            this.layoutService.setItems(portalControllerContext, layoutItems);
         } catch (PortalException e) {
             throw new PortletException(e);
         }
