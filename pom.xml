@@ -3,7 +3,7 @@
 
     <groupId>fr.toutatice.acrennes.portail</groupId>
     <artifactId>toutatice-portail-acrennes-parent</artifactId>
-    <version>1.0-RC1</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Portail Toutatice - Parent</name>
@@ -220,7 +220,7 @@
         <url>https://github.com/osivia/acrennes</url>
         <connection>scm:git:git://github.com/osivia/acrennes.git</connection>
         <developerConnection>scm:git:git@github.com:osivia/acrennes.git</developerConnection>
-      <tag>1.0-RC1</tag>
+      <tag>HEAD</tag>
   </scm>
 
 
