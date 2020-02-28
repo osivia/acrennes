@@ -31,7 +31,7 @@ $JQry(function () {
 
 
             // Sortable
-            $JQry(".cua-sortable").sortable({
+            $cua.find(".cua-sortable").sortable({
                 cancel: "a",
                 connectWith: ".cua-sortable",
                 cursor: "move",
