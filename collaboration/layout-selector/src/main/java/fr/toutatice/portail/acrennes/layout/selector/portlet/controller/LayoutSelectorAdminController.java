@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
@@ -18,11 +18,11 @@ import javax.portlet.*;
  * Layout selector portlet administration controller.
  *
  * @author Cédric Krommenhoek
+ * @see AbstractLayoutSelectorAdminController
  */
 @Controller
 @RequestMapping("ADMIN")
-@SessionAttributes("adminForm")
-public class LayoutSelectorAdminController {
+public class LayoutSelectorAdminController extends AbstractLayoutSelectorAdminController {
 
     /**
      * Portlet context.
@@ -59,15 +59,35 @@ public class LayoutSelectorAdminController {
 
 
     /**
-     * Reorder action mapping.
+     * Reorder layout items action mapping.
      *
      * @param request  action request
      * @param response action response
      * @param form     administration form model attribute
      */
     @ActionMapping(name = "submit", params = "reorder")
-    public void reorder(ActionRequest request, ActionResponse response, @ModelAttribute("adminForm") LayoutSelectorAdminForm form) {
-        // TODO
+    public void reorder(ActionRequest request, ActionResponse response, @ModelAttribute("adminForm") LayoutSelectorAdminForm form) throws PortletException {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
+
+        this.service.reorder(portalControllerContext, form);
+    }
+
+
+    /**
+     * Remove layout item action mapping.
+     *
+     * @param request  action request
+     * @param response action response
+     * @param id       layout item identifier request parameter
+     * @param form     administration form model attribute
+     */
+    @ActionMapping("remove")
+    public void remove(ActionRequest request, ActionResponse response, @RequestParam("id") String id, @ModelAttribute("adminForm") LayoutSelectorAdminForm form) throws PortletException {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
+
+        this.service.remove(portalControllerContext, form, id);
     }
 
 
@@ -89,7 +109,7 @@ public class LayoutSelectorAdminController {
 
 
     /**
-     * Save action mapping.
+     * Save layout items action mapping.
      *
      * @param request       action request
      * @param response      action response
@@ -107,22 +127,6 @@ public class LayoutSelectorAdminController {
 
         response.setWindowState(WindowState.NORMAL);
         response.setPortletMode(PortletMode.VIEW);
-    }
-
-
-    /**
-     * Get administration form model attribute.
-     *
-     * @param request  portlet request
-     * @param response portlet response
-     * @return administration form
-     */
-    @ModelAttribute("adminForm")
-    public LayoutSelectorAdminForm getForm(PortletRequest request, PortletResponse response) throws PortletException {
-        // Portal controller context
-        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
-
-        return this.service.getAdminForm(portalControllerContext);
     }
 
 }

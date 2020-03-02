@@ -1,5 +1,9 @@
 package fr.toutatice.portail.acrennes.layout.selector.portlet.configuration;
 
+import fr.toutatice.portail.acrennes.directory.service.ToutaticeGroupService;
+import org.osivia.portal.api.directory.v2.DirServiceFactory;
+import org.osivia.portal.api.internationalization.IBundleFactory;
+import org.osivia.portal.api.internationalization.IInternationalizationService;
 import org.osivia.portal.api.locator.Locator;
 import org.osivia.portal.api.portlet.PortletAppUtils;
 import org.osivia.portal.api.ui.layout.LayoutService;
@@ -71,7 +75,7 @@ public class LayoutSelectorConfiguration implements PortletConfigAware {
     @Bean(name = "messageSource")
     public ResourceBundleMessageSource getMessageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("layout-selector");
+        messageSource.setBasenames("layout-selector", "layout-selector-validation");
         return messageSource;
     }
 
@@ -84,6 +88,29 @@ public class LayoutSelectorConfiguration implements PortletConfigAware {
     @Bean
     public LayoutService getLayoutService() {
         return Locator.findMBean(LayoutService.class, LayoutService.MBEAN_NAME);
+    }
+
+
+    /**
+     * Get internationalization bundle factory.
+     *
+     * @return internationalization bundle factory
+     */
+    @Bean
+    public IBundleFactory getBundleFactory() {
+        IInternationalizationService internationalizationService = Locator.findMBean(IInternationalizationService.class, IInternationalizationService.MBEAN_NAME);
+        return internationalizationService.getBundleFactory(this.getClass().getClassLoader(), this.applicationContext);
+    }
+
+
+    /**
+     * Get group service.
+     *
+     * @return group service
+     */
+    @Bean
+    public ToutaticeGroupService getGroupService() {
+        return DirServiceFactory.getService(ToutaticeGroupService.class);
     }
 
 }
