@@ -24,7 +24,7 @@
 
         <div class="row no-gutters">
             <div class="col-md-3">
-                <div class="mb-3 p-3 bg-white rounded">
+                <div class="mb-3 py-3 bg-white rounded">
                     <p:region regionName="col-1"/>
                 </div>
             </div>
