@@ -14,7 +14,7 @@ import org.osivia.portal.api.PortalException;
 import org.osivia.portal.api.context.PortalControllerContext;
 import org.osivia.portal.api.directory.v2.model.Group;
 import org.osivia.portal.api.ui.layout.LayoutItem;
-import org.osivia.portal.api.ui.layout.LayoutService;
+import org.osivia.portal.api.ui.layout.LayoutItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -59,10 +59,10 @@ public class LayoutSelectorServiceImpl implements LayoutSelectorService {
     private LayoutSelectorAdminFormItemComparator itemsComparator;
 
     /**
-     * Layout service.
+     * Layout items service.
      */
     @Autowired
-    private LayoutService layoutService;
+    private LayoutItemsService layoutItemsService;
 
 
     /**
@@ -81,11 +81,25 @@ public class LayoutSelectorServiceImpl implements LayoutSelectorService {
         // Layout items
         List<LayoutItem> items;
         try {
-            items = this.layoutService.getItems(portalControllerContext);
+            items = this.layoutItemsService.getItems(portalControllerContext);
         } catch (PortalException e) {
             throw new PortletException(e);
         }
         form.setItems(items);
+
+        // Active layout item identifier
+        String activeId;
+        try {
+            LayoutItem currentItem = this.layoutItemsService.getCurrentItem(portalControllerContext);
+            if (currentItem == null) {
+                activeId = null;
+            } else {
+                activeId = currentItem.getId();
+            }
+        } catch (PortalException e) {
+            throw new PortletException(e);
+        }
+        form.setActiveId(activeId);
 
         return form;
     }
@@ -94,10 +108,13 @@ public class LayoutSelectorServiceImpl implements LayoutSelectorService {
     @Override
     public void select(PortalControllerContext portalControllerContext, LayoutSelectorForm form, String id) throws PortletException {
         try {
-            this.layoutService.selectItem(portalControllerContext, id);
+            this.layoutItemsService.selectItem(portalControllerContext, id);
         } catch (PortalException e) {
             throw new PortletException(e);
         }
+
+        // Update model
+        form.setActiveId(id);
     }
 
 
@@ -110,7 +127,7 @@ public class LayoutSelectorServiceImpl implements LayoutSelectorService {
             // Layout items
             List<LayoutItem> layoutItems;
             try {
-                layoutItems = this.layoutService.getItems(portalControllerContext);
+                layoutItems = this.layoutItemsService.getItems(portalControllerContext);
             } catch (PortalException e) {
                 throw new PortletException(e);
             }
@@ -182,7 +199,7 @@ public class LayoutSelectorServiceImpl implements LayoutSelectorService {
         }
 
         try {
-            this.layoutService.setItems(portalControllerContext, layoutItems);
+            this.layoutItemsService.setItems(portalControllerContext, layoutItems);
         } catch (PortalException e) {
             throw new PortletException(e);
         }

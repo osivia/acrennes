@@ -20,6 +20,10 @@ public class LayoutSelectorForm {
      * Layout items.
      */
     private List<LayoutItem> items;
+    /**
+     * Active layout item identifier
+     */
+    private String activeId;
 
 
     /**
@@ -38,4 +42,11 @@ public class LayoutSelectorForm {
         this.items = items;
     }
 
+    public String getActiveId() {
+        return activeId;
+    }
+
+    public void setActiveId(String activeId) {
+        this.activeId = activeId;
+    }
 }

@@ -6,7 +6,7 @@ import org.osivia.portal.api.internationalization.IBundleFactory;
 import org.osivia.portal.api.internationalization.IInternationalizationService;
 import org.osivia.portal.api.locator.Locator;
 import org.osivia.portal.api.portlet.PortletAppUtils;
-import org.osivia.portal.api.ui.layout.LayoutService;
+import org.osivia.portal.api.ui.layout.LayoutItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -81,13 +81,13 @@ public class LayoutSelectorConfiguration implements PortletConfigAware {
 
 
     /**
-     * Get layout service.
+     * Get layout items service.
      *
-     * @return layout service
+     * @return layout items service
      */
     @Bean
-    public LayoutService getLayoutService() {
-        return Locator.findMBean(LayoutService.class, LayoutService.MBEAN_NAME);
+    public LayoutItemsService getLayoutItemsService() {
+        return Locator.findMBean(LayoutItemsService.class, LayoutItemsService.MBEAN_NAME);
     }
 
 
