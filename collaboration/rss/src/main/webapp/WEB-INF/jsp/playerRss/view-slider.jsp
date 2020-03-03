@@ -65,45 +65,46 @@
 
             <div class="carousel-inner">
                 <c:forEach var="item" items="${player.displayedItems}" varStatus="status">
-                    <div class="carousel-item ${status.first ? 'active' : ''}">
-                        <div class="toutatice-slider-inner-container">
-                            <div class="toutatice-slider-picture-container">
-                                <div class="embed-responsive">
-                                    <c:if test="${not empty item.pictureUrl}">
-                                        <img src="${item.pictureUrl}" class="embed-responsive-item">
-                                    </c:if>
+                    <c:if test="${not empty item}">
+                        <div class="carousel-item ${status.first ? 'active' : ''}">
+                            <div class="toutatice-slider-inner-container">
+                                <div class="toutatice-slider-picture-container">
+                                    <div class="embed-responsive">
+                                        <c:if test="${not empty item.pictureUrl}">
+                                            <img src="${item.pictureUrl}" class="embed-responsive-item">
+                                        </c:if>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="toutatice-slider-text-container">
-                                <div>
-                                    <h3 class="h6">
-                                        <!-- Title + date -->
-                                        <a href="${item.link}" target="_blank" class="no-ajax-link">
-                                            <span>${item.title}</span>
-                                        </a>
-                                        <br>
-                                        <small class="text-muted"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></small>
-                                    </h3>
-
-                                    <c:if test="${not empty item.description}">
-                                        <div class="d-none d-md-block mt-2">${item.description}</div>
-                                    </c:if>
+    
+                                <div class="toutatice-slider-text-container">
+                                    <div>
+                                        <h3 class="h6">
+                                            <!-- Title + date -->
+                                            <a href="${item.link}" target="_blank" class="no-ajax-link">
+                                                <span>${item.title}</span>
+                                            </a>
+                                            <br>
+                                            <small class="text-muted"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></small>
+                                        </h3>
+    
+                                        <c:if test="${not empty item.description}">
+                                            <div class="d-none d-md-block mt-2">${item.description}</div>
+                                        </c:if>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <a href="#${namespace}-slider" class="carousel-control-prev text-tertiary no-ajax-link" role="button" data-slide="prev">
+                            <i class="glyphicons glyphicons-basic-chevron-left"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a href="#${namespace}-slider" class="carousel-control-next text-tertiary no-ajax-link" role="button" data-slide="next">
+                            <i class="glyphicons glyphicons-basic-chevron-right"></i>
+                            <span class="sr-only">Next</span>
+                        </a>                        
+                    </c:if>
                 </c:forEach>
             </div>
-
-            <a href="#${namespace}-slider" class="carousel-control-prev text-tertiary no-ajax-link" role="button" data-slide="prev">
-                <i class="glyphicons glyphicons-basic-chevron-left"></i>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a href="#${namespace}-slider" class="carousel-control-next text-tertiary no-ajax-link" role="button" data-slide="next">
-                <i class="glyphicons glyphicons-basic-chevron-right"></i>
-                <span class="sr-only">Next</span>
-            </a>
         </div>
     </div>
 </div>
