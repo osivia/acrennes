@@ -52,7 +52,7 @@
                         <c:forEach var="feed" items="${windowPropertiesForm.feeds}">
                             <tr>
                             	<!-- Picture -->
-                            	<td><img width="50" src="${feed.pictureUrl}" alt="" class="img-responsive"></td>
+                            	<td><img width="50" src="${feed.pictureUrl}" alt="" class="img-fluid"></td>
                                 <!-- Display Name -->
                                 <td>${feed.displayName}</td>
                                 <td>
