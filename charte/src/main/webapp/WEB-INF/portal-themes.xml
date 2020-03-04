@@ -4,7 +4,10 @@
     <theme>
         <name>toutatice-charte</name>
 
-        <!-- CSS -->
+        <!--CSS-->
         <link rel="stylesheet" href="/css/toutatice.css"/>
+
+        <!--JavaScript-->
+        <script type="text/javascript" src="/js/cua.js"></script>
     </theme>
 </themes>

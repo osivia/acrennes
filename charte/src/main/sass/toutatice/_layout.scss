@@ -33,3 +33,10 @@ main {
     }
   }
 }
+
+
+.portlet-container {
+  #col-1 &, #col-2 & {
+    margin-bottom: 0;
+  }
+}

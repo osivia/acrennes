@@ -8,8 +8,33 @@ $JQry(function () {
         $cua.find(".cua-placeholder").each(function (index, element) {
             var $placeholder = $JQry(element);
 
-            $placeholder.load($placeholder.data("url"), function(response, status, xhr) {
-            });
+            loadApplications($cua, $placeholder);
+        });
+
+
+        $cua.find("[data-target='settings']").each(function (index, element) {
+            var $link = $JQry(element);
+
+            if (!$link.data("loaded")) {
+                $link.click(function (event) {
+                    // AJAX parameters
+                    var container = null;
+                    var options = {
+                        requestHeaders: ["ajax", "true", "bilto"],
+                        method: "post",
+                        onSuccess: function (t) {
+                            onAjaxSuccess(t, null);
+                        }
+                    };
+                    var url = $cua.data("settings-url");
+                    var eventToStop = null;
+                    var callerId = null;
+
+                    directAjaxCall(container, options, url, eventToStop, callerId);
+                });
+
+                $link.data("loaded", true);
+            }
         });
 
 
@@ -18,11 +43,11 @@ $JQry(function () {
             $cua.find(".collapse").each(function (index, element) {
                 var $collapse = $JQry(element);
 
-                $collapse.on("show.bs.collapse", function () {
+                $collapse.on("shown.bs.collapse", function () {
                     if (!$collapse.data("loaded")) {
                         var $placeholder = $collapse.find(".cua-placeholder-other-applications");
 
-                        $placeholder.load($placeholder.data("url"));
+                        loadApplications($cua, $placeholder);
 
                         $collapse.data("loaded", true);
                     }
@@ -64,4 +89,23 @@ $JQry(function () {
             $cua.data("loaded", true);
         }
     });
+
+
+    function loadApplications($cua, $placeholder) {
+        jQuery.ajax({
+            async: false,
+            cache: false,
+            dataType: "html",
+            global: false,
+            url: $placeholder.data("url"),
+
+            error: function (xhr, status, error) {
+                $placeholder.html("<p class='text-danger'>" + $cua.data("error-message") + "</p>");
+            },
+
+            success: function (data, status, xhr) {
+                $placeholder.html(data);
+            }
+        });
+    }
 });

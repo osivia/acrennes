@@ -17,13 +17,13 @@ import org.springframework.web.context.WebApplicationContext;
 public class CuaClientForm extends AbstractCuaClientForm {
 
     /**
-     * Loaded indicator.
+     * Partially loaded indicator.
      */
-    private boolean loaded;
+    private boolean partiallyLoaded;
     /**
-     * Other applications loaded indicator.
+     * Fully loaded indicator.
      */
-    private boolean otherApplicationsLoaded;
+    private boolean fullyLoaded;
 
 
     /**
@@ -34,19 +34,19 @@ public class CuaClientForm extends AbstractCuaClientForm {
     }
 
 
-    public boolean isLoaded() {
-        return loaded;
+    public boolean isPartiallyLoaded() {
+        return partiallyLoaded;
     }
 
-    public void setLoaded(boolean loaded) {
-        this.loaded = loaded;
+    public void setPartiallyLoaded(boolean partiallyLoaded) {
+        this.partiallyLoaded = partiallyLoaded;
     }
 
-    public boolean isOtherApplicationsLoaded() {
-        return otherApplicationsLoaded;
+    public boolean isFullyLoaded() {
+        return fullyLoaded;
     }
 
-    public void setOtherApplicationsLoaded(boolean otherApplicationsLoaded) {
-        this.otherApplicationsLoaded = otherApplicationsLoaded;
+    public void setFullyLoaded(boolean fullyLoaded) {
+        this.fullyLoaded = fullyLoaded;
     }
 }

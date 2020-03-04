@@ -133,7 +133,7 @@ public class CuaClientServiceImpl implements CuaClientService {
         // Catalog identifier
         String catalogId = form.getCatalogId();
 
-        if (StringUtils.isNotEmpty(catalogId)) {
+        if (StringUtils.isNotEmpty(catalogId) && !form.isPartiallyLoaded()) {
             // Synchronize
             this.synchronize(portalControllerContext, catalogId);
 
@@ -141,7 +141,7 @@ public class CuaClientServiceImpl implements CuaClientService {
             CuaApplication[] starredApplications = this.repository.getStarredApplications(portalControllerContext, catalogId);
             form.setStarredApplications(this.convert(starredApplications));
 
-            form.setLoaded(true);
+            form.setPartiallyLoaded(true);
 
 
             if (ArrayUtils.isEmpty(starredApplications)) {
@@ -149,7 +149,7 @@ public class CuaClientServiceImpl implements CuaClientService {
                 CuaApplication[] otherApplications = this.repository.getApplications(portalControllerContext, catalogId);
                 form.setOtherApplications(this.convert(otherApplications));
 
-                form.setOtherApplicationsLoaded(true);
+                form.setFullyLoaded(true);
             }
         }
 
@@ -187,7 +187,7 @@ public class CuaClientServiceImpl implements CuaClientService {
         // Catalog identifier
         String catalogId = form.getCatalogId();
 
-        if (StringUtils.isNotEmpty(catalogId) && !form.isOtherApplicationsLoaded()) {
+        if (StringUtils.isNotEmpty(catalogId) && !form.isFullyLoaded()) {
             // Applications
             CuaApplication[] applications = this.repository.getApplications(portalControllerContext, catalogId);
 
@@ -196,7 +196,7 @@ public class CuaClientServiceImpl implements CuaClientService {
             otherApplications.removeAll(form.getStarredApplications());
             form.setOtherApplications(otherApplications);
 
-            form.setOtherApplicationsLoaded(true);
+            form.setFullyLoaded(true);
         }
 
 
@@ -332,7 +332,8 @@ public class CuaClientServiceImpl implements CuaClientService {
 
         // Update form model
         CuaClientForm form = this.applicationContext.getBean(CuaClientForm.class);
-        form.setLoaded(false);
+        form.setPartiallyLoaded(false);
+        form.setFullyLoaded(false);
     }
 
 

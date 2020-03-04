@@ -1,5 +1,6 @@
 <%@ taglib prefix="portlet" uri="http://java.sun.com/portlet_2_0" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="op" uri="http://www.osivia.org/jsp/taglib/osivia-portal" %>
 
 <%@ page isELIgnored="false" %>
@@ -11,10 +12,12 @@
     <portlet:param name="view" value="settings"/>
 </portlet:renderURL>
 
+<c:set var="errorMessage"><op:translate key="CUA_CLIENT_ERROR_MESSAGE"/></c:set>
 
-<div class="cua">
+
+<div class="cua" data-settings-url="${settingsUrl}" data-error-message="${errorMessage}">
     <c:choose>
-        <c:when test="${form.loaded}">
+        <c:when test="${form.partiallyLoaded}">
             <%@ include file="starred-applications.jsp" %>
         </c:when>
 
@@ -31,25 +34,6 @@
             </div>
         </c:otherwise>
     </c:choose>
-
-
-    <%--Actions--%>
-    <div class="d-flex">
-        <p class="mr-3">
-            <a href="#${namespace}-other-applications" class="btn btn-outline-secondary btn-sm no-ajax-link" data-toggle="collapse">
-                <i class="glyphicons glyphicons-basic-more-vertical"></i>
-                <span><op:translate key="CUA_CLIENT_VIEW_ALL_APPLICATIONS"/></span>
-            </a>
-        </p>
-
-        <p>
-            <a href="${settingsUrl}" class="btn btn-outline-secondary btn-sm">
-                <i class="glyphicons glyphicons-basic-cogwheel"></i>
-                <span><op:translate key="CUA_CLIENT_SETTINGS"/></span>
-            </a>
-        </p>
-    </div>
-
 
     <div id="${namespace}-other-applications" class="collapse">
         <portlet:resourceURL var="url" id="load-other-applications" />
