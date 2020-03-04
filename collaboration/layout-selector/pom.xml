@@ -3,18 +3,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>toutatice-portail-acrennes-collaboration-parent</artifactId>
         <groupId>fr.toutatice.acrennes.portail.collaboration</groupId>
+        <artifactId>toutatice-portail-acrennes-collaboration-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>toutatice-portail-acrennes-collaboration-rss</artifactId>
+    <artifactId>toutatice-portail-acrennes-collaboration-layout-selector</artifactId>
     <packaging>war</packaging>
 
-    <name>Portail Toutatice - Collaboration - RSS</name>
+    <name>Portail Toutatice - Collaboration - Layout selector</name>
 
 
-	<build>
+    <build>
         <plugins>
 
             <!-- SASS -->

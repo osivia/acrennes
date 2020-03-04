@@ -1,0 +1,30 @@
+@import "../../../../../charte/src/main/sass/osivia/variables";
+
+
+.layout-selector {
+  .layout-selector-sortable {
+    padding-left: 0;
+    list-style: none;
+
+    > * {
+      margin-bottom: map_get($spacers, 2);
+      padding: $input-btn-padding-y $input-btn-padding-x;
+
+      color: $secondary;
+      background-color: $white;
+      border: {
+        width: $border-width;
+        style: solid;
+        color: $border-color;
+      }
+
+      cursor: grab;
+
+      @include border-radius;
+
+      &:hover, &:focus {
+        color: darken($secondary, $emphasized-link-hover-darken-percentage);
+      }
+    }
+  }
+}

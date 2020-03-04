@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>fr.toutatice.acrennes.portail</groupId>
         <artifactId>toutatice-portail-acrennes-parent</artifactId>
-        <version>6.0-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>toutatice-portail-acrennes-distribution</artifactId>
@@ -72,13 +70,6 @@
             <version>${identity-sso.version}</version>
         </dependency>
 
-        <!--Jackson-->
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
         <!-- Java Melody -->
         <dependency>
             <groupId>org.osivia.services</groupId>
@@ -128,19 +119,6 @@
                                     </artifactItems>
                                 </configuration>
                             </execution>
-
-                            <execution>
-                                <id>import-dependencies</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>copy-dependencies</goal>
-                                </goals>
-                                <configuration>
-                                    <includeGroupIds>
-                                        com.fasterxml.jackson
-                                    </includeGroupIds>
-                                </configuration>
-                            </execution>
                         </executions>
                     </plugin>
                 </plugins>
@@ -179,5 +157,25 @@
         </profile>
 
     </profiles>
+
+
+    <scm>
+        <url>https://github.com/osivia/acrennes</url>
+        <connection>scm:git:ssh://git@github.com/osivia/acrennes.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/osivia/acrennes.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+
+    <distributionManagement>
+        <repository>
+            <id>osivia-releases</id>
+            <url>http://www.osivia.org/nexus/content/repositories/osivia-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>osivia-snapshots</id>
+            <url>http://www.osivia.org/nexus/content/repositories/osivia-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

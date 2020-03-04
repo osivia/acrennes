@@ -7,7 +7,7 @@
         version="2.0">
 
     <portlet>
-        <portlet-name>toutatice-cua-client</portlet-name>
+        <portlet-name>toutatice-layout-selector</portlet-name>
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
 
         <init-param>
@@ -16,7 +16,7 @@
         </init-param>
         <init-param>
             <name>contextConfigLocation</name>
-            <value>fr.toutatice.portail.acrennes.cua.client.portlet.configuration.CuaClientConfiguration</value>
+            <value>fr.toutatice.portail.acrennes.layout.selector.portlet.configuration.LayoutSelectorConfiguration</value>
         </init-param>
 
         <expiration-cache>180</expiration-cache>
@@ -24,10 +24,11 @@
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>view</portlet-mode>
+            <portlet-mode>admin</portlet-mode>
         </supports>
 
         <portlet-info>
-            <title>CUA client</title>
+            <title>Layout selector</title>
         </portlet-info>
     </portlet>
 
