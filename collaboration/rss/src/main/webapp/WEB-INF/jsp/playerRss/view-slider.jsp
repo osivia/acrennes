@@ -86,7 +86,13 @@
                                         </h3>
 
                                         <p class="mb-2">
-                                            <small class="text-muted"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></small>
+                                            <small class="text-muted">
+                                                <span><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></span>
+                                                <c:if test="${empty player.selectedId and not empty item.feedDisplayName}">
+                                                    <span>&ndash;</span>
+                                                    <span>${item.feedDisplayName}</span>
+                                                </c:if>
+                                            </small>
                                         </p>
     
                                         <c:if test="${not empty item.description}">

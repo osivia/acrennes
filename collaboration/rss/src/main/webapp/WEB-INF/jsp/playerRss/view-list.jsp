@@ -7,8 +7,8 @@
 <%@ page isELIgnored="false" %>
 
 
-<div class="card">
-	<div class="card-header">
+<div class="card border-light">
+	<div class="card-header bg-light border-light">
 		<ul class="nav nav-pills card-header-pills">
 			<c:if test="${fn:length(player.feeds) gt 1}">
 				<portlet:actionURL name="select" var="selectUrl" />
@@ -36,7 +36,7 @@
 
 	<ul class="list-group list-group-flush">
 		<c:forEach var="item" items="${player.displayedItems}">
-			<li class="list-group-item">
+			<li class="list-group-item border-light">
 				<h3 class="h6 mb-1">
 					<!-- Title + date -->
 					<a href="${item.link}" target="_blank" class="no-ajax-link">
@@ -45,7 +45,13 @@
 				</h3>
 
 				<p class="mb-2">
-					<small class="text-muted"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></small>
+					<small class="text-muted">
+						<span><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></span>
+						<c:if test="${empty player.selectedId and not empty item.feedDisplayName}">
+							<span>&ndash;</span>
+							<span>${item.feedDisplayName}</span>
+						</c:if>
+					</small>
 				</p>
 
 				<c:if test="${not empty item.description}">
