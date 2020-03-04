@@ -78,14 +78,16 @@
     
                                 <div class="toutatice-slider-text-container">
                                     <div>
-                                        <h3 class="h6">
+                                        <h3 class="h6 mb-1">
                                             <!-- Title + date -->
                                             <a href="${item.link}" target="_blank" class="no-ajax-link">
                                                 <span>${item.title}</span>
                                             </a>
-                                            <br>
-                                            <small class="text-muted"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></small>
                                         </h3>
+
+                                        <p class="mb-2">
+                                            <small class="text-muted"><fmt:formatDate value="${item.pubDate}" type="date" dateStyle="long" /></small>
+                                        </p>
     
                                         <c:if test="${not empty item.description}">
                                             <div class="d-none d-md-block mt-2">${item.description}</div>

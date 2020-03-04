@@ -42,6 +42,10 @@ public class RssPlayer {
      * Displayed items.
      */
     private List<RssPlayerFeedItem> displayedItems;
+    /**
+     * Aggregated items.
+     */
+    private List<RssPlayerFeedItem> aggregatedItems;
 
 
     /**
@@ -98,5 +102,13 @@ public class RssPlayer {
 
     public void setDisplayedItems(List<RssPlayerFeedItem> displayedItems) {
         this.displayedItems = displayedItems;
+    }
+
+    public List<RssPlayerFeedItem> getAggregatedItems() {
+        return aggregatedItems;
+    }
+
+    public void setAggregatedItems(List<RssPlayerFeedItem> aggregatedItems) {
+        this.aggregatedItems = aggregatedItems;
     }
 }

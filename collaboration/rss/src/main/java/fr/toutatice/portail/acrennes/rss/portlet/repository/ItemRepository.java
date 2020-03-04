@@ -99,8 +99,9 @@ public interface ItemRepository {
      * @param portalControllerContext portal controller context
      * @param identifiers             feeds identifiers
      * @param limit                   limit
+     * @param slider                  slider indicator
      * @return feeds
      */
-    List<RssPlayerFeed> getFeeds(PortalControllerContext portalControllerContext, List<String> identifiers, int limit) throws PortletException;
+    List<RssPlayerFeed> getFeeds(PortalControllerContext portalControllerContext, List<String> identifiers, int limit, boolean slider) throws PortletException;
 
 }

@@ -8,7 +8,7 @@
         <if-exists>overwrite</if-exists>
         <instance>
             <display-name xml:lang="en">Toutatice - RSS Player</display-name>
-            <display-name xml:lang="fr">Toutatice - lecteur RSS</display-name>
+            <display-name xml:lang="fr">Toutatice - Lecteur RSS</display-name>
             <instance-id>toutatice-rss-player-instance</instance-id>
             <portlet-ref>toutatice-rss-player</portlet-ref>
             <security-constraint>
