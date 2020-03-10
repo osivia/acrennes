@@ -19,6 +19,7 @@
         <module>cua</module>
         <module>layout-selector</module>
         <module>rss</module>
+        <module>search</module>
 
         <module>ear</module>
     </modules>
