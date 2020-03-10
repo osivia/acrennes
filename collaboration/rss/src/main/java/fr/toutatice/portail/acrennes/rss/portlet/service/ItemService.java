@@ -132,4 +132,11 @@ public interface ItemService {
      */
     void selectFeed(PortalControllerContext portalControllerContext, RssPlayer player, String id) throws PortletException;
 
+    /**
+     * Reorder admin feed.
+     *
+     * @param portalControllerContext portal controller context
+     * @param form                    RssWindowProperties form
+     */
+    void reorder(PortalControllerContext portalControllerContext, RssWindowProperties form) throws PortletException;    
 }

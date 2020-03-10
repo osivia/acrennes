@@ -130,6 +130,22 @@ public class AdminPlayerRssController {
 
 
     /**
+     * Reorder feed action mapping.
+     *
+     * @param request  action request
+     * @param response action response
+     * @param form     administration form model attribute
+     */
+    @ActionMapping(name = "submit", params = "reorder")
+    public void reorder(ActionRequest request, ActionResponse response, @ModelAttribute("windowPropertiesForm") RssWindowProperties form) throws PortletException {
+        // Portal controller context
+        PortalControllerContext portalControllerContext = new PortalControllerContext(this.portletContext, request, response);
+
+        this.service.reorder(portalControllerContext, form);
+    }
+    
+    
+    /**
      * Get form model attribute.
      *
      * @param request  portlet request

@@ -48,50 +48,54 @@
                         </tr>
                         </thead>
 
-
-                        <c:forEach var="feed" items="${windowPropertiesForm.feeds}">
-                            <tr>
-                            	<!-- Picture -->
-                            	<td><img width="50" src="${feed.pictureUrl}" alt="" class="img-fluid"></td>
-                                <!-- Display Name -->
-                                <td>${feed.displayName}</td>
-                                <td>
-                                    <c:forEach var="right" items="${feed.rights}" varStatus="status">
-                                        <c:if test="${status.index gt 0}">
-                                            <span>,${right}</span>
-                                        </c:if>
-                                        <c:if test="${status.index lt 1}">
-                                            <span>${right}</span>
-                                        </c:if>
-                                    </c:forEach>
-                                </td>
-                                <td>
-                                    <c:set var="delTitle">
-                                        <op:translate key="DEL_FEED"/>
-                                    </c:set>
-                                    <c:set var="editTitle">
-                                        <op:translate key="MOD_FEED"/>
-                                    </c:set>
-                                    <button type="submit" name="del" class="btn btn-outline-secondary btn-sm"
-                                            title="${delTitle}"
-                                            value="${feed.id}">
-                                        <i class="glyphicons glyphicons-remove"></i>
-                                    </button>
-                                    <button type="submit" name="edit" class="btn btn-outline-secondary btn-sm"
-                                            title="${editTitle}"
-                                            value="${feed.id}">
-                                        <i class="glyphicons glyphicons-pencil"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </c:forEach>
+                        <tbody class="selector-sortable">
+                            <c:forEach var="feed" items="${windowPropertiesForm.feeds}" varStatus="statusFeed">
+                                <tr>
+                                	<!-- Picture -->
+                                	<td><img width="50" src="${feed.pictureUrl}" alt="" class="img-fluid"></td>
+                                    <!-- Display Name -->
+                                    <td>${feed.displayName}</td>
+                                    <td>
+                                        <c:forEach var="right" items="${feed.rights}" varStatus="status">
+                                            <c:if test="${status.index gt 0}">
+                                                <span>,${right}</span>
+                                            </c:if>
+                                            <c:if test="${status.index lt 1}">
+                                                <span>${right}</span>
+                                            </c:if>
+                                        </c:forEach>
+                                    </td>
+                                    <td>
+                                        <c:set var="delTitle">
+                                            <op:translate key="DEL_FEED"/>
+                                        </c:set>
+                                        <c:set var="editTitle">
+                                            <op:translate key="MOD_FEED"/>
+                                        </c:set>
+                                        <button type="submit" name="del" class="btn btn-outline-secondary btn-sm"
+                                                title="${delTitle}"
+                                                value="${feed.id}">
+                                            <i class="glyphicons glyphicons-remove"></i>
+                                        </button>
+                                        <button type="submit" name="edit" class="btn btn-outline-secondary btn-sm"
+                                                title="${editTitle}"
+                                                value="${feed.id}">
+                                            <i class="glyphicons glyphicons-pencil"></i>
+                                        </button>
+                                    </td>
+                                    <form:hidden path="feeds[${statusFeed.index}].order"/>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
                     </c:if>
+                    
                 </table>
 
                 <button type="submit" name="add" class="btn btn-outline-secondary btn-sm">
                     <i class="glyphicons glyphicons-plus"></i>
                     <span><op:translate key="ADD_FEED"/></span>
                 </button>
+                <input type="submit" name="reorder" class="d-none">
             </div>
         </div>
     </div>
@@ -106,4 +110,5 @@
             <op:translate key="VALIDATE"/>
         </button>
     </div>
+
 </form:form>

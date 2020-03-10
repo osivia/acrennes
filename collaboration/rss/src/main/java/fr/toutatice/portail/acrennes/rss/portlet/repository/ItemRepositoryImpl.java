@@ -309,7 +309,7 @@ public class ItemRepositoryImpl implements ItemRepository {
      */
     private Map<String, List<RssPlayerFeedItem>> getItems(NuxeoController nuxeoController, List<String> identifiers, int limit) {
         // Nuxeo command
-        GetItemsCommand command = this.applicationContext.getBean(GetItemsCommand.class, identifiers);
+        GetItemsCommand command = this.applicationContext.getBean(GetItemsCommand.class, identifiers, true);
         // RSS items documents
         Documents documents = (Documents) nuxeoController.executeNuxeoCommand(command);
 

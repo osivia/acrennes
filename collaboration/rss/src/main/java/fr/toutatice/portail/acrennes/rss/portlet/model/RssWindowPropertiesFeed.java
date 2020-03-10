@@ -32,7 +32,12 @@ public class RssWindowPropertiesFeed implements RssFeed {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> rights;
 
-
+    /**
+     * Order.
+     */
+    @JsonIgnore
+    private int order;
+    
     /**
      * Constructor.
      */
@@ -84,4 +89,14 @@ public class RssWindowPropertiesFeed implements RssFeed {
     public void setRights(List<String> rights) {
         this.rights = rights;
     }
+
+
+	public int getOrder() {
+		return order;
+	}
+
+
+	public void setOrder(int order) {
+		this.order = order;
+	}
 }

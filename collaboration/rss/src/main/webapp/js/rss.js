@@ -1,6 +1,37 @@
 $JQry(function () {
 
-    $JQry("select.select2.select2-rss").each(function (index, element) {
+	$JQry(".card-body").each(function (index, element) {
+        var $container = $JQry(element);
+
+        if (!$container.data("loaded")) {
+            // Sortable
+            $container.find(".selector-sortable").sortable({
+                cancel: "a",
+                cursor: "move",
+                forcePlaceholderSize: true,
+                tolerance: "pointer",
+
+                stop: function (event, ui) {
+                    var $item = ui.item;
+                    var $form = $item.closest("form");
+                    var $sortable = $form.find(".selector-sortable");
+                    var $submit = $form.find("input[type=submit][name=reorder]");
+
+                    $sortable.children().each(function (index, element) {
+                        var $child = $JQry(element);
+                        var $input = $child.find("input[type=hidden][name$=order]");
+
+                        $input.val(index + 1);
+                    });
+
+                    $submit.click();
+                }
+            })    
+        }
+    })
+    
+    
+	$JQry("select.select2.select2-rss").each(function (index, element) {
         var $element = $JQry(element);
         var url = $element.data("url");
         var options = {
