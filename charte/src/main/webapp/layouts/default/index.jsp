@@ -18,7 +18,16 @@
 
 <main>
     <div class="container py-4">
-        <h2 class="h3 mb-3"><op:translate key="LAYOUT_DESKTOP_TITLE"/></h2>
+        <div class="row">
+            <div class="col-md">
+                <h2 class="h3 mb-3"><op:translate key="LAYOUT_DESKTOP_TITLE"/></h2>
+            </div>
+
+            <div class="col-md-auto">
+                <p:region regionName="search"/>
+            </div>
+        </div>
+
 
         <p:region regionName="top"/>
 
