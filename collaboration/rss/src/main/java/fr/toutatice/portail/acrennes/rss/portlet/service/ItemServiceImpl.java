@@ -237,6 +237,10 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         window.setProperty(FEEDS_WINDOW_PROPERTY, feeds);
+
+        // Update model
+        RssPlayer player = this.applicationContext.getBean(RssPlayer.class);
+        player.setLoaded(false);
     }
 
 
@@ -356,6 +360,8 @@ public class ItemServiceImpl implements ItemService {
         if (!player.isLoaded() || (player.isAnonymous() && (person != null))) {
             // Window properties
             RssWindowProperties windowProperties = this.getWindowProperties(portalControllerContext);
+            // Slider indicator
+            boolean slider = RssView.SLIDER.equals(windowProperties.getView());
 
             List<String> rights;
             if (person == null) {
@@ -382,6 +388,7 @@ public class ItemServiceImpl implements ItemService {
             // Feeds
             List<RssWindowPropertiesFeed> properties = windowProperties.getFeeds();
             List<RssPlayerFeed> feeds;
+            RssPlayerFeed aggregatedFeed = null;
             if (CollectionUtils.isEmpty(properties)) {
                 feeds = null;
             } else {
@@ -392,15 +399,66 @@ public class ItemServiceImpl implements ItemService {
                         identifiers.add(property.getId());
                     }
                 }
-                feeds = this.repository.getFeeds(portalControllerContext, identifiers, windowProperties.getNbItems());
+                feeds = this.repository.getFeeds(portalControllerContext, identifiers, windowProperties.getNbItems(), slider);
+
+                if (!slider) {
+                    Iterator<RssPlayerFeed> iterator = feeds.iterator();
+                    while ((aggregatedFeed == null) && iterator.hasNext()) {
+                        RssPlayerFeed feed = iterator.next();
+                        if (StringUtils.equals(AGGREGATED_FEEDS_ID, feed.getId())) {
+                            aggregatedFeed = feed;
+                            iterator.remove();
+                        }
+                    }
+                }
             }
             player.setFeeds(feeds);
+            if (aggregatedFeed != null) {
+                player.setAggregatedItems(aggregatedFeed.getItems());
+            }
 
             // Displayed items
-            List<RssPlayerFeedItem> displayedItems;
-            if (CollectionUtils.isEmpty(feeds)) {
-                displayedItems = null;
-            } else {
+            this.updateDisplayedItems(player, slider);
+        }
+
+        return player;
+    }
+
+    @Override
+    public void selectFeed(PortalControllerContext portalControllerContext, RssPlayer player, String id) throws PortletException {
+        // Window properties
+        RssWindowProperties windowProperties = this.getWindowProperties(portalControllerContext);
+        // Slider indicator
+        boolean slider = RssView.SLIDER.equals(windowProperties.getView());
+
+
+        // Update model
+        player.setSelectedId(id);
+
+        this.updateDisplayedItems(player, slider);
+    }
+
+
+    /**
+     * Update displayed RSS items.
+     *
+     * @param player RSS player
+     * @param slider slider indicator
+     */
+    private void updateDisplayedItems(RssPlayer player, boolean slider) {
+        // Selected RSS feed identifier
+        String selectedId = player.getSelectedId();
+        // RSS feeds
+        List<RssPlayerFeed> feeds = player.getFeeds();
+
+        // Displayed RSS items
+        List<RssPlayerFeedItem> displayedItems;
+
+        if (CollectionUtils.isEmpty(feeds)) {
+            displayedItems = null;
+        } else if (StringUtils.isEmpty(selectedId)) {
+            if (slider) {
+                // Get first RSS item of each RSS feed
                 displayedItems = new ArrayList<>(feeds.size());
                 for (RssPlayerFeed feed : feeds) {
                     List<RssPlayerFeedItem> items = feed.getItems();
@@ -409,41 +467,28 @@ public class ItemServiceImpl implements ItemService {
                         displayedItems.add(item);
                     }
                 }
+            } else {
+                displayedItems = player.getAggregatedItems();
             }
-            player.setDisplayedItems(displayedItems);
-        }
-
-        return player;
-    }
-
-    @Override
-    public void selectFeed(PortalControllerContext portalControllerContext, RssPlayer player, String id) throws PortletException {
-        if (CollectionUtils.isNotEmpty(player.getFeeds())) {
-            ArrayList<RssPlayerFeedItem> displayedItems = new ArrayList<>();
-            for (RssPlayerFeed feed : player.getFeeds()) {
-                if (id == null) {
-                    List<RssPlayerFeedItem> items = feed.getItems();
-                    if (CollectionUtils.isNotEmpty(items)) {
-                        RssPlayerFeedItem item = items.get(0);
-                        displayedItems.add(item);
-                    }
-                    player.setDisplayedItems(displayedItems);
-                } else {
-                    if (feed.getId().equalsIgnoreCase(id)) {
-                        List<RssPlayerFeedItem> items = feed.getItems();
-                        if (CollectionUtils.isNotEmpty(items)) {
-                            for (RssPlayerFeedItem item : items) {
-                                displayedItems.add(item);
-                            }
-                        }
-                        player.setDisplayedItems(displayedItems);
-                    }
+        } else {
+            // Selected RSS feed
+            RssPlayerFeed selectedFeed = null;
+            Iterator<RssPlayerFeed> iterator = feeds.iterator();
+            while ((selectedFeed == null) && iterator.hasNext()) {
+                RssPlayerFeed feed = iterator.next();
+                if (StringUtils.equals(selectedId, feed.getId())) {
+                    selectedFeed = feed;
                 }
             }
+
+            if (selectedFeed == null) {
+                displayedItems = null;
+            } else {
+                displayedItems = selectedFeed.getItems();
+            }
         }
 
-        // Update model
-        player.setSelectedId(id);
+        player.setDisplayedItems(displayedItems);
     }
 
     @Override

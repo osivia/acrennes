@@ -7,15 +7,11 @@
     <deployment>
         <if-exists>overwrite</if-exists>
         <instance>
-            <display-name xml:lang="en">Toutatice - RSS Player</display-name>
-            <display-name xml:lang="fr">Toutatice - Lecteur RSS</display-name>
-            <instance-id>toutatice-rss-player-instance</instance-id>
-            <portlet-ref>toutatice-rss-player</portlet-ref>
+            <display-name xml:lang="en">Toutatice - Search</display-name>
+            <display-name xml:lang="fr">Toutatice - Recherche</display-name>
+            <instance-id>toutatice-search-instance</instance-id>
+            <portlet-ref>toutatice-search</portlet-ref>
             <security-constraint>
-                <policy-permission>
-                    <action-name>admin</action-name>
-                    <role-name>Administrators</role-name>
-                </policy-permission>
                 <policy-permission>
                     <action-name>view</action-name>
                     <unchecked/>

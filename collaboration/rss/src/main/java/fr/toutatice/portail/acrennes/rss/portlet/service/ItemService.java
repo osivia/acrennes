@@ -17,6 +17,10 @@ import java.util.List;
  */
 public interface ItemService {
 
+    /** Aggregated feeds identifier. */
+    String AGGREGATED_FEEDS_ID = "_aggregated_feeds_";
+
+
     /**
      * Search groups.
      *

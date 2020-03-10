@@ -5,6 +5,7 @@ import fr.toutatice.portail.acrennes.rss.portlet.command.GetContainersCommand;
 import fr.toutatice.portail.acrennes.rss.portlet.command.GetItemsCommand;
 import fr.toutatice.portail.acrennes.rss.portlet.model.*;
 import fr.toutatice.portail.acrennes.rss.portlet.model.comparator.TitleItemComparator;
+import fr.toutatice.portail.acrennes.rss.portlet.service.ItemService;
 import fr.toutatice.portail.cms.nuxeo.api.INuxeoCommand;
 import fr.toutatice.portail.cms.nuxeo.api.NuxeoController;
 import org.apache.commons.collections.CollectionUtils;
@@ -53,7 +54,7 @@ public class ItemRepositoryImpl implements ItemRepository {
      * Id sync flux RSS
      */
     private static String ID_PROPERTY = "syncId";
-    /**   
+    /**
      * Description flux RSS
      */
     private static String DESCRIPTION_PROPERTY = "dc:description";
@@ -197,7 +198,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public List<RssPlayerFeed> getFeeds(PortalControllerContext portalControllerContext, List<String> identifiers, int limit) throws PortletException {
+    public List<RssPlayerFeed> getFeeds(PortalControllerContext portalControllerContext, List<String> identifiers, int limit, boolean slider) throws PortletException {
         // Nuxeo controller
         NuxeoController nuxeoController = new NuxeoController(portalControllerContext);
 
@@ -231,10 +232,22 @@ public class ItemRepositoryImpl implements ItemRepository {
 
 
             // RSS items, sorted by feed identifier
-            Map<String, List<RssPlayerFeedItem>> itemsMap = this.getItems(nuxeoController, identifiers, limit);
+            Map<String, List<RssPlayerFeedItem>> itemsMap = this.getItems(nuxeoController, feedsMap, identifiers, limit, slider);
 
+            // Feeds
+            if (slider) {
+                feeds = new ArrayList<>(feedsMap.size());
+            } else {
+                feeds = new ArrayList<>(feedsMap.size() + 1);
 
-            feeds = new ArrayList<>(feedsMap.size());
+                // Aggregated feed
+                RssPlayerFeed aggregatedFeed = this.applicationContext.getBean(RssPlayerFeed.class);
+                aggregatedFeed.setId(ItemService.AGGREGATED_FEEDS_ID);
+                aggregatedFeed.setItems(itemsMap.get(ItemService.AGGREGATED_FEEDS_ID));
+
+                feeds.add(aggregatedFeed);
+            }
+
             for (String id : identifiers) {
                 RssPlayerFeed feed = feedsMap.get(id);
                 if (feed != null) {
@@ -303,11 +316,13 @@ public class ItemRepositoryImpl implements ItemRepository {
      * Get RSS items.
      *
      * @param nuxeoController Nuxeo controller
-     * @param identifiers     feeds identifiers
+     * @param feeds           feeds
+     * @param identifiers     feeds ordered identifiers
      * @param limit           limit
+     * @param slider          slider indicator
      * @return RSS items
      */
-    private Map<String, List<RssPlayerFeedItem>> getItems(NuxeoController nuxeoController, List<String> identifiers, int limit) {
+    private Map<String, List<RssPlayerFeedItem>> getItems(NuxeoController nuxeoController, Map<String, RssPlayerFeed> feeds, List<String> identifiers, int limit, boolean slider) {
         // Nuxeo command
         GetItemsCommand command = this.applicationContext.getBean(GetItemsCommand.class, identifiers, true);
         // RSS items documents
@@ -317,7 +332,12 @@ public class ItemRepositoryImpl implements ItemRepository {
         if (documents == null) {
             items = null;
         } else {
-            items = new HashMap<>(identifiers.size());
+            if (slider) {
+                items = new HashMap<>(identifiers.size());
+            } else {
+                items = new HashMap<>(identifiers.size() + 1);
+                items.put(ItemService.AGGREGATED_FEEDS_ID, new ArrayList<>(limit));
+            }
 
             Map<String, Boolean> limitReached = new HashMap<>(identifiers.size());
             for (String identifier : identifiers) {
@@ -335,13 +355,29 @@ public class ItemRepositoryImpl implements ItemRepository {
                         items.put(identifier, list);
                     }
 
-                    RssPlayerFeedItem item = this.convert(document, nuxeoController);
+                    // Feed display name
+                    String feedDisplayName;
+                    RssPlayerFeed feed = feeds.get(identifier);
+                    if (feed == null) {
+                        feedDisplayName = null;
+                    } else {
+                        feedDisplayName = feed.getDisplayName();
+                    }
 
-                    if (StringUtils.isNotEmpty(item.getPictureUrl())) {
+                    RssPlayerFeedItem item = this.convert(document, nuxeoController, feedDisplayName);
+
+                    if (!slider || StringUtils.isNotEmpty(item.getPictureUrl())) {
                         list.add(item);
 
                         if (list.size() >= limit) {
                             limitReached.put(identifier, true);
+                        }
+
+                        if (!slider) {
+                            List<RssPlayerFeedItem> aggregatedItems = items.get(ItemService.AGGREGATED_FEEDS_ID);
+                            if (aggregatedItems.size() < limit) {
+                                aggregatedItems.add(item);
+                            }
                         }
                     }
                 }
@@ -358,7 +394,7 @@ public class ItemRepositoryImpl implements ItemRepository {
      * @param document Nuxeo document
      * @return RSS item
      */
-    private RssPlayerFeedItem convert(Document document, NuxeoController nuxeoController) {
+    private RssPlayerFeedItem convert(Document document, NuxeoController nuxeoController, String feedDisplayName) {
         RssPlayerFeedItem item = this.applicationContext.getBean(RssPlayerFeedItem.class);
 
         // Title
@@ -381,11 +417,14 @@ public class ItemRepositoryImpl implements ItemRepository {
         // Link
         String link = document.getString(LINK_PROPERTY);
         item.setLink(link);
-        
+
         // pubDate
         Date pubDate = document.getDate(PUBDATE_PROPERTY);
         item.setPubDate(pubDate);
-        
+
+        // Feed display name
+        item.setFeedDisplayName(feedDisplayName);
+
         return item;
     }
 

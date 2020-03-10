@@ -49,6 +49,8 @@ public class RegionsCustomizerServiceImpl extends CustomizerServiceImpl {
 
         // Toolbar
         renderedRegion.customizeRenderedRegion("toolbar", "/regions/toolbar.jsp");
+        // Search
+        renderedRegion.removeRenderedRegion("search");
         // Tabs
         renderedRegion.removeRenderedRegion("tabs");
         // Footer

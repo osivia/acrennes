@@ -35,6 +35,11 @@ public class RssPlayerFeedItem {
      * Date.
      */
     private Date pubDate;
+    /**
+     * Feed display name.
+     */
+    private String feedDisplayName;
+
 
     /**
      * Constructor.
@@ -69,22 +74,30 @@ public class RssPlayerFeedItem {
     }
 
 
-	public String getLink() {
-		return link;
-	}
+    public String getLink() {
+        return link;
+    }
 
 
-	public void setLink(String link) {
-		this.link = link;
-	}
+    public void setLink(String link) {
+        this.link = link;
+    }
 
 
-	public Date getPubDate() {
-		return pubDate;
-	}
+    public Date getPubDate() {
+        return pubDate;
+    }
 
 
-	public void setPubDate(Date pubDate) {
-		this.pubDate = pubDate;
-	}
+    public void setPubDate(Date pubDate) {
+        this.pubDate = pubDate;
+    }
+
+    public String getFeedDisplayName() {
+        return feedDisplayName;
+    }
+
+    public void setFeedDisplayName(String feedDisplayName) {
+        this.feedDisplayName = feedDisplayName;
+    }
 }
